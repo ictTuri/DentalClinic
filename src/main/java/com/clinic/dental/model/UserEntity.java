@@ -1,11 +1,14 @@
 package com.clinic.dental.model;
 
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.annotation.Id;
 
 import com.clinic.dental.enums.Gender;
@@ -19,10 +22,9 @@ import lombok.Data;
 public class UserEntity {
 
 	@Id
-	@GeneratedValue(generator = "system-uuid")
-	@GenericGenerator(name = "system-uuid", strategy = "uuid2")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "user_id")
-	private String id;
+	private Long id;
 	
 	private String firstName;
 	private String lastName;
@@ -35,4 +37,6 @@ public class UserEntity {
 	private String NID;
 	private Gender gender;
 	private Role role;
+	@OneToMany
+	private Set<AppointmentEntity> appointments; 
 }
