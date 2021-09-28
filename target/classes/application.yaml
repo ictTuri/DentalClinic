@@ -1,0 +1,15 @@
+spring:
+ datasource:
+  url: jdbc:postgresql://localhost:5432/dental?sslmode=disable
+  username: postgres
+  password: postgres
+ jpa:
+  show-sql: true
+  hibernate:
+   ddl-auto: update
+  database-platform: org.hibernate.dialect.PostgreSQLDialect
+  properties:
+   hibernates:
+    format-sql: true
+    dialect: org.hibernate.dialect.PostgreSQLDialect
+
