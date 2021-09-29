@@ -1,17 +1,19 @@
-package com.clinic.dental.model;
+package com.clinic.dental.models;
 
 import java.time.LocalDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.springframework.data.annotation.Id;
-
+import com.clinic.dental.enums.AppointmentType;
 
 import lombok.Data;
 
@@ -31,6 +33,7 @@ public class AppointmentEntity{
 	private UserEntity dentist;
 	private LocalDateTime date;
 	
-	private AppointmentEntity type;
+	@Enumerated(EnumType.STRING)
+	private AppointmentType type;
 	
 }

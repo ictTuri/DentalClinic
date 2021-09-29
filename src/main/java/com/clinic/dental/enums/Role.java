@@ -5,5 +5,14 @@ public enum Role {
 	SECRETARY("Access all apointments and manage them"),
 	PUBLIC("Check calendar and setup appoinments on free times");
 
-	Role(String string) {}
+	String value;
+
+	private Role(String value) {
+		this.value = value;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
 }

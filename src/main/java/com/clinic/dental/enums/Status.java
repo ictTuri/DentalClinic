@@ -6,5 +6,13 @@ public enum Status {
 	ACTIVE("Active appointments"),
 	CLOSED("Closed appointment");
 
-	Status(String string) {}
+	String value;
+
+	private Status(String value) {
+		this.value = value;
+	}
+
+	public String getValue() {
+		return value;
+	}
 }

@@ -1,7 +1,15 @@
 package com.clinic.dental.enums;
 
 public enum Gender {
-	M("male"),F("female");
+	MALE("male"),FEMALE("female"),NULL("empty");
 
-	Gender(String string) {}
+	String value;
+
+	private Gender(String value) {
+		this.value = value;
+	}
+
+	public String getValue() {
+		return value;
+	}
 }

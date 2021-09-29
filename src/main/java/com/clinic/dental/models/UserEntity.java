@@ -1,15 +1,17 @@
-package com.clinic.dental.model;
+package com.clinic.dental.models;
 
 import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.springframework.data.annotation.Id;
 
 import com.clinic.dental.enums.Gender;
 import com.clinic.dental.enums.Role;
@@ -35,8 +37,11 @@ public class UserEntity {
 	private String phone;
 	@Column(name = "national_id")
 	private String NID;
+	@Enumerated(EnumType.STRING)
 	private Gender gender;
+	@Enumerated(EnumType.STRING)
 	private Role role;
+	private boolean isActive;
 	@OneToMany
 	private Set<AppointmentEntity> appointments; 
 }
