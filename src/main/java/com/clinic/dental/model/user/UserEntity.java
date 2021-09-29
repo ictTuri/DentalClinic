@@ -1,4 +1,4 @@
-package com.clinic.dental.models;
+package com.clinic.dental.model.user;
 
 import java.util.Set;
 
@@ -12,9 +12,9 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-
-import com.clinic.dental.enums.Gender;
-import com.clinic.dental.enums.Role;
+import com.clinic.dental.model.appointment.AppointmentEntity;
+import com.clinic.dental.model.user.enums.Gender;
+import com.clinic.dental.model.user.enums.Role;
 
 import lombok.Data;
 

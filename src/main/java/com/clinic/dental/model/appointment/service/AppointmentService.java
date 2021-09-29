@@ -1,10 +1,10 @@
-package com.clinic.dental.services;
+package com.clinic.dental.model.appointment.service;
 
 import java.util.List;
 
 import javax.validation.Valid;
 
-import com.clinic.dental.dto.AppointmentDto;
+import com.clinic.dental.model.appointment.dto.AppointmentDto;
 
 public interface AppointmentService {
 

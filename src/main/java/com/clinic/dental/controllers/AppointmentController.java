@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.clinic.dental.dto.AppointmentDto;
-import com.clinic.dental.services.AppointmentService;
+import com.clinic.dental.model.appointment.dto.AppointmentDto;
+import com.clinic.dental.model.appointment.service.AppointmentService;
 
 import lombok.RequiredArgsConstructor;
 

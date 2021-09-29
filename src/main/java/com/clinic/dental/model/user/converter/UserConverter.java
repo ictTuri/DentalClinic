@@ -1,9 +1,9 @@
-package com.clinic.dental.converters;
+package com.clinic.dental.model.user.converter;
 
-import com.clinic.dental.dto.UserDto;
-import com.clinic.dental.enums.Gender;
-import com.clinic.dental.enums.Role;
-import com.clinic.dental.models.UserEntity;
+import com.clinic.dental.model.user.UserEntity;
+import com.clinic.dental.model.user.dto.UserDto;
+import com.clinic.dental.model.user.enums.Gender;
+import com.clinic.dental.model.user.enums.Role;
 
 public class UserConverter {
 

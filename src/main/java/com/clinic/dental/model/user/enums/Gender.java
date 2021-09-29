@@ -1,4 +1,4 @@
-package com.clinic.dental.enums;
+package com.clinic.dental.model.user.enums;
 
 public enum Gender {
 	MALE("male"),FEMALE("female"),NULL("empty");

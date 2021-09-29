@@ -1,4 +1,4 @@
-package com.clinic.dental.enums;
+package com.clinic.dental.model.appointment.enums;
 
 public enum AppointmentType {
 	COMPLETE,

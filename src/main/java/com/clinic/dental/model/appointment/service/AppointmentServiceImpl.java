@@ -1,4 +1,4 @@
-package com.clinic.dental.services.impl;
+package com.clinic.dental.model.appointment.service;
 
 import java.util.List;
 
@@ -7,8 +7,7 @@ import javax.validation.Valid;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.clinic.dental.dto.AppointmentDto;
-import com.clinic.dental.services.AppointmentService;
+import com.clinic.dental.model.appointment.dto.AppointmentDto;
 
 @Service
 @Transactional(readOnly = true)

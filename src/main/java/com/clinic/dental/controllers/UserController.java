@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.clinic.dental.dto.UserDto;
-import com.clinic.dental.services.UserService;
+import com.clinic.dental.model.user.dto.UserDto;
+import com.clinic.dental.model.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 

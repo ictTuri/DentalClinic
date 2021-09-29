@@ -13,4 +13,8 @@ spring:
     format-sql: true
     dialect: org.hibernate.dialect.PostgreSQLDialect
 
+ liquibase:
+  enabled: true
+  change-log: classpath:/data/changelog/changelog-master.xml
+ 
 

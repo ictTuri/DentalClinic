@@ -1,4 +1,4 @@
-package com.clinic.dental.services.impl;
+package com.clinic.dental.model.user.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,12 +8,11 @@ import javax.validation.Valid;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.clinic.dental.converters.UserConverter;
-import com.clinic.dental.dto.UserDto;
-import com.clinic.dental.enums.Role;
-import com.clinic.dental.models.UserEntity;
-import com.clinic.dental.repositories.UserRepository;
-import com.clinic.dental.services.UserService;
+import com.clinic.dental.model.user.UserEntity;
+import com.clinic.dental.model.user.converter.UserConverter;
+import com.clinic.dental.model.user.dto.UserDto;
+import com.clinic.dental.model.user.enums.Role;
+import com.clinic.dental.model.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 

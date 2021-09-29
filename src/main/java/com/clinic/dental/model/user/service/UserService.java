@@ -1,10 +1,10 @@
-package com.clinic.dental.services;
+package com.clinic.dental.model.user.service;
 
 import java.util.List;
 
 import javax.validation.Valid;
 
-import com.clinic.dental.dto.UserDto;
+import com.clinic.dental.model.user.dto.UserDto;
 
 public interface UserService {
 
