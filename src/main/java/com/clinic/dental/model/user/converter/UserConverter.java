@@ -1,5 +1,7 @@
 package com.clinic.dental.model.user.converter;
 
+import java.time.LocalDateTime;
+
 import com.clinic.dental.model.user.UserEntity;
 import com.clinic.dental.model.user.dto.UserDto;
 import com.clinic.dental.model.user.enums.Gender;
@@ -35,6 +37,7 @@ public class UserConverter {
 		entity.setPhone(dto.getPhone());
 		entity.setNID(dto.getNID());
 		entity.setRole(Role.valueOf(dto.getRole().trim().toUpperCase()));
+		entity.setCreatedAt(LocalDateTime.now());
 		return entity;
 	}
 }

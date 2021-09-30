@@ -1,6 +1,6 @@
 package com.clinic.dental.model.slot;
 
-import java.util.Calendar;
+import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -21,8 +21,8 @@ public class SlotEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private Calendar classStart;
-	private Calendar classEnd;
+	private LocalDateTime visitStart;
+	private LocalDateTime visitEnd;
 	
 	@ManyToOne
 	private UserEntity doctors;

@@ -1,5 +1,6 @@
 package com.clinic.dental.model.user;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -44,4 +45,5 @@ public class UserEntity {
 	private boolean isActive;
 	@OneToMany
 	private Set<AppointmentEntity> appointments; 
+	private LocalDateTime createdAt;
 }

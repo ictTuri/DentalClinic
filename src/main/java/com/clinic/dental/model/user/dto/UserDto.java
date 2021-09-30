@@ -1,7 +1,7 @@
 package com.clinic.dental.model.user.dto;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 import lombok.Data;
@@ -15,16 +15,17 @@ public class UserDto {
 	@NotBlank(message = "Last Name is mandatory!")
 	private String lastName;
 
-	@NotNull(message = "Age is mandatory!")
+//	@NotNull(message = "Age is mandatory!")
 	private Integer age;
 
-	@NotBlank(message = "Email is mandatory!")
+	@Email(message = "Please enter a valid email address!")
+	@NotBlank
 	private String email;
 
 	@NotBlank(message = "password is mandatory!")
 	private String password;
 
-	@NotBlank(message = "Phone Number is mandatory!")
+	@Pattern(regexp = "^06[7-9]{1}[0-9]{7}$", message = "Please enter a valid Albanian phone number")
 	private String phone;
 
 	@Pattern(regexp = "^[a-zA-Z]{1}[0-9]{8}[a-zA-Z]{1}$", message = "Please enter a valid NID format \"X12345678Y\"!")

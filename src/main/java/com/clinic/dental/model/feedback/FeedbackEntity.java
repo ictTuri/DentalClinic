@@ -1,7 +1,6 @@
 package com.clinic.dental.model.feedback;
 
-import java.util.Date;
-
+import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,5 +19,5 @@ public class FeedbackEntity {
 	private Long id;
 	
 	private String description;
-	private Date createdAt;
+	private LocalDateTime createdAt;
 }
