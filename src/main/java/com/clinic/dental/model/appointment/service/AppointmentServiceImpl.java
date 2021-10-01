@@ -5,13 +5,11 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import javax.validation.Valid;
 
-import org.aspectj.weaver.patterns.ConcreteCflowPointcut.Slot;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -75,26 +73,22 @@ public class AppointmentServiceImpl implements AppointmentService {
 		List<LocalDateTime> timeList = getSevenDaysForward(LocalDateTime.now().truncatedTo(ChronoUnit.HOURS),LocalDateTime.now().plusWeeks(1L));
 		List<AppointmentEntity> appointmentList = appointmentRepo.findAll();
 		List<String> doctors = userService.getDoctorsName(Role.DOCTOR.toString());
-		List<SlotDto> listAllTimes = new ArrayList<>();
+		List<SlotDto> listOfSlots = new ArrayList<>();
 		
 		timeList.stream()
-				.map(time -> listAllTimes.add(new SlotDto(time.toLocalDate(), time.toLocalTime(), time.plusHours(1).toLocalTime(),doctors)))
+				.map(time -> listOfSlots.add(new SlotDto(time.toLocalDate(), time.toLocalTime(), time.plusHours(1).toLocalTime(),doctors)))
 				.collect(Collectors.toList());
 		
-		
-		for(AppointmentEntity appointment : appointmentList) {
-			listAllTimes.forEach(slot -> {
-				if(slot.getDate().equals(appointment.getDate())&&slot.getVisitStart().equals(appointment.getStartTime())) {
-					if(!appointment.getDentist().isEmpty()) {
-						slot.getDoctors().remove(appointment.getDentist());
-					}
-					continue;
+		List<String> doctorsCopy = new ArrayList<>(doctors);
+		appointmentList.forEach(app -> {
+			for(SlotDto slot: listOfSlots) {
+				if(slot.getDate().equals(app.getDate())&&slot.getVisitStart().equals(app.getStartTime())) {
+					doctorsCopy.remove(app.getDentist());
 				}
-			});
-		}
+			}
+		});
 		
-
-		return listAllTimes;
+		return listOfSlots;
 	}
 
 
