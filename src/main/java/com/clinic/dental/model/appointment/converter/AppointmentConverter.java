@@ -31,8 +31,8 @@ public class AppointmentConverter {
 		entity.setId(null);
 		entity.setCreatedAt(LocalDateTime.now());
 		entity.setDate(appointmentDto.getDate());
-		entity.setStartTime(appointmentDto.getStartTime().truncatedTo(ChronoUnit.HOURS).plusHours(1));
-		entity.setEndTime(appointmentDto.getEndTime().truncatedTo(ChronoUnit.HOURS).plusHours(1));
+		entity.setStartTime(appointmentDto.getStartTime().truncatedTo(ChronoUnit.HOURS));
+		entity.setEndTime(appointmentDto.getEndTime().truncatedTo(ChronoUnit.HOURS));
 		entity.setDentist(appointmentDto.getDentist());
 		// Need to pass here the authenticated user
 		entity.setPatient(null);

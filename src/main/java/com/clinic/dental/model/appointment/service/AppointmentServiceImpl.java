@@ -74,18 +74,13 @@ public class AppointmentServiceImpl implements AppointmentService {
 		List<AppointmentEntity> appointmentList = appointmentRepo.findAll();
 		List<String> doctors = userService.getDoctorsName(Role.DOCTOR.toString());
 		List<SlotDto> listOfSlots = new ArrayList<>();
-		
 		timeList.stream()
 				.map(time -> listOfSlots.add(new SlotDto(time.toLocalDate(), time.toLocalTime(), time.plusHours(1).toLocalTime(),doctors)))
 				.collect(Collectors.toList());
 		
-		List<String> doctorsCopy = new ArrayList<>(doctors);
 		appointmentList.forEach(app -> {
-			for(SlotDto slot: listOfSlots) {
-				if(slot.getDate().equals(app.getDate())&&slot.getVisitStart().equals(app.getStartTime())) {
-					doctorsCopy.remove(app.getDentist());
-				}
-			}
+			listOfSlots.stream().filter(slot -> slot.getDate().equals(app.getDate()) && slot.getVisitStart().equals(app.getStartTime()))
+			.findFirst().map(slot -> listOfSlots.remove(slot));
 		});
 		
 		return listOfSlots;
