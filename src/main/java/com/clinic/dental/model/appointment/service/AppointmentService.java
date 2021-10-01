@@ -4,18 +4,22 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import com.clinic.dental.model.appointment.dto.AppointmentDto;
+import com.clinic.dental.model.appointment.dto.DisplayAppointmentDto;
+import com.clinic.dental.model.appointment.dto.CreatePublicAppointmentDto;
+import com.clinic.dental.model.appointment.dto.SlotDto;
 
 public interface AppointmentService {
 
-	List<AppointmentDto> getAllAppointments();
+	List<DisplayAppointmentDto> getAllAppointments();
 
-	AppointmentDto getAppointmentById(Long id);
+	DisplayAppointmentDto getAppointmentById(Long id);
 	
-	AppointmentDto createAppointment(@Valid AppointmentDto appointmentDto);
+	CreatePublicAppointmentDto createAppointment(@Valid CreatePublicAppointmentDto appointmentDto);
 
-	AppointmentDto updateAppointmentById(@Valid AppointmentDto appointmentDto, Long id);
+	CreatePublicAppointmentDto updateAppointmentById(@Valid CreatePublicAppointmentDto appointmentDto, Long id);
 
 	Void deleteAppointmentById(Long id);
+
+	List<SlotDto> getFreeTimes();
 
 }

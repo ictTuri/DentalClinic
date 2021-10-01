@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.clinic.dental.model.appointment.dto.AppointmentDto;
+import com.clinic.dental.model.appointment.dto.DisplayAppointmentDto;
+import com.clinic.dental.model.appointment.dto.CreatePublicAppointmentDto;
+import com.clinic.dental.model.appointment.dto.SlotDto;
 import com.clinic.dental.model.appointment.service.AppointmentService;
 
 import lombok.RequiredArgsConstructor;
@@ -27,24 +29,29 @@ public class AppointmentController {
 
 	private final AppointmentService appointmentService;
 	
+	@GetMapping("/schedule")
+	public ResponseEntity<List<SlotDto>> getFreeTimes(){
+		return new ResponseEntity<List<SlotDto>>(appointmentService.getFreeTimes(),HttpStatus.OK);
+	}
+	
 	@GetMapping
-	public ResponseEntity<List<AppointmentDto>> getAllAppointments(){
-		return new ResponseEntity<List<AppointmentDto>>(appointmentService.getAllAppointments(),HttpStatus.OK);
+	public ResponseEntity<List<DisplayAppointmentDto>> getAllAppointments(){
+		return new ResponseEntity<List<DisplayAppointmentDto>>(appointmentService.getAllAppointments(),HttpStatus.OK);
 	}
 	
 	@GetMapping("{id}")
-	public ResponseEntity<AppointmentDto> getAppointmentById(@PathVariable("id") Long id){
-		return new ResponseEntity<AppointmentDto>(appointmentService.getAppointmentById(id),HttpStatus.OK);
+	public ResponseEntity<DisplayAppointmentDto> getAppointmentById(@PathVariable("id") Long id){
+		return new ResponseEntity<DisplayAppointmentDto>(appointmentService.getAppointmentById(id),HttpStatus.OK);
 	}
 	
 	@PostMapping
-	public ResponseEntity<AppointmentDto> createAppointment(@Valid @RequestBody AppointmentDto appointmentDto){
-		return new ResponseEntity<AppointmentDto>(appointmentService.createAppointment(appointmentDto),HttpStatus.CREATED);
+	public ResponseEntity<CreatePublicAppointmentDto> createAppointment(@Valid @RequestBody CreatePublicAppointmentDto appointmentDto){
+		return new ResponseEntity<CreatePublicAppointmentDto>(appointmentService.createAppointment(appointmentDto),HttpStatus.CREATED);
 	}
 	
 	@PutMapping("{id}")
-	public ResponseEntity<AppointmentDto> updateAppointmentById(@Valid @RequestBody AppointmentDto appointmentDto, @PathVariable("id") Long id){
-		return new ResponseEntity<AppointmentDto>(appointmentService.updateAppointmentById(appointmentDto,id),HttpStatus.CREATED);
+	public ResponseEntity<CreatePublicAppointmentDto> updateAppointmentById(@Valid @RequestBody CreatePublicAppointmentDto appointmentDto, @PathVariable("id") Long id){
+		return new ResponseEntity<CreatePublicAppointmentDto>(appointmentService.updateAppointmentById(appointmentDto,id),HttpStatus.CREATED);
 	}
 	
 	@DeleteMapping("{id}")

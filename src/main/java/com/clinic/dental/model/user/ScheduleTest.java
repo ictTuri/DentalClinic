@@ -14,10 +14,9 @@ public class ScheduleTest {
 	@Autowired
 	private UserRepository userRepo;
 	
-//	@Scheduled(fixedRate = 1, timeUnit = TimeUnit.HOURS)
-	@Scheduled(fixedRate = 10, timeUnit = TimeUnit.SECONDS)
+	@Scheduled(fixedRate = 1, timeUnit = TimeUnit.DAYS)
 	protected void runPeriodicallyIfNullUpdate() {
 		userRepo.updateWhereAgeNull(100);
-		System.out.println("Hello mozerfuckers");
+		System.out.println("This runs once a day and exucutes and update if condition!");
 	}
 }

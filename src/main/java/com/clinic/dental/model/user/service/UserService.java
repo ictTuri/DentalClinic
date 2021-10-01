@@ -18,4 +18,6 @@ public interface UserService {
 
 	Void deleteUserById(Long id);
 
+	List<String> getDoctorsName(String role);
+
 }

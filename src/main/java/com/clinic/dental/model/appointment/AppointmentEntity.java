@@ -1,6 +1,8 @@
 package com.clinic.dental.model.appointment;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,7 +19,6 @@ import javax.persistence.Table;
 
 import com.clinic.dental.model.appointment.enums.AppointmentType;
 import com.clinic.dental.model.feedback.FeedbackEntity;
-import com.clinic.dental.model.slot.SlotEntity;
 import com.clinic.dental.model.user.UserEntity;
 
 import lombok.Data;
@@ -36,10 +37,9 @@ public class AppointmentEntity{
 	private UserEntity patient;
 	@Column(nullable = true)
 	private String dentist;
-	private LocalDateTime date;
-	@OneToOne
-	@JoinColumn(name = "slot", referencedColumnName = "id", nullable = false)
-	private SlotEntity slot;
+	private LocalDate date;
+	private LocalTime startTime;
+	private LocalTime endTime;
 	@OneToOne
 	@JoinColumn(name = "feedback", referencedColumnName = "id", nullable = true)
 	private FeedbackEntity feedback;
@@ -47,4 +47,5 @@ public class AppointmentEntity{
 	@Enumerated(EnumType.STRING)
 	private AppointmentType type;
 	private LocalDateTime createdAt;
+	private LocalDateTime lastUpdatedAt;
 }
