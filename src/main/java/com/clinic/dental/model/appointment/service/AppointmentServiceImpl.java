@@ -5,11 +5,13 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import javax.validation.Valid;
 
+import org.aspectj.weaver.patterns.ConcreteCflowPointcut.Slot;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -70,35 +72,36 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 	@Override
 	public List<SlotDto> getFreeTimes() {
-		List<SlotDto> listToReturn = new ArrayList<>();
 		List<LocalDateTime> timeList = getSevenDaysForward(LocalDateTime.now().truncatedTo(ChronoUnit.HOURS),LocalDateTime.now().plusWeeks(1L));
 		List<AppointmentEntity> appointmentList = appointmentRepo.findAll();
 		List<String> doctors = userService.getDoctorsName(Role.DOCTOR.toString());
-		for(LocalDateTime time : timeList) {
-			for(AppointmentEntity appointment : appointmentList) {
-				if(appointment.getStartTime().equals(time.toLocalTime())) {
-					for(String doctor: doctors) {
-						if(doctor.equalsIgnoreCase(appointment.getDentist())) {
-							doctors.remove(doctor);
-							listToReturn.add(new SlotDto(time.toLocalDate(),time.toLocalTime(),time.plusHours(1).toLocalTime(),doctors));
-						}
+		List<SlotDto> listAllTimes = new ArrayList<>();
+		
+		timeList.stream()
+				.map(time -> listAllTimes.add(new SlotDto(time.toLocalDate(), time.toLocalTime(), time.plusHours(1).toLocalTime(),doctors)))
+				.collect(Collectors.toList());
+		
+		
+		for(AppointmentEntity appointment : appointmentList) {
+			listAllTimes.forEach(slot -> {
+				if(slot.getDate().equals(appointment.getDate())&&slot.getVisitStart().equals(appointment.getStartTime())) {
+					if(!appointment.getDentist().isEmpty()) {
+						slot.getDoctors().remove(appointment.getDentist());
 					}
+					continue;
 				}
-			}
-			listToReturn.add(new SlotDto(time.toLocalDate(),time.toLocalTime(),time.plusHours(1).toLocalTime(),doctors));
+			});
 		}
 		
-		return listToReturn;
+
+		return listAllTimes;
 	}
+
 
 	public static List<LocalDateTime> getSevenDaysForward(LocalDateTime startDate, LocalDateTime endDate) {
 		long numOfDaysBetween = ChronoUnit.HOURS.between(startDate, endDate);
-		return IntStream.iterate(0, i -> i + 1)
-				.limit(numOfDaysBetween)
-				.mapToObj(i -> startDate.plusHours(i))
-				.filter(i -> isWorkingHours(i))
-				.filter(i -> isWorkingDay(i))
-				.collect(Collectors.toList());
+		return IntStream.iterate(0, i -> i + 1).limit(numOfDaysBetween).mapToObj(i -> startDate.plusHours(i))
+				.filter(i -> isWorkingHours(i)).filter(i -> isWorkingDay(i)).collect(Collectors.toList());
 	}
 
 	private static boolean isWorkingDay(final LocalDateTime time) {
