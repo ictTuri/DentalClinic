@@ -21,4 +21,10 @@ public interface UserRepository extends JpaRepository<UserEntity, Long>{
 
 	@Query(value = "SELECT * FROM users WHERE role = ?1", nativeQuery = true)
 	List<UserEntity> getByRole(String value);
+
+	UserEntity findByNID(String credential);
+
+	UserEntity findByPhone(String credential);
+
+	UserEntity findByEmail(String credential);
 }
