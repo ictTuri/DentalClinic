@@ -1,5 +1,6 @@
 package com.clinic.dental.security.auth;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -15,47 +16,59 @@ import lombok.RequiredArgsConstructor;
 @Data
 public class ApplicationUser implements UserDetails {
 	private static final long serialVersionUID = 1L;
+	
+	private final String username;
+    private final String password;
 	private List<UserAuthority> authorities;
-	private UserEntity user;
+    private final boolean isAccountNonExpired;
+    private final boolean isAccountNonLocked;
+    private final boolean isCredentialsNonExpired;
+    private final boolean isEnabled;
 	
 	public ApplicationUser(UserEntity userEntity) {
-		this.user = userEntity;
+		this.username = userEntity.getUsername();
+		this.password = userEntity.getPassword();
+		authorities = new ArrayList<>();
+		authorities.add(new UserAuthority(userEntity.getRole().name()));
+		this.isAccountNonExpired = true;
+		this.isAccountNonLocked = true;
+		this.isCredentialsNonExpired = true;
+		this.isEnabled = userEntity.isActive();
 	}
 	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		 authorities.add(new UserAuthority(user.getRole().name()));
-		 return authorities;
+		 return this.authorities;
 	}
 
 	@Override
 	public String getPassword() {
-		return user.getPassword();
+		return this.password;
 	}
 
 	@Override
 	public String getUsername() {
-		return user.getFirstName().toLowerCase().concat(user.getLastName().toLowerCase());
+		return this.username;
 	}
 
 	@Override
 	public boolean isAccountNonExpired() {
-		return true;
+		return this.isAccountNonExpired;
 	}
 
 	@Override
 	public boolean isAccountNonLocked() {
-		return true;
+		return this.isAccountNonLocked;
 	}
 
 	@Override
 	public boolean isCredentialsNonExpired() {
-		return true;
+		return this.isCredentialsNonExpired;
 	}
 
 	@Override
 	public boolean isEnabled() {
-		return true;
+		return this.isEnabled;
 	}
 
 }

@@ -19,14 +19,11 @@ public class ApplicationUserService implements UserDetailsService{
 	@Override
 	public UserDetails loadUserByUsername(String credential) throws UsernameNotFoundException {
 		
-		String NIDPattern = "^[a-zA-Z]{1}[0-9]{8}[a-zA-Z]{1}$";
-		String phonePattern = "^06[7-9]{1}[0-9]{7}$";
-		
 		if(credential != null) {
-			if(credential.trim().toUpperCase().matches(NIDPattern)) {
+			if(credential.trim().toUpperCase().matches(RegexPatterns.NID)) {
 				var userEntity = userRepo.findByNID(credential);
 				return new ApplicationUser(userEntity);
-			}else if(credential.trim().matches(phonePattern)) {
+			}else if(credential.trim().matches(RegexPatterns.PHONE_NUMBER)) {
 				var userEntity = userRepo.findByPhone(credential);
 				return new ApplicationUser(userEntity);
 			}else {
@@ -34,7 +31,7 @@ public class ApplicationUserService implements UserDetailsService{
 				return new ApplicationUser(userEntity);
 			}
 		}
-		throw new UsernameNotFoundException("User: "+credential+" not found or not activated!");
+		throw new UsernameNotFoundException("User: "+credential+" not found!");
 	}
 
 }

@@ -15,6 +15,7 @@ public class UserConverter {
 		UserDto dto = new UserDto();
 		dto.setFirstName(user.getFirstName());
 		dto.setLastName(user.getLastName());
+		dto.setUsername(user.getUsername());
 		dto.setAge(user.getAge());
 		dto.setEmail(user.getEmail());
 		dto.setGender(user.getGender().toString());
@@ -30,6 +31,7 @@ public class UserConverter {
 		entity.setId(null);
 		entity.setFirstName(dto.getFirstName());
 		entity.setLastName(dto.getLastName());
+		entity.setUsername(dto.getUsername());
 		entity.setAge(dto.getAge());
 		entity.setEmail(dto.getEmail());
 		entity.setGender(Gender.valueOf(dto.getGender().trim().toUpperCase()));
@@ -38,6 +40,7 @@ public class UserConverter {
 		entity.setNID(dto.getNID());
 		entity.setRole(Role.valueOf(dto.getRole().trim().toUpperCase()));
 		entity.setCreatedAt(LocalDateTime.now());
+		entity.setActive(true);
 		return entity;
 	}
 }

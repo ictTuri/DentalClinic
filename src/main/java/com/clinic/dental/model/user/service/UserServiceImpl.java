@@ -5,9 +5,11 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.clinic.dental.exceptions.CustomMessageException;
 import com.clinic.dental.model.user.UserEntity;
 import com.clinic.dental.model.user.converter.UserConverter;
 import com.clinic.dental.model.user.dto.UserDto;
@@ -19,10 +21,11 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
 	private final UserRepository userRepo;
-	
+	private final PasswordEncoder passEncoder;
+
 	@Override
 	public List<UserDto> getAllUsers() {
 		List<UserDto> users = new ArrayList<>();
@@ -36,12 +39,43 @@ public class UserServiceImpl implements UserService{
 		return dto;
 	}
 
-	@Override @Transactional
+	@Override
+	@Transactional
 	public UserDto createUser(@Valid UserDto userDto) {
-		return UserConverter.toDto(userRepo.save(UserConverter.toEntity(userDto)));
+		if (!existUserByUsername(userDto.getUsername())) {
+			if (!existUserByNID(userDto.getNID())) {
+				if (!existUserByPhone(userDto.getPhone())) {
+					if (!existUserByEmail(userDto.getEmail())) {
+						userDto.setPassword(passEncoder.encode(userDto.getPassword()));
+						return UserConverter.toDto(userRepo.save(UserConverter.toEntity(userDto)));
+					}
+					throw new CustomMessageException("Email Already exist!");
+				}
+				throw new CustomMessageException("Phone Number Already exist!");
+			}
+			throw new CustomMessageException("NID Already exist!");
+		}
+		throw new CustomMessageException("Username Already exist!");
 	}
 
-	@Override @Transactional
+	private boolean existUserByEmail(String email) {
+		return userRepo.existsByEmail(email);
+	}
+
+	private boolean existUserByPhone(String phone) {
+		return userRepo.existsByPhone(phone);
+	}
+
+	private boolean existUserByNID(String nid) {
+		return userRepo.existsByNID(nid);
+	}
+
+	private boolean existUserByUsername(String username) {
+		return userRepo.existsByUsername(username);
+	}
+
+	@Override
+	@Transactional
 	public UserDto updateUserById(@Valid UserDto userDto, Long id) {
 		UserEntity user = userRepo.locateById(id);
 		user.setAge(userDto.getAge());
@@ -56,7 +90,8 @@ public class UserServiceImpl implements UserService{
 		return UserConverter.toDto(user);
 	}
 
-	@Override @Transactional
+	@Override
+	@Transactional
 	public Void deleteUserById(Long id) {
 		userRepo.deleteById(id);
 		return null;
@@ -66,9 +101,8 @@ public class UserServiceImpl implements UserService{
 	public List<String> getDoctorsName(String role) {
 		List<String> doctors = new ArrayList<>();
 		userRepo.getByRole(role).stream().forEach(user -> {
-			doctors.add(user.getFirstName().concat(" "+user.getLastName()));
+			doctors.add(user.getFirstName().concat(" " + user.getLastName()));
 		});
 		return doctors;
 	}
-
 }

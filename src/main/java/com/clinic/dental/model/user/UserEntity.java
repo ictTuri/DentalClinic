@@ -31,6 +31,7 @@ public class UserEntity {
 	
 	private String firstName;
 	private String lastName;
+	private String username;
 	private Integer age;
 	private String email;
 	private String password;

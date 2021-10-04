@@ -14,3 +14,12 @@ spring:
     dialect: org.hibernate.dialect.PostgreSQLDialect
  liquibase:
   enabled: false
+   
+scheduling:
+ enabled: true
+  
+app:
+ jwt:
+  secretKey: supercalifragilisticexpialidocioussecretkeyhere
+  token-prefix: Bearer
+  token-expiration-after-days: 1
