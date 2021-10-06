@@ -15,7 +15,7 @@ import com.clinic.dental.model.user.UserEntity;
 
 public class AppointmentConverter {
 
-	public AppointmentConverter() {}
+	private AppointmentConverter() {}
 	
 	public static DisplayAppointmentDto toDto(AppointmentEntity appointment) {
 		DisplayAppointmentDto dto = new DisplayAppointmentDto();

@@ -8,7 +8,7 @@ import com.clinic.dental.model.feedback.dto.DisplayFeedbackDto;
 
 public class FeedbackConverter {
 
-	public FeedbackConverter() {}
+	private FeedbackConverter() {}
 	
 	public static FeedbackEntity toEntity(CreateFeedbackDto dto) {
 		FeedbackEntity entity = new FeedbackEntity();

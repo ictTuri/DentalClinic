@@ -27,4 +27,6 @@ public interface UserService {
 	
 	UserEntity getAuthenticatedUser();
 
+	UserEntity getDoctorByUsername(String doctorUsername);
+
 }

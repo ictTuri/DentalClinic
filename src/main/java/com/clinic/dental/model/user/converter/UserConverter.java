@@ -12,7 +12,7 @@ import com.clinic.dental.model.user.enums.Role;
 
 public class UserConverter {
 
-	UserConverter(){}
+	private UserConverter(){}
 	
 	public static UserDto toDto(UserEntity user) {
 		UserDto dto = new UserDto();

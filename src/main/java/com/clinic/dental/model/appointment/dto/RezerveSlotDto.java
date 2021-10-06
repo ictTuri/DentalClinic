@@ -10,6 +10,6 @@ public class RezerveSlotDto {
 	
 	private LocalDate day;
 	private LocalTime startTime;
-	private String doctorName;
+	private String doctorUsername;
 
 }

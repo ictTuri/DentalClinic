@@ -20,6 +20,7 @@ import javax.persistence.Table;
 import com.clinic.dental.model.appointment.enums.AppointmentType;
 import com.clinic.dental.model.appointment.enums.Status;
 import com.clinic.dental.model.feedback.FeedbackEntity;
+import com.clinic.dental.model.original_appointment.OriginalAppointmentEntity;
 import com.clinic.dental.model.user.UserEntity;
 
 import lombok.Data;
@@ -44,6 +45,10 @@ public class AppointmentEntity{
 	@OneToOne
 	@JoinColumn(name = "feedback", referencedColumnName = "id", nullable = true)
 	private FeedbackEntity feedback;
+	
+	@OneToOne
+	@JoinColumn(name = "original_date", referencedColumnName = "id", nullable = true)
+	private OriginalAppointmentEntity originalDate;
 	
 	@Enumerated(EnumType.STRING)
 	private AppointmentType type;

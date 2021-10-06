@@ -90,11 +90,12 @@ public class AppointmentServiceImpl implements AppointmentService {
 		
 		timeList.stream()
 				.map(time -> listOfSlots.add(new SlotDto(time.toLocalDate(), time.toLocalTime(), time.plusHours(1).toLocalTime(),doctors)))
-				.collect(Collectors.toList());
+				.collect(Collectors.toList());	
 		
 		appointmentList.forEach(app -> {
 			listOfSlots.stream().filter(slot -> slot.getDate().equals(app.getDate()) && slot.getVisitStart().equals(app.getStartTime()))
-			.findFirst().map(slot -> listOfSlots.remove(slot));
+			.findFirst()
+			.map(slot -> listOfSlots.remove(slot));
 		});
 		
 		return listOfSlots;
@@ -122,9 +123,10 @@ public class AppointmentServiceImpl implements AppointmentService {
 		UserEntity thisUser = userService.getAuthenticatedUser();
 		List<SlotDto> freeSlots = getFreeTimes();
 		boolean hasFreeSlot = hasSlot(freeSlots,rezerveDto.getDay(),rezerveDto.getStartTime());
+		UserEntity doctorSelected = userService.getDoctorByUsername(rezerveDto.getDoctorUsername());
+		
 		if(hasFreeSlot) {
-			String doctor = "ArturMolla";
-			AppointmentEntity appointment = AppointmentConverter.rezervationToEntity(rezerveDto,thisUser,doctor);
+			AppointmentEntity appointment = AppointmentConverter.rezervationToEntity(rezerveDto,thisUser,doctorSelected.getUsername());
 			return AppointmentConverter.toDto(appointmentRepo.save(appointment));
 		}
 		throw new CustomMessageException("Please pick another time!");
@@ -136,6 +138,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 				.stream()
 				.anyMatch(slot -> slot.getVisitStart().equals(startTime.truncatedTo(ChronoUnit.HOURS)) && slot.getDate().equals(day));
 	}
+
 
 	@Override
 	@Transactional
@@ -201,26 +204,5 @@ public class AppointmentServiceImpl implements AppointmentService {
 			return Collections.emptyList();
 		}
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 
 }

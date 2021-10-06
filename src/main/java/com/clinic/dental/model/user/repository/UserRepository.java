@@ -37,4 +37,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long>{
 	boolean existsByEmail(String email);
 
 	boolean existsByPhone(String phone);
+
+	@Query(value = "SELECT u FROM UserEntity u WHERE u.username = ?1 AND u.role = 'ROLE_DOCTOR'")
+	UserEntity findDoctorByUsername(String doctorUsername);
 }

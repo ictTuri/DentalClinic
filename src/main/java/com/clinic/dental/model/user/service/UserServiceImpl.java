@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.clinic.dental.exceptions.CustomMessageException;
+import com.clinic.dental.exceptions.DataIdNotFoundException;
 import com.clinic.dental.model.user.UserEntity;
 import com.clinic.dental.model.user.converter.UserConverter;
 import com.clinic.dental.model.user.dto.CustomResponseDto;
@@ -105,7 +106,7 @@ public class UserServiceImpl implements UserService {
 	public List<String> getDoctorsName(String role) {
 		List<String> doctors = new ArrayList<>();
 		userRepo.getByRole(role).stream().forEach(user -> {
-			doctors.add(user.getFirstName().concat(" " + user.getLastName()));
+			doctors.add(user.getUsername());
 		});
 		return doctors;
 	}
@@ -135,6 +136,45 @@ public class UserServiceImpl implements UserService {
 		String username = SecurityContextHolder.getContext().getAuthentication().getName();
 		return userRepo.findByUsername(username);
 	}
+
+	@Override
+	public UserEntity getDoctorByUsername(String doctorUsername) {
+		UserEntity doctor = userRepo.findDoctorByUsername(doctorUsername);
+		if(doctor != null) {
+			return doctor;
+		}
+		throw new DataIdNotFoundException("Can not find doctor by given username: "+ doctorUsername);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 }
