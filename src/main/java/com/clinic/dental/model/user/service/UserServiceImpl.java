@@ -1,10 +1,12 @@
 package com.clinic.dental.model.user.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,7 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.clinic.dental.exceptions.CustomMessageException;
 import com.clinic.dental.model.user.UserEntity;
 import com.clinic.dental.model.user.converter.UserConverter;
+import com.clinic.dental.model.user.dto.CustomResponseDto;
 import com.clinic.dental.model.user.dto.UserDto;
+import com.clinic.dental.model.user.dto.UserRegisterDto;
 import com.clinic.dental.model.user.enums.Role;
 import com.clinic.dental.model.user.repository.UserRepository;
 
@@ -105,4 +109,32 @@ public class UserServiceImpl implements UserService {
 		});
 		return doctors;
 	}
+
+	@Override
+	@Transactional
+	public CustomResponseDto addClient(@Valid UserRegisterDto dto) {
+		if (!existUserByUsername(dto.getUsername())) {
+			if (!existUserByNID(dto.getNID())) {
+				if (!existUserByPhone(dto.getPhone())) {
+					if (!existUserByEmail(dto.getEmail())) {
+						dto.setPassword(passEncoder.encode(dto.getPassword()));
+						userRepo.save(UserConverter.toClientRegisterEntity(dto));
+						return new CustomResponseDto("Successful Registration, please login now! ",LocalDateTime.now());
+					}
+					throw new CustomMessageException("Email Already exist!");
+				}
+				throw new CustomMessageException("Phone Number Already exist!");
+			}
+			throw new CustomMessageException("NID Already exist!");
+		}
+		throw new CustomMessageException("Username Already exist!");
+	}
+
+	@Override
+	public UserEntity getAuthenticatedUser() {
+		String username = SecurityContextHolder.getContext().getAuthentication().getName();
+		return userRepo.findByUsername(username);
+	}
+	
+	
 }

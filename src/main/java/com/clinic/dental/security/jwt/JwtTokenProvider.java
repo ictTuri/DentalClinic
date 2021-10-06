@@ -35,7 +35,7 @@ public class JwtTokenProvider {
 	public Cookie createCookie(String token) {
 		var cookie = new Cookie("jwttoken", token);
 		cookie.setPath("/");
-		cookie.setSecure(true);
+		cookie.setSecure(false);
 		cookie.setHttpOnly(true);
 		return cookie;
 	}

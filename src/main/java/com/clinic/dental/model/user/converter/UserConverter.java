@@ -2,8 +2,11 @@ package com.clinic.dental.model.user.converter;
 
 import java.time.LocalDateTime;
 
+import javax.validation.Valid;
+
 import com.clinic.dental.model.user.UserEntity;
 import com.clinic.dental.model.user.dto.UserDto;
+import com.clinic.dental.model.user.dto.UserRegisterDto;
 import com.clinic.dental.model.user.enums.Gender;
 import com.clinic.dental.model.user.enums.Role;
 
@@ -43,4 +46,50 @@ public class UserConverter {
 		entity.setActive(true);
 		return entity;
 	}
+
+	public static UserEntity toClientRegisterEntity(@Valid UserRegisterDto dto) {
+		UserEntity entity = new UserEntity();
+		entity.setId(null);
+		entity.setFirstName(dto.getFirstName());
+		entity.setLastName(dto.getLastName());
+		entity.setUsername(dto.getUsername());
+		entity.setAge(dto.getAge());
+		entity.setEmail(dto.getEmail());
+		entity.setPassword(dto.getPassword());
+		entity.setNID(dto.getNID());
+		entity.setPhone(dto.getPhone());
+		entity.setActive(true);
+		entity.setCreatedAt(LocalDateTime.now());
+		entity.setGender(Gender.valueOf(dto.getGender().trim().toUpperCase()));
+		entity.setRole(Role.ROLE_PUBLIC);
+		return entity;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

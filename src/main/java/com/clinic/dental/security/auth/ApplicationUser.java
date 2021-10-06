@@ -1,5 +1,6 @@
 package com.clinic.dental.security.auth;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -14,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Data
-public class ApplicationUser implements UserDetails {
+public class ApplicationUser implements UserDetails,Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	private final String username;

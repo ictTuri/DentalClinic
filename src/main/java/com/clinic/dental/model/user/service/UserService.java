@@ -4,7 +4,10 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.clinic.dental.model.user.UserEntity;
+import com.clinic.dental.model.user.dto.CustomResponseDto;
 import com.clinic.dental.model.user.dto.UserDto;
+import com.clinic.dental.model.user.dto.UserRegisterDto;
 
 public interface UserService {
 
@@ -19,5 +22,9 @@ public interface UserService {
 	Void deleteUserById(Long id);
 
 	List<String> getDoctorsName(String role);
+
+	CustomResponseDto addClient(@Valid UserRegisterDto dto);
+	
+	UserEntity getAuthenticatedUser();
 
 }

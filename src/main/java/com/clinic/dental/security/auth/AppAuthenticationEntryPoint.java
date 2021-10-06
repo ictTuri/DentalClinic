@@ -19,6 +19,7 @@ public class AppAuthenticationEntryPoint implements AuthenticationEntryPoint{
 	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException authException) throws IOException, ServletException {
+		
 		var cookie = WebUtils.getCookie(request, "jwttoken");
 		if(cookie == null) {
 			response.setContentType("application/json");

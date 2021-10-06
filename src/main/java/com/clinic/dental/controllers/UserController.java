@@ -41,19 +41,19 @@ public class UserController {
 	}
 	
 	@PostMapping
-//	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto){
 		return new ResponseEntity<UserDto>(userService.createUser(userDto),HttpStatus.CREATED);
 	}
 	
 	@PutMapping("{id}")
-//	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<UserDto> updateUserById(@Valid @RequestBody UserDto userDto, @PathVariable("id") Long id){
 		return new ResponseEntity<UserDto>(userService.updateUserById(userDto,id),HttpStatus.CREATED);
 	}
 	
 	@DeleteMapping("{id}")
-//	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<Void> deleteUseryId(@PathVariable("id") Long id){
 		return new ResponseEntity<Void>(userService.deleteUserById(id),HttpStatus.NO_CONTENT);
 	}

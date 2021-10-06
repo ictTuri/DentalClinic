@@ -18,6 +18,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.clinic.dental.model.appointment.enums.AppointmentType;
+import com.clinic.dental.model.appointment.enums.Status;
 import com.clinic.dental.model.feedback.FeedbackEntity;
 import com.clinic.dental.model.user.UserEntity;
 
@@ -46,6 +47,8 @@ public class AppointmentEntity{
 	
 	@Enumerated(EnumType.STRING)
 	private AppointmentType type;
+	@Enumerated(EnumType.STRING)
+	private Status status;
 	private LocalDateTime createdAt;
 	private LocalDateTime lastUpdatedAt;
 }

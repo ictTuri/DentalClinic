@@ -2,9 +2,10 @@ package com.clinic.dental.model.appointment.enums;
 
 public enum Status {
 	APPENDING("Waiting for appointment approval"),
+	APPENGING_USER("Waiting user to accept new time"),
 	REFUZED("Refuzed appointments"),
 	ACTIVE("Active appointments"),
-	CLOSED("Closed appointment");
+	DONE("Closed appointment");
 
 	String value;
 

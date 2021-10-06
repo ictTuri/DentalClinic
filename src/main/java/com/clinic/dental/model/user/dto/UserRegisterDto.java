@@ -8,29 +8,26 @@ import javax.validation.constraints.Pattern;
 import lombok.Data;
 
 @Data
-public class UserDto {
+public class UserRegisterDto {
 
 	@NotBlank(message = "First Name is mandatory!")
 	private String firstName;
-
-	@NotBlank(message = "Last Name is mandatory!")
+	@NotBlank(message = "First Name is mandatory!")
 	private String lastName;
-	
-	@NotBlank(message = "Username is mandatory!")
+	@NotBlank(message = "First Name is mandatory!")
 	private String username;
-
-	@NotNull(message = "Age is mandatory!")
+	@NotNull(message = "First Name is mandatory!")
 	private Integer age;
-
-	@Email(message = "Please enter a valid email address!")
-	@NotBlank
+	
+	@NotBlank(message = "First Name is mandatory!")
+	@Email
 	private String email;
-
-	@NotBlank(message = "password is mandatory!")
+	
+	@NotBlank(message = "First Name is mandatory!")
 	private String password;
-
+	
 	@Pattern(regexp = "^06[7-9]{1}[0-9]{7}$", message = "Please enter a valid Albanian phone number")
-	@NotNull(message = "Phone is mandatory!/try 'nid'")
+	@NotNull(message = "Phone is mandatory!")
 	private String phone;
 
 	@Pattern(regexp = "^[a-zA-Z]{1}[0-9]{8}[a-zA-Z]{1}$", message = "Please enter a valid NID format \"X12345678Y\"!")
@@ -40,6 +37,4 @@ public class UserDto {
 	@NotBlank(message = "Please enter \"male\" or \"female\"!")
 	private String gender;
 
-	@NotBlank(message = "Role is mandatory! Enter \"doctor\" or \"secretary\" or \"public\"!")
-	private String role;
 }

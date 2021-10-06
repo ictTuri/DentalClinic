@@ -5,6 +5,8 @@ import java.util.List;
 import javax.validation.Valid;
 
 import com.clinic.dental.model.appointment.dto.DisplayAppointmentDto;
+import com.clinic.dental.model.appointment.dto.RezerveSlotDto;
+import com.clinic.dental.model.appointment.dto.ChangeTimeAppointmentDto;
 import com.clinic.dental.model.appointment.dto.CreatePublicAppointmentDto;
 import com.clinic.dental.model.appointment.dto.SlotDto;
 
@@ -21,5 +23,15 @@ public interface AppointmentService {
 	Void deleteAppointmentById(Long id);
 
 	List<SlotDto> getFreeTimes();
+
+	DisplayAppointmentDto rezerveAppointment(@Valid RezerveSlotDto rezerveDto);
+
+	DisplayAppointmentDto approveAppointmentById(Long id);
+
+	DisplayAppointmentDto changeAppointmentTimeById(Long id, @Valid ChangeTimeAppointmentDto dto);
+
+	DisplayAppointmentDto closeAppointmentById(Long id);
+
+	List<DisplayAppointmentDto> getMyAllAppointments();
 
 }

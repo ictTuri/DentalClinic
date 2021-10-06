@@ -8,6 +8,7 @@ import lombok.Data;
 @Data
 public class DisplayAppointmentDto {
 
+	private Long id;
 	private String dentist;
 	private String patient;
 	private LocalDate date;
@@ -15,4 +16,5 @@ public class DisplayAppointmentDto {
 	private LocalTime endTime;
 	private String feedback;
 	private String type;
+	private String status;
 }

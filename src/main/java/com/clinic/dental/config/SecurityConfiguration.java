@@ -35,7 +35,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 	private final LogoutSuccessHandler logoutSuccess;
 	private final SecretKey secretKey;
 	private final AppAuthenticationEntryPoint authenticationEntryPoint;
-	private final CustomAccessDeniedHandler accessDeniedHandler;	
+	private final CustomAccessDeniedHandler customAccessDeniedHandler;	
 	
 	public JwtTokenVerifier jwtTokenVerifier(){
         return new JwtTokenVerifier(secretKey);
@@ -50,7 +50,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.cors();
-		http.exceptionHandling().accessDeniedHandler(accessDeniedHandler);
+		http.exceptionHandling().accessDeniedHandler(customAccessDeniedHandler);
 		http.csrf().disable()
 						.sessionManagement()
 						.sessionCreationPolicy(SessionCreationPolicy.STATELESS)

@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.var;
 
 @RestController
-@RequestMapping("api")
+@RequestMapping("/api")
 @RequiredArgsConstructor
 public class LoginLogoutController {
 	
