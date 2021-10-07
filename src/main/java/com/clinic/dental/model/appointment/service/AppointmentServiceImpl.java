@@ -27,6 +27,9 @@ import com.clinic.dental.model.appointment.dto.CreatePublicAppointmentDto;
 import com.clinic.dental.model.appointment.dto.SlotDto;
 import com.clinic.dental.model.appointment.enums.Status;
 import com.clinic.dental.model.appointment.repository.AppointmentRepository;
+import com.clinic.dental.model.original_appointment.OriginalAppointmentEntity;
+import com.clinic.dental.model.original_appointment.converter.OriginalAppointmentConverter;
+import com.clinic.dental.model.original_appointment.repository.OriginalAppointmentRepository;
 import com.clinic.dental.model.user.UserEntity;
 import com.clinic.dental.model.user.enums.Role;
 import com.clinic.dental.model.user.service.UserService;
@@ -39,6 +42,7 @@ import lombok.RequiredArgsConstructor;
 public class AppointmentServiceImpl implements AppointmentService {
 
 	private final AppointmentRepository appointmentRepo;
+	private final OriginalAppointmentRepository originalAppointmentRepo;
 	private final UserService userService;
 	
 	public static final Integer WORK_HOUR_START = 8;
@@ -91,12 +95,19 @@ public class AppointmentServiceImpl implements AppointmentService {
 		timeList.stream()
 				.map(time -> listOfSlots.add(new SlotDto(time.toLocalDate(), time.toLocalTime(), time.plusHours(1).toLocalTime(),doctors)))
 				.collect(Collectors.toList());	
-		
+
 		appointmentList.forEach(app -> {
 			listOfSlots.stream().filter(slot -> slot.getDate().equals(app.getDate()) && slot.getVisitStart().equals(app.getStartTime()))
 			.findFirst()
 			.map(slot -> listOfSlots.remove(slot));
 		});
+		
+//		appointmentList.forEach(app ->{
+//			listOfSlots.stream()
+//			.flatMap(slot -> slot.getDoctors().stream()).filter(doctor -> doctor.equals(app.getDentist()))
+//			.findFirst()
+//			.map(doc -> doc.replace(doc, ""));
+//		});
 		
 		return listOfSlots;
 	}
@@ -155,12 +166,15 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 
 	@Override
+	@Transactional
 	public DisplayAppointmentDto changeAppointmentTimeById(Long id, @Valid ChangeTimeAppointmentDto dto) {
 		AppointmentEntity appointment = appointmentRepo.getById(id);
 		if(appointment != null) {
 			boolean hasFreeSlot = hasSlot(getFreeTimes(),dto.getDay(),dto.getStartTime());
 			if(hasFreeSlot) {
-				appointment.setStatus(Status.APPENGING_USER);
+				OriginalAppointmentEntity originalDate = OriginalAppointmentConverter.toEntity(appointment);
+				appointment.setOriginalDate(originalAppointmentRepo.save(originalDate));
+				appointment.setStatus(Status.APPENDING_USER);
 				appointment.setDate(dto.getDay());
 				appointment.setStartTime(dto.getStartTime().truncatedTo(ChronoUnit.HOURS));
 				appointment.setEndTime(dto.getStartTime().plusHours(1).truncatedTo(ChronoUnit.HOURS));
@@ -172,6 +186,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 
 	@Override
+	@Transactional
 	public DisplayAppointmentDto closeAppointmentById(Long id) {
 		AppointmentEntity appointment = appointmentRepo.getById(id);
 		if(appointment != null) {
@@ -204,5 +219,59 @@ public class AppointmentServiceImpl implements AppointmentService {
 			return Collections.emptyList();
 		}
 	}
+
+	@Override
+	@Transactional
+	public DisplayAppointmentDto approveNewTimeAppointment(Long id) {
+		UserEntity user = userService.getAuthenticatedUser();
+		AppointmentEntity appointment = appointmentRepo.findByIdAndStatus(id, Status.APPENDING_USER);
+		if(appointment.getPatient().equals(user)) {
+			appointment.setStatus(Status.ACTIVE);
+			return AppointmentConverter.toDto(appointmentRepo.save(appointment));
+		}
+		throw new DataIdNotFoundException("Cannot locate your appointment by id:"+id);
+	}
+
+	@Override
+	@Transactional
+	public DisplayAppointmentDto refuzeNewTimeAppointment(Long id) {
+		UserEntity user = userService.getAuthenticatedUser();
+		AppointmentEntity appointment = appointmentRepo.findByIdAndStatus(id, Status.APPENDING_USER);
+		if( appointment!= null) {
+			if(appointment.getPatient().equals(user)) {
+				OriginalAppointmentEntity originalDate = appointment.getOriginalDate();
+				appointment.setStatus(Status.USER_REFUZED_TIME);
+				appointment.setDate(originalDate.getDay());
+				appointment.setStartTime(originalDate.getStartTime());
+				appointment.setEndTime(originalDate.getEndTime());
+				appointment.setLastUpdatedAt(LocalDateTime.now());
+				return AppointmentConverter.toDto(appointmentRepo.save(appointment));
+			}
+			throw new DataIdNotFoundException("Cannot locate your appointment by id:"+id);
+		}
+		throw new DataIdNotFoundException("Can not find with given id: "+id+". please verify dates");
+	}
+
+	@Override
+	@Transactional
+	public DisplayAppointmentDto cancelAppointment(Long id) {
+		UserEntity user = userService.getAuthenticatedUser();
+		AppointmentEntity appointment = appointmentRepo.findAppointmentToCancel(id);
+		if( appointment!= null) {
+			if(appointment.getPatient().equals(user)) {
+				appointment.setStatus(Status.USER_CANCELLED);
+				appointment.setLastUpdatedAt(LocalDateTime.now());
+				return AppointmentConverter.toDto(appointmentRepo.save(appointment));
+			}else if(appointment.getDentist().equals(user.getUsername())){
+				appointment.setStatus(Status.DOCTOR_CANCELLED);
+				appointment.setLastUpdatedAt(LocalDateTime.now());
+				return AppointmentConverter.toDto(appointmentRepo.save(appointment));
+			}
+			throw new CustomMessageException("Selected Appointment not your appointment!");
+		}
+		throw new DataIdNotFoundException("Can not find with given id: "+id+".  Can not Cancel!");
+	}
+	
+	
 
 }

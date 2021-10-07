@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.clinic.dental.model.appointment.AppointmentEntity;
+import com.clinic.dental.model.appointment.enums.Status;
 import com.clinic.dental.model.user.UserEntity;
 
 public interface AppointmentRepository extends JpaRepository<AppointmentEntity, Long>{
@@ -16,5 +17,10 @@ public interface AppointmentRepository extends JpaRepository<AppointmentEntity, 
 	Collection<AppointmentEntity> findByDentist(String username);
 
 	Collection<AppointmentEntity> findByPatient(UserEntity user);
+
+	AppointmentEntity findByIdAndStatus(Long id, Status appendingUser);
+
+	@Query(value = "SELECT * FROM appointments WHERE appointment_id = ?1 status NOT IN ('DONE','ACTIVE','USER_CANCELLED','DOCTOR_CANCELLED') AND (AGE(now(),date)) < '1' ", nativeQuery = true)
+	AppointmentEntity findAppointmentToCancel(Long id);
 
 }

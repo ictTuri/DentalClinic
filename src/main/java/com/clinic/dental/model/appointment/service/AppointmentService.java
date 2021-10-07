@@ -34,4 +34,10 @@ public interface AppointmentService {
 
 	List<DisplayAppointmentDto> getMyAllAppointments();
 
+	DisplayAppointmentDto approveNewTimeAppointment(Long id);
+
+	DisplayAppointmentDto refuzeNewTimeAppointment(Long id);
+
+	DisplayAppointmentDto cancelAppointment(Long id);
+
 }

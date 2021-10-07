@@ -22,4 +22,5 @@ public class OriginalAppointmentEntity {
 	
 	private LocalDate day;
 	private LocalTime startTime;
+	private LocalTime endTime;
 }
