@@ -29,26 +29,26 @@ public class AppointmentController {
 
 	private final AppointmentService appointmentService;
 	
-	@GetMapping("/schedule")
+	@GetMapping("/free-schedule")
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_PUBLIC')")
 	public ResponseEntity<List<SlotDto>> getFreeTimes(){
 		return new ResponseEntity<List<SlotDto>>(appointmentService.getFreeTimes(),HttpStatus.OK);
 	}
 	
-	@PostMapping("/schedule/rezerve")
+	@PostMapping("/rezerve")
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_PUBLIC')")
 	public ResponseEntity<DisplayAppointmentDto> rezerveAppointment(@Valid @RequestBody RezerveSlotDto rezerveDto){
 		return new ResponseEntity<DisplayAppointmentDto>(appointmentService.rezerveAppointment(rezerveDto),HttpStatus.CREATED);
 	}
 	
-	@GetMapping
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SECRETARY')")
-	public ResponseEntity<List<DisplayAppointmentDto>> getAllAppointments(){
-		return new ResponseEntity<List<DisplayAppointmentDto>>(appointmentService.getAllAppointments(),HttpStatus.OK);
+	@GetMapping()
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_PUBLIC','ROLE_DOCTOR','ROLE_SECRETARY')")
+	public ResponseEntity<List<DisplayAppointmentDto>> getMyAllAppointments(){
+		return new ResponseEntity<List<DisplayAppointmentDto>>(appointmentService.getMyAllAppointments(),HttpStatus.OK);
 	}
 	
 	@GetMapping("{id}")
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SECRETARY')")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_PUBLIC','ROLE_DOCTOR','ROLE_SECRETARY')")
 	public ResponseEntity<DisplayAppointmentDto> getAppointmentById(@PathVariable("id") Long id){
 		return new ResponseEntity<DisplayAppointmentDto>(appointmentService.getAppointmentById(id),HttpStatus.OK);
 	}
@@ -71,29 +71,30 @@ public class AppointmentController {
 		return new ResponseEntity<DisplayAppointmentDto>(appointmentService.changeAppointmentTimeById(id,dto),HttpStatus.OK);
 	}
 	
-	@GetMapping("/my-appointment")
-	@PreAuthorize("hasAnyRole('ROLE_PUBLIC','ROLE_DOCTOR')")
-	public ResponseEntity<List<DisplayAppointmentDto>> getMyAllAppointments(){
-		return new ResponseEntity<List<DisplayAppointmentDto>>(appointmentService.getMyAllAppointments(),HttpStatus.OK);
-	}
-	
-	@PostMapping("/my-appointment/{id}/approve-new-time")
+	@PostMapping("/{id}/approve-new-time")
 	@PreAuthorize("hasAnyRole('ROLE_PUBLIC')")
 	public ResponseEntity<DisplayAppointmentDto> approveNewTimeAppointment(@PathVariable("id") Long id){
 		return new ResponseEntity<DisplayAppointmentDto>(appointmentService.approveNewTimeAppointment(id),HttpStatus.OK);
 	}
 	
-	@PostMapping("/my-appointment/{id}/refuze-new-time")
+	@PostMapping("/{id}/refuze-new-time")
 	@PreAuthorize("hasAnyRole('ROLE_PUBLIC')")
 	public ResponseEntity<DisplayAppointmentDto> refuzeNewTimeAppointment(@PathVariable("id") Long id){
 		return new ResponseEntity<DisplayAppointmentDto>(appointmentService.refuzeNewTimeAppointment(id),HttpStatus.OK);
 	}
 	
-	@PostMapping("/my-appointment/{id}/cancel")
+	@PostMapping("/{id}/cancel")
 	@PreAuthorize("hasAnyRole('ROLE_PUBLIC','ROLE_DOCTOR')")
 	public ResponseEntity<DisplayAppointmentDto> cancelAppointment(@PathVariable("id") Long id){
 		return new ResponseEntity<DisplayAppointmentDto>(appointmentService.cancelAppointment(id),HttpStatus.OK);
 	}
+	
+//	@GetMapping
+//	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SECRETARY')")
+//	public ResponseEntity<List<DisplayAppointmentDto>> getAllAppointments(){
+//		return new ResponseEntity<List<DisplayAppointmentDto>>(appointmentService.getAllAppointments(),HttpStatus.OK);
+//	}
+//	
 //	@PostMapping
 //	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SECRETARY')")
 //	public ResponseEntity<CreatePublicAppointmentDto> createAppointment(@Valid @RequestBody CreatePublicAppointmentDto appointmentDto){
