@@ -23,7 +23,7 @@ public interface AppointmentRepository extends JpaRepository<AppointmentEntity, 
 	@Query(value = "SELECT * FROM appointments WHERE appointment_id = ?1 status NOT IN ('DONE','ACTIVE','USER_CANCELLED','DOCTOR_CANCELLED') AND (AGE(now(),date)) < '1' ", nativeQuery = true)
 	AppointmentEntity findAppointmentToCancel(Long id);
 
-	@Query(value = "SELECT * FROM appointments WHERE status NOT IN ('REFUZED','DOCTOR_CANCELLED','USER_CANCELLED','APPENDING') AND (AGE(date(now()),date)) <= '0'", nativeQuery = true)
+	@Query(value = "SELECT * FROM appointments WHERE status NOT IN ('REFUZED','DOCTOR_CANCELLED','USER_CANCELLED') AND (AGE(date(now()),date)) <= '0'", nativeQuery = true)
 	Collection<AppointmentEntity> findAllAfterToday();
 
 }

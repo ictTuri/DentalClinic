@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.clinic.dental.model.appointment.dto.DisplayAppointmentDto;
-import com.clinic.dental.model.appointment.dto.RezerveSlotDto;
 import com.clinic.dental.model.appointment.dto.ChangeTimeAppointmentDto;
+import com.clinic.dental.model.appointment.dto.CreatePublicAppointmentDto;
 import com.clinic.dental.model.appointment.dto.SlotDto;
 import com.clinic.dental.model.appointment.service.AppointmentService;
 
@@ -37,7 +37,7 @@ public class AppointmentController {
 	
 	@PostMapping("/rezerve")
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_PUBLIC')")
-	public ResponseEntity<DisplayAppointmentDto> rezerveAppointment(@Valid @RequestBody RezerveSlotDto rezerveDto){
+	public ResponseEntity<DisplayAppointmentDto> rezerveAppointment(@Valid @RequestBody CreatePublicAppointmentDto rezerveDto){
 		return new ResponseEntity<DisplayAppointmentDto>(appointmentService.rezerveAppointment(rezerveDto),HttpStatus.CREATED);
 	}
 	
@@ -88,34 +88,5 @@ public class AppointmentController {
 	public ResponseEntity<DisplayAppointmentDto> cancelAppointment(@PathVariable("id") Long id){
 		return new ResponseEntity<DisplayAppointmentDto>(appointmentService.cancelAppointment(id),HttpStatus.OK);
 	}
-	
-//	@GetMapping
-//	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SECRETARY')")
-//	public ResponseEntity<List<DisplayAppointmentDto>> getAllAppointments(){
-//		return new ResponseEntity<List<DisplayAppointmentDto>>(appointmentService.getAllAppointments(),HttpStatus.OK);
-//	}
-//	
-//	@PostMapping
-//	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SECRETARY')")
-//	public ResponseEntity<CreatePublicAppointmentDto> createAppointment(@Valid @RequestBody CreatePublicAppointmentDto appointmentDto){
-//		return new ResponseEntity<CreatePublicAppointmentDto>(appointmentService.createAppointment(appointmentDto),HttpStatus.CREATED);
-//	}
-//	
-//	@PutMapping("{id}")
-//	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SECRETARY')")
-//	public ResponseEntity<CreatePublicAppointmentDto> updateAppointmentById(@Valid @RequestBody CreatePublicAppointmentDto appointmentDto, @PathVariable("id") Long id){
-//		return new ResponseEntity<CreatePublicAppointmentDto>(appointmentService.updateAppointmentById(appointmentDto,id),HttpStatus.CREATED);
-//	}
-//	
-//	@DeleteMapping("{id}")
-//	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SECRETARY')")
-//	public ResponseEntity<Void> deleteAppointmentById(@PathVariable("id") Long id){
-//		return new ResponseEntity<Void>(appointmentService.deleteAppointmentById(id),HttpStatus.NO_CONTENT);
-//	}
-//
-//	@GetMapping("{id}")
-//	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SECRETARY')")
-//	public ResponseEntity<DisplayAppointmentDto> getAppointmentById(@PathVariable("id") Long id){
-//		return new ResponseEntity<DisplayAppointmentDto>(appointmentService.getAppointmentById(id),HttpStatus.OK);
-//	}
+
 }

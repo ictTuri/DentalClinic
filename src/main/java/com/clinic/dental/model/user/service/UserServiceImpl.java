@@ -103,12 +103,13 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public List<String> getDoctorsName(String role) {
+	public String[] getDoctorsName(String role) {
 		List<String> doctors = new ArrayList<>();
 		userRepo.getByRole(role).stream().forEach(user -> {
 			doctors.add(user.getUsername());
 		});
-		return doctors;
+		String[] returnNames = doctors.toArray(new String[0]);
+		return returnNames;
 	}
 
 	@Override

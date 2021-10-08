@@ -21,7 +21,7 @@ public interface UserService {
 
 	Void deleteUserById(Long id);
 
-	List<String> getDoctorsName(String role);
+	String[] getDoctorsName(String role);
 
 	CustomResponseDto addClient(@Valid UserRegisterDto dto);
 	

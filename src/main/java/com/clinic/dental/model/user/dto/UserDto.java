@@ -5,6 +5,10 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
+import com.clinic.dental.Utils.ValueOfEnum;
+import com.clinic.dental.model.user.enums.Gender;
+import com.clinic.dental.model.user.enums.Role;
+
 import lombok.Data;
 
 @Data
@@ -38,8 +42,10 @@ public class UserDto {
 	private String NID;
 
 	@NotBlank(message = "Please enter \"male\" or \"female\"!")
+	@ValueOfEnum(enumClass = Gender.class)
 	private String gender;
 
 	@NotBlank(message = "Role is mandatory! Enter \"doctor\" or \"secretary\" or \"public\"!")
+	@ValueOfEnum(enumClass = Role.class)
 	private String role;
 }

@@ -5,9 +5,10 @@ import java.util.List;
 
 public class DoctorListUtilTest {
 
-	public static List<String> getDoctors(){
+	public static String[] getDoctors(){
 		List<String> list = new ArrayList<>();
 		list.add("doctorname");
-		return list;
+		String[] returnList = list.toArray(new String[0]);
+		return returnList;
 	}
 }

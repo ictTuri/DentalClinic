@@ -56,4 +56,5 @@ public class AppointmentEntity{
 	private Status status;
 	private LocalDateTime createdAt;
 	private LocalDateTime lastUpdatedAt;
+	private String lastUpdatedBy;
 }

@@ -108,7 +108,7 @@ public class AppointmentUtilTest {
 	
 	public static List<SlotDto> getSLots(){ 
 		List<LocalDateTime> timeList = getSevenDaysForward(LocalDateTime.now().truncatedTo(ChronoUnit.HOURS),LocalDateTime.now().plusWeeks(1L));
-		List<String> doctors = DoctorListUtilTest.getDoctors();
+		String[] doctors = DoctorListUtilTest.getDoctors();
 		List<SlotDto> getSLots =  new ArrayList<>();
 		timeList.stream()
 		.map(time -> getSLots.add(
