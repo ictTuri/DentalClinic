@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import com.clinic.dental.model.appointment.dto.DisplayAppointmentDto;
+import com.clinic.dental.model.appointment.AppointmentEntity;
 import com.clinic.dental.model.appointment.dto.ChangeAppointmentDentistDto;
 import com.clinic.dental.model.appointment.dto.ChangeAppointmentTimeDto;
 import com.clinic.dental.model.appointment.dto.CreatePublicAppointmentDto;
@@ -13,7 +14,7 @@ import com.clinic.dental.model.feedback.dto.CreateFeedbackDto;
 import com.clinic.dental.model.user.UserEntity;
 
 public interface AppointmentService {
-	List<DisplayAppointmentDto> getAllAppointments();
+	List<AppointmentEntity> getAllAppointments();
 
 	DisplayAppointmentDto getAppointmentById(Long id, UserEntity authenticated);
 

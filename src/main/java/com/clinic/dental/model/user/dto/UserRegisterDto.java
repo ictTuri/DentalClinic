@@ -38,7 +38,7 @@ public class UserRegisterDto {
 	private String NID;
 
 	@NotBlank(message = "Please enter \"male\" or \"female\"!")
-	@ValueOfEnum(enumClass = Gender.class)
+	@ValueOfEnum(enumClass = Gender.class, message = "Please enter \\\"male\\\" or \\\"female\\\"!\"")
 	private String gender;
 
 }

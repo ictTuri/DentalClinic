@@ -9,10 +9,12 @@ import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 @Data
 @Entity
 @AllArgsConstructor
+@RequiredArgsConstructor
 @Table(name = "feedback")
 public class FeedbackEntity {
 

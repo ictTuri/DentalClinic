@@ -121,7 +121,7 @@ public class UserServiceImpl implements UserService {
 					if (!existUserByEmail(dto.getEmail())) {
 						dto.setPassword(passEncoder.encode(dto.getPassword()));
 						userRepo.save(UserConverter.toClientRegisterEntity(dto));
-						return new CustomResponseDto("Successful Registration, please login now! ",LocalDateTime.now());
+						return new CustomResponseDto("Successful Registration, please login now! ", LocalDateTime.now());
 					}
 					throw new CustomMessageException("Email Already exist!");
 				}

@@ -23,6 +23,9 @@ public class AppointmentConverter {
 		dto.setStartTime(appointment.getStartTime());
 		dto.setEndTime(appointment.getEndTime());
 		dto.setDentist(appointment.getDentist());
+		if(appointment.getFeedback() != null) {
+			dto.setFeedback(appointment.getFeedback().getDescription());
+		}
 		dto.setPatient(appointment.getPatient().getFirstName().concat(" "+appointment.getPatient().getLastName()));
 		dto.setType(appointment.getType().toString());
 		dto.setStatus(appointment.getStatus().toString());

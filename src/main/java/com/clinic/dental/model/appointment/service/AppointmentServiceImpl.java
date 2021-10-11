@@ -29,6 +29,7 @@ import com.clinic.dental.model.appointment.repository.AppointmentRepository;
 import com.clinic.dental.model.feedback.FeedbackEntity;
 import com.clinic.dental.model.feedback.converter.FeedbackConverter;
 import com.clinic.dental.model.feedback.dto.CreateFeedbackDto;
+import com.clinic.dental.model.feedback.repository.FeedbackRepository;
 import com.clinic.dental.model.original_appointment.OriginalAppointmentEntity;
 import com.clinic.dental.model.original_appointment.converter.OriginalAppointmentConverter;
 import com.clinic.dental.model.original_appointment.repository.OriginalAppointmentRepository;
@@ -46,14 +47,15 @@ public class AppointmentServiceImpl implements AppointmentService {
 	private final AppointmentRepository appointmentRepo;
 	private final OriginalAppointmentRepository originalAppointmentRepo;
 	private final UserService userService;
+	private final FeedbackRepository feedbackRepository;
 
 	public static final Integer WORK_HOUR_START = 8;
 	public static final Integer WORK_HOUR_END = 16;
 
-	public List<DisplayAppointmentDto> getAllAppointments() {
-		List<DisplayAppointmentDto> appointments = new ArrayList<>();
+	public List<AppointmentEntity> getAllAppointments() {
+		List<AppointmentEntity> appointments = new ArrayList<>();
 		appointmentRepo.findAll().stream()
-				.forEach(appointment -> appointments.add(AppointmentConverter.toDto(appointment)));
+				.forEach(appointment -> appointments.add(appointment));
 		return appointments;
 	}
 
@@ -260,7 +262,18 @@ public class AppointmentServiceImpl implements AppointmentService {
 			}
 
 		} else {
-			return getAllAppointments();
+			if (status != null && !status.isEmpty()) {
+				List<DisplayAppointmentDto> appointments = new ArrayList<>();
+				getAllAppointments().stream()
+						.filter(appointment -> appointment.getStatus().equals(Status.valueOf(status.toUpperCase())))
+						.forEach(appointment -> appointments.add(AppointmentConverter.toDto(appointment)));
+				return appointments;
+			} else {
+				List<DisplayAppointmentDto> appointments = new ArrayList<>();
+				getAllAppointments().stream()
+						.forEach(appointment -> appointments.add(AppointmentConverter.toDto(appointment)));
+				return appointments;
+			}
 		}
 	}
 
@@ -271,11 +284,12 @@ public class AppointmentServiceImpl implements AppointmentService {
 					|| status.strip().toUpperCase().equals(Status.DONE.name())
 					|| status.strip().toUpperCase().equals(Status.DOCTOR_CANCELLED.name())
 					|| status.strip().toUpperCase().equals(Status.USER_CANCELLED.name())
-					|| status.strip().toUpperCase().equals(Status.USER_REFUZED_TIME.name())) {
+					|| status.strip().toUpperCase().equals(Status.USER_REFUZED_TIME.name())
+					|| status.strip().toUpperCase().equals(Status.IN_PROGRESS.name())) {
 				return true;
 			}
 			throw new CustomMessageException(
-					"Please enter a valid status such as: 'ACTIVE','REFUZED','DONE','DOCTOR_CANCELLED','USER_CANCELLED','USER_REFUZED_TIME'!");
+					"Please enter a valid status such as: 'ACTIVE','REFUZED','DONE','DOCTOR_CANCELLED','USER_CANCELLED','IN_PROGRESS','USER_REFUZED_TIME'!");
 		}
 		return false;
 	}
@@ -335,6 +349,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 
 	@Override
+	@Transactional
 	public void setFeedbackAfterEightHoursNull(String defaultFeedback) {
 		appointmentRepo.getAppoinmentForUpdateFeedback().stream().map(appointment -> {
 			appointment.setFeedback(new FeedbackEntity(null, defaultFeedback, LocalDateTime.now()));
@@ -344,10 +359,12 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 
 	@Override
+	@Transactional
 	public DisplayAppointmentDto setAppointmentFeedback(Long id, @Valid CreateFeedbackDto dto, UserEntity thisUser) {
 		AppointmentEntity appointment = appointmentRepo.getActiveAppointmentForFeedback(thisUser.getUsername());
 		if(appointment != null) {
-			appointment.setFeedback(FeedbackConverter.toEntity(dto));
+			FeedbackEntity feedback = FeedbackConverter.toEntity(dto);
+			appointment.setFeedback(feedbackRepository.save(feedback));
 			return AppointmentConverter.toDto(appointmentRepo.save(appointment));
 		}
 		throw new DataIdNotFoundException("Can not find and active or in progress appointment with id: "+id);

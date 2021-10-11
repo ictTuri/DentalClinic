@@ -55,7 +55,7 @@ class AppointmentServiceImplTest {
 
 		when(appointmentRepo.findAll()).thenReturn(appointments);
 
-		List<DisplayAppointmentDto> returnedList = appService.getAllAppointments();
+		List<AppointmentEntity> returnedList = appService.getAllAppointments();
 
 		assertEquals(3, returnedList.size());
 		assertNotNull(returnedList);
