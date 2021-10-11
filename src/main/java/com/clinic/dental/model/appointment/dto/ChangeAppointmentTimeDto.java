@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class ChangeTimeAppointmentDto {
+public class ChangeAppointmentTimeDto {
 
 	@NotNull(message = "Please enter a day of format: 'YYYY-MM-DD'")
 	private LocalDate day;

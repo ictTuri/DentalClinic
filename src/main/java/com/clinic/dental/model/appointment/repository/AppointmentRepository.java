@@ -3,7 +3,9 @@ package com.clinic.dental.model.appointment.repository;
 import java.util.Collection;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.clinic.dental.model.appointment.AppointmentEntity;
 import com.clinic.dental.model.appointment.enums.Status;
@@ -25,5 +27,13 @@ public interface AppointmentRepository extends JpaRepository<AppointmentEntity, 
 
 	@Query(value = "SELECT * FROM appointments WHERE status NOT IN ('REFUZED','DOCTOR_CANCELLED','USER_CANCELLED') AND (AGE(date(now()),date)) <= '0'", nativeQuery = true)
 	Collection<AppointmentEntity> findAllAfterToday();
+
+	@Transactional
+	@Modifying
+	@Query(value = "UPDATE appointments SET status = 'DONE' WHERE status in ('ACTIVE') AND (AGE(date(now()),date)) >= '0'", nativeQuery = true)
+	void setStatusDoneAfterTime();
+
+	@Query(value = "SELECT * FROM appointments WHERE status = 'DONE' AND feedback IS NULL AND (AGE(now(),last_updated_at)) > '08:00:00'", nativeQuery = true)
+	Collection<AppointmentEntity> getAppoinmentForUpdateFeedback();
 
 }

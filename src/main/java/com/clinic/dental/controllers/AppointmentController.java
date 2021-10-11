@@ -3,7 +3,6 @@ package com.clinic.dental.controllers;
 import java.util.List;
 
 import javax.validation.Valid;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -12,10 +11,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.clinic.dental.model.appointment.dto.DisplayAppointmentDto;
-import com.clinic.dental.model.appointment.dto.ChangeTimeAppointmentDto;
+import com.clinic.dental.model.appointment.dto.ChangeAppointmentDentistDto;
+import com.clinic.dental.model.appointment.dto.ChangeAppointmentTimeDto;
 import com.clinic.dental.model.appointment.dto.CreatePublicAppointmentDto;
 import com.clinic.dental.model.appointment.dto.SlotDto;
 import com.clinic.dental.model.appointment.service.AppointmentService;
@@ -43,8 +44,8 @@ public class AppointmentController {
 	
 	@GetMapping()
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_PUBLIC','ROLE_DOCTOR','ROLE_SECRETARY')")
-	public ResponseEntity<List<DisplayAppointmentDto>> getMyAllAppointments(){
-		return new ResponseEntity<List<DisplayAppointmentDto>>(appointmentService.getMyAllAppointments(),HttpStatus.OK);
+	public ResponseEntity<List<DisplayAppointmentDto>> getMyAllAppointments(@RequestParam(name = "status", required = false) String status){
+		return new ResponseEntity<List<DisplayAppointmentDto>>(appointmentService.getMyAllAppointments(status),HttpStatus.OK);
 	}
 	
 	@GetMapping("{id}")
@@ -67,8 +68,14 @@ public class AppointmentController {
 	
 	@PostMapping("{id}/change-time")
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SECRETARY')")
-	public ResponseEntity<DisplayAppointmentDto> changeAppointmentTimeById(@PathVariable("id") Long id,@Valid @RequestBody ChangeTimeAppointmentDto dto){
+	public ResponseEntity<DisplayAppointmentDto> changeAppointmentTimeById(@PathVariable("id") Long id,@Valid @RequestBody ChangeAppointmentTimeDto dto){
 		return new ResponseEntity<DisplayAppointmentDto>(appointmentService.changeAppointmentTimeById(id,dto),HttpStatus.OK);
+	}
+	
+	@PostMapping("{id}/change-dentist")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SECRETARY')")
+	public ResponseEntity<DisplayAppointmentDto> changeAppointmentDentist(@PathVariable("id") Long id,@Valid @RequestBody ChangeAppointmentDentistDto dto){
+		return new ResponseEntity<DisplayAppointmentDto>(appointmentService.changeAppointmentDentist(id,dto),HttpStatus.OK);
 	}
 	
 	@PostMapping("/{id}/approve-new-time")

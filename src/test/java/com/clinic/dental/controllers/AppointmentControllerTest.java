@@ -17,9 +17,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.clinic.dental.model.appointment.converter.AppointmentConverter;
-import com.clinic.dental.model.appointment.dto.ChangeTimeAppointmentDto;
+import com.clinic.dental.model.appointment.dto.ChangeAppointmentTimeDto;
+import com.clinic.dental.model.appointment.dto.CreatePublicAppointmentDto;
 import com.clinic.dental.model.appointment.dto.DisplayAppointmentDto;
-import com.clinic.dental.model.appointment.dto.RezerveSlotDto;
 import com.clinic.dental.model.appointment.dto.SlotDto;
 import com.clinic.dental.model.appointment.service.AppointmentService;
 import com.clinic.dental.util.AppointmentUtilTest;
@@ -56,7 +56,7 @@ class AppointmentControllerTest {
 
 	@Test
 	void givenAppointmentList_WhenGetList_CheckValidateSize() {
-		ResponseEntity<List<DisplayAppointmentDto>> allAppointment = appointmentController.getMyAllAppointments();
+		ResponseEntity<List<DisplayAppointmentDto>> allAppointment = appointmentController.getMyAllAppointments(null);
 
 		assertEquals(HttpStatus.OK, allAppointment.getStatusCode());
 		assertNotNull(allAppointment);
@@ -145,7 +145,7 @@ class AppointmentControllerTest {
 	
 	@Test
 	void givenSlot_WhenRezerve_VerifyAppointment() {
-		RezerveSlotDto dto = RezerveSlotDtoUtilTest.rezerveSlot();
+		CreatePublicAppointmentDto dto = RezerveSlotDtoUtilTest.rezerveSlot();
 		DisplayAppointmentDto dtoGet = AppointmentConverter.toDto(AppointmentUtilTest.rezervedAppointment());
 		
 		Mockito.when(appointmentService.rezerveAppointment(dto)).thenReturn(dtoGet);
@@ -161,7 +161,7 @@ class AppointmentControllerTest {
 	@Test
 	void givenAppointment_WhenChangeTime_VerifyAppointment() {
 		Long id = 1L;
-		ChangeTimeAppointmentDto dtoNewTime = ChangeTimeAppointmentDtoUtilTest.changeTimeOne();
+		ChangeAppointmentTimeDto dtoNewTime = ChangeTimeAppointmentDtoUtilTest.changeTimeOne();
 		DisplayAppointmentDto dtoChangeTime = AppointmentConverter.toDto(AppointmentUtilTest.appointmentFive());
 
 		Mockito.when(appointmentService.changeAppointmentTimeById(id,dtoNewTime)).thenReturn(dtoChangeTime);

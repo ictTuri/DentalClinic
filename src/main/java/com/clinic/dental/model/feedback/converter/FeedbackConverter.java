@@ -11,11 +11,7 @@ public class FeedbackConverter {
 	private FeedbackConverter() {}
 	
 	public static FeedbackEntity toEntity(CreateFeedbackDto dto) {
-		FeedbackEntity entity = new FeedbackEntity();
-		entity.setId(null);
-		entity.setDescription(dto.getDescription());
-		entity.setCreatedAt(LocalDateTime.now());
-		return entity;
+		return new FeedbackEntity(null,dto.getDescription(),LocalDateTime.now());
 	}
 	
 	public static DisplayFeedbackDto toDto(FeedbackEntity entity) {

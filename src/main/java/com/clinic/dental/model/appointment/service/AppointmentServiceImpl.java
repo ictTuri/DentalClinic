@@ -10,7 +10,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-
 import javax.validation.Valid;
 
 import org.springframework.stereotype.Service;
@@ -21,11 +20,13 @@ import com.clinic.dental.exceptions.DataIdNotFoundException;
 import com.clinic.dental.model.appointment.AppointmentEntity;
 import com.clinic.dental.model.appointment.converter.AppointmentConverter;
 import com.clinic.dental.model.appointment.dto.DisplayAppointmentDto;
-import com.clinic.dental.model.appointment.dto.ChangeTimeAppointmentDto;
+import com.clinic.dental.model.appointment.dto.ChangeAppointmentDentistDto;
+import com.clinic.dental.model.appointment.dto.ChangeAppointmentTimeDto;
 import com.clinic.dental.model.appointment.dto.CreatePublicAppointmentDto;
 import com.clinic.dental.model.appointment.dto.SlotDto;
 import com.clinic.dental.model.appointment.enums.Status;
 import com.clinic.dental.model.appointment.repository.AppointmentRepository;
+import com.clinic.dental.model.feedback.FeedbackEntity;
 import com.clinic.dental.model.original_appointment.OriginalAppointmentEntity;
 import com.clinic.dental.model.original_appointment.converter.OriginalAppointmentConverter;
 import com.clinic.dental.model.original_appointment.repository.OriginalAppointmentRepository;
@@ -85,10 +86,10 @@ public class AppointmentServiceImpl implements AppointmentService {
 	public List<SlotDto> getFreeTimes() {
 		List<LocalDateTime> timeList = getSevenDaysForward(
 				LocalDateTime.now().truncatedTo(ChronoUnit.HOURS).plusHours(1), LocalDateTime.now().plusWeeks(1L));
-		
+
 		List<AppointmentEntity> appointmentList = appointmentRepo.findAllAfterToday().stream()
 				.filter(app -> !app.getStatus().equals(Status.REFUZED)).toList();
-		
+
 		final String[] doctorsList = userService.getDoctorsName(Role.ROLE_DOCTOR.toString());
 
 		List<SlotDto> listByAppoinment = new ArrayList<>();
@@ -99,19 +100,20 @@ public class AppointmentServiceImpl implements AppointmentService {
 		timeList.stream().map(time -> listOfSlots
 				.add(new SlotDto(time.toLocalDate(), time.toLocalTime(), time.plusHours(1).toLocalTime(), doctorsList)))
 				.collect(Collectors.toList());
-		for(SlotDto app: listByAppoinment) {
-			listOfSlots.stream().filter(slot -> slot.getDate().equals(app.getDate()) && slot.getVisitStart().equals(app.getVisitStart()))
-				.map(slot -> {
-					String[] str_array = slot.getDoctors();
-					List<String> list = new ArrayList<String>(Arrays.asList(str_array));
-					list.remove(app.getDoctors()[0]);
-					str_array = list.toArray(new String[0]);
-					slot.setDoctors(str_array);
-					return null;
-				}).collect(Collectors.toList());
+		for (SlotDto app : listByAppoinment) {
+			listOfSlots.stream().filter(
+					slot -> slot.getDate().equals(app.getDate()) && slot.getVisitStart().equals(app.getVisitStart()))
+					.map(slot -> {
+						String[] str_array = slot.getDoctors();
+						List<String> list = new ArrayList<String>(Arrays.asList(str_array));
+						list.remove(app.getDoctors()[0]);
+						str_array = list.toArray(new String[0]);
+						slot.setDoctors(str_array);
+						return null;
+					}).collect(Collectors.toList());
 		}
-		listOfSlots.stream().filter(slot -> slot.getDoctors()!=null)
-			.findFirst().map(slot -> listOfSlots.remove(slot));
+		listOfSlots.stream().filter(slot -> slot.getDoctors() != null).findFirst()
+				.map(slot -> listOfSlots.remove(slot));
 
 		return listOfSlots;
 	}
@@ -177,7 +179,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 	@Override
 	@Transactional
-	public DisplayAppointmentDto changeAppointmentTimeById(Long id, @Valid ChangeTimeAppointmentDto dto) {
+	public DisplayAppointmentDto changeAppointmentTimeById(Long id, @Valid ChangeAppointmentTimeDto dto) {
 		AppointmentEntity appointment = appointmentRepo.getById(id);
 		if (appointment != null) {
 			boolean hasFreeSlot = hasSlot(getFreeTimes(), dto.getDay(), dto.getStartTime());
@@ -193,6 +195,33 @@ public class AppointmentServiceImpl implements AppointmentService {
 			throw new CustomMessageException("Please pick another time!");
 		}
 		throw new DataIdNotFoundException("Can not find appointment with given id: " + id);
+	}
+
+	@Override
+	public DisplayAppointmentDto changeAppointmentDentist(Long id, @Valid ChangeAppointmentDentistDto dto) {
+		AppointmentEntity appointment = appointmentRepo.locateById(id);
+		if (appointment != null && appointment.getStatus().equals(Status.ACTIVE)) {
+			UserEntity dentist = userService.getDoctorByUsername(dto.getDentist().trim().toLowerCase());
+			if (dentist != null) {
+				boolean isDoctorFree = dentistIsFree(getFreeTimes(), appointment.getDate(), appointment.getStartTime(),
+						dentist.getUsername());
+				if (isDoctorFree) {
+					appointment.setDentist(dentist.getUsername());
+					appointment.setLastUpdatedAt(LocalDateTime.now());
+					appointment.setLastUpdatedBy(userService.getAuthenticatedUser().getUsername());
+					return AppointmentConverter.toDto(appointmentRepo.save(appointment));
+				}
+				throw new CustomMessageException("Dentist: " + dto.getDentist() + " is not free at this time");
+			}
+			throw new DataIdNotFoundException("Can not find dentist with given username: " + dto.getDentist());
+		}
+		throw new DataIdNotFoundException(
+				"Can not find appointment with given id: " + id + " or status did not match to ACTIVE.");
+	}
+
+	private boolean dentistIsFree(List<SlotDto> slots, LocalDate day, LocalTime startTime, String username) {
+		return slots.stream().anyMatch(slot -> slot.getVisitStart().equals(startTime.truncatedTo(ChronoUnit.HOURS))
+				&& slot.getDate().equals(day) && slot.getDoctors().toString().contains(username));
 	}
 
 	@Override
@@ -213,21 +242,54 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 
 	@Override
-	public List<DisplayAppointmentDto> getMyAllAppointments() {
+	public List<DisplayAppointmentDto> getMyAllAppointments(String status) {
 		UserEntity user = userService.getAuthenticatedUser();
 		if (user.getRole().equals(Role.ROLE_DOCTOR)) {
 			List<DisplayAppointmentDto> appointments = new ArrayList<>();
-			appointmentRepo.findByDentist(user.getUsername()).stream()
-					.forEach(appointment -> appointments.add(AppointmentConverter.toDto(appointment)));
-			return appointments;
+			if (isValidStatus(status)) {
+				appointmentRepo.findByDentist(user.getUsername()).stream()
+						.filter(appointment -> appointment.getStatus().equals(Status.valueOf(status.toUpperCase())))
+						.forEach(appointment -> appointments.add(AppointmentConverter.toDto(appointment)));
+				return appointments;
+			} else {
+				appointmentRepo.findByDentist(user.getUsername()).stream()
+						.forEach(appointment -> appointments.add(AppointmentConverter.toDto(appointment)));
+				return appointments;
+			}
+
 		} else if (user.getRole().equals(Role.ROLE_PUBLIC)) {
-			List<DisplayAppointmentDto> appointments = new ArrayList<>();
-			appointmentRepo.findByPatient(user).stream()
-					.forEach(appointment -> appointments.add(AppointmentConverter.toDto(appointment)));
-			return appointments;
+			if (status != null && !status.isEmpty()) {
+				List<DisplayAppointmentDto> appointments = new ArrayList<>();
+				appointmentRepo.findByPatient(user).stream()
+						.filter(appointment -> appointment.getStatus().equals(Status.valueOf(status.toUpperCase())))
+						.forEach(appointment -> appointments.add(AppointmentConverter.toDto(appointment)));
+				return appointments;
+			} else {
+				List<DisplayAppointmentDto> appointments = new ArrayList<>();
+				appointmentRepo.findByPatient(user).stream()
+						.forEach(appointment -> appointments.add(AppointmentConverter.toDto(appointment)));
+				return appointments;
+			}
+
 		} else {
 			return getAllAppointments();
 		}
+	}
+
+	private boolean isValidStatus(String status) {
+		if (status != null && !status.isBlank()) {
+			if (status.strip().toUpperCase().equals(Status.ACTIVE.name())
+					|| status.strip().toUpperCase().equals(Status.REFUZED.name())
+					|| status.strip().toUpperCase().equals(Status.DONE.name())
+					|| status.strip().toUpperCase().equals(Status.DOCTOR_CANCELLED.name())
+					|| status.strip().toUpperCase().equals(Status.USER_CANCELLED.name())
+					|| status.strip().toUpperCase().equals(Status.USER_REFUZED_TIME.name())) {
+				return true;
+			}
+			throw new CustomMessageException(
+					"Please enter a valid status such as: 'ACTIVE','REFUZED','DONE','DOCTOR_CANCELLED','USER_CANCELLED','USER_REFUZED_TIME'!");
+		}
+		return false;
 	}
 
 	@Override
@@ -282,5 +344,14 @@ public class AppointmentServiceImpl implements AppointmentService {
 			throw new CustomMessageException("Selected Appointment not your appointment!");
 		}
 		throw new DataIdNotFoundException("Can not find with given id: " + id + ".  Can not Cancel!");
+	}
+
+	@Override
+	public void setFeedbackAfterEightHoursNull(String defaultFeedback) {
+		appointmentRepo.getAppoinmentForUpdateFeedback().stream().map(appointment -> {
+			appointment.setFeedback(new FeedbackEntity(null, defaultFeedback, LocalDateTime.now()));
+			appointmentRepo.save(appointment);
+			return null;
+		});
 	}
 }
