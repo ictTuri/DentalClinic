@@ -87,11 +87,24 @@ public class AppointmentUtilTest {
 		return app;
 	}
 	
-
+	public static AppointmentEntity appointmentSix() {
+		AppointmentEntity app = new AppointmentEntity();
+		app.setDate(LocalDate.of(2021, 11, 12));
+		app.setDentist("newDentist");
+		app.setId(1L);
+		app.setPatient(UserUtilTest.publicOne());
+		app.setStartTime(LocalTime.of(15, 00));
+		app.setEndTime(LocalTime.of(16, 00));
+		app.setStatus(Status.ACTIVE);
+		app.setType(AppointmentType.IMPLANTS);
+		app.setCreatedAt(LocalDateTime.now());
+		return app;
+	}
+	
 	public static AppointmentEntity appointmentFive() {
 		AppointmentEntity app = new AppointmentEntity();
 		app.setDate(LocalDate.of(2021, 11, 12));
-		app.setDentist("dentistname");
+		app.setDentist("doctorOne");
 		app.setId(1L);
 		app.setPatient(UserUtilTest.publicOne());
 		app.setStartTime(LocalTime.of(15, 00));
@@ -108,7 +121,7 @@ public class AppointmentUtilTest {
 	
 	public static List<SlotDto> getSLots(){ 
 		List<LocalDateTime> timeList = getSevenDaysForward(LocalDateTime.now().truncatedTo(ChronoUnit.HOURS),LocalDateTime.now().plusWeeks(1L));
-		String[] doctors = DoctorListUtilTest.getDoctors();
+		String[] doctors = AppointmentDtoUtilTest.getDoctors();
 		List<SlotDto> getSLots =  new ArrayList<>();
 		timeList.stream()
 		.map(time -> getSLots.add(

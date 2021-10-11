@@ -20,6 +20,9 @@ import com.clinic.dental.model.appointment.dto.ChangeAppointmentTimeDto;
 import com.clinic.dental.model.appointment.dto.CreatePublicAppointmentDto;
 import com.clinic.dental.model.appointment.dto.SlotDto;
 import com.clinic.dental.model.appointment.service.AppointmentService;
+import com.clinic.dental.model.feedback.dto.CreateFeedbackDto;
+import com.clinic.dental.model.user.UserEntity;
+import com.clinic.dental.model.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -29,6 +32,8 @@ import lombok.RequiredArgsConstructor;
 public class AppointmentController {
 
 	private final AppointmentService appointmentService;
+	private final UserService userService;
+
 	
 	@GetMapping("/free-schedule")
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_PUBLIC')")
@@ -39,19 +44,29 @@ public class AppointmentController {
 	@PostMapping("/rezerve")
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_PUBLIC')")
 	public ResponseEntity<DisplayAppointmentDto> rezerveAppointment(@Valid @RequestBody CreatePublicAppointmentDto rezerveDto){
-		return new ResponseEntity<DisplayAppointmentDto>(appointmentService.rezerveAppointment(rezerveDto),HttpStatus.CREATED);
+		UserEntity thisUser = userService.getAuthenticatedUser();
+		return new ResponseEntity<DisplayAppointmentDto>(appointmentService.rezerveAppointment(rezerveDto,thisUser),HttpStatus.CREATED);
 	}
 	
 	@GetMapping()
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_PUBLIC','ROLE_DOCTOR','ROLE_SECRETARY')")
 	public ResponseEntity<List<DisplayAppointmentDto>> getMyAllAppointments(@RequestParam(name = "status", required = false) String status){
-		return new ResponseEntity<List<DisplayAppointmentDto>>(appointmentService.getMyAllAppointments(status),HttpStatus.OK);
+		UserEntity thisUser = userService.getAuthenticatedUser();
+		return new ResponseEntity<List<DisplayAppointmentDto>>(appointmentService.getMyAllAppointments(status,thisUser),HttpStatus.OK);
 	}
 	
 	@GetMapping("{id}")
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_PUBLIC','ROLE_DOCTOR','ROLE_SECRETARY')")
 	public ResponseEntity<DisplayAppointmentDto> getAppointmentById(@PathVariable("id") Long id){
-		return new ResponseEntity<DisplayAppointmentDto>(appointmentService.getAppointmentById(id),HttpStatus.OK);
+		UserEntity thisUser = userService.getAuthenticatedUser();
+		return new ResponseEntity<DisplayAppointmentDto>(appointmentService.getAppointmentById(id,thisUser),HttpStatus.OK);
+	}
+	
+	@PostMapping("{id}/feedback")
+	@PreAuthorize("hasAnyRole('ROLE_DOCTOR')")
+	public ResponseEntity<DisplayAppointmentDto> setAppointmentFeedback(@PathVariable("id") Long id, @RequestBody @Valid CreateFeedbackDto dto){
+		UserEntity thisUser = userService.getAuthenticatedUser();
+		return new ResponseEntity<DisplayAppointmentDto>(appointmentService.setAppointmentFeedback(id,dto,thisUser),HttpStatus.CREATED);
 	}
 	
 	@PostMapping("{id}/approve")

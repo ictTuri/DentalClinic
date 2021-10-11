@@ -30,10 +30,13 @@ public interface AppointmentRepository extends JpaRepository<AppointmentEntity, 
 
 	@Transactional
 	@Modifying
-	@Query(value = "UPDATE appointments SET status = 'DONE' WHERE status in ('ACTIVE') AND (AGE(date(now()),date)) >= '0'", nativeQuery = true)
+	@Query(value = "UPDATE appointments SET status = 'IN_PROGRESS' WHERE status in ('ACTIVE') AND (AGE(date(now()),date)) >= '0'", nativeQuery = true)
 	void setStatusDoneAfterTime();
 
 	@Query(value = "SELECT * FROM appointments WHERE status = 'DONE' AND feedback IS NULL AND (AGE(now(),last_updated_at)) > '08:00:00'", nativeQuery = true)
 	Collection<AppointmentEntity> getAppoinmentForUpdateFeedback();
+
+	@Query("SELECT app FROM AppointmentEntity app WHERE app.dentist = ?1 AND app.status = 'ACTIVE' OR app.status = 'IN_PROGRESS' ")
+	AppointmentEntity getActiveAppointmentForFeedback(String username);
 
 }

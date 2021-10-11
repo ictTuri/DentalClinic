@@ -27,6 +27,8 @@ import com.clinic.dental.model.appointment.dto.SlotDto;
 import com.clinic.dental.model.appointment.enums.Status;
 import com.clinic.dental.model.appointment.repository.AppointmentRepository;
 import com.clinic.dental.model.feedback.FeedbackEntity;
+import com.clinic.dental.model.feedback.converter.FeedbackConverter;
+import com.clinic.dental.model.feedback.dto.CreateFeedbackDto;
 import com.clinic.dental.model.original_appointment.OriginalAppointmentEntity;
 import com.clinic.dental.model.original_appointment.converter.OriginalAppointmentConverter;
 import com.clinic.dental.model.original_appointment.repository.OriginalAppointmentRepository;
@@ -48,7 +50,6 @@ public class AppointmentServiceImpl implements AppointmentService {
 	public static final Integer WORK_HOUR_START = 8;
 	public static final Integer WORK_HOUR_END = 16;
 
-	@Override
 	public List<DisplayAppointmentDto> getAllAppointments() {
 		List<DisplayAppointmentDto> appointments = new ArrayList<>();
 		appointmentRepo.findAll().stream()
@@ -57,29 +58,18 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 
 	@Override
-	public DisplayAppointmentDto getAppointmentById(Long id) {
-		UserEntity user = userService.getAuthenticatedUser();
+	public DisplayAppointmentDto getAppointmentById(Long id, UserEntity authenticated) {
 		AppointmentEntity appointment = appointmentRepo.locateById(id);
 		if (appointment != null) {
-			if (user.getRole().equals(Role.ROLE_PUBLIC) && appointment.getPatient().equals(user)) {
+			if (authenticated.getRole().equals(Role.ROLE_PUBLIC) && appointment.getPatient().equals(authenticated)) {
 				return AppointmentConverter.toDto(appointment);
-			} else if (user.getRole().equals(Role.ROLE_DOCTOR) && appointment.getDentist().equals(user.getUsername())) {
+			} else if (authenticated.getRole().equals(Role.ROLE_DOCTOR) && appointment.getDentist().equals(authenticated.getUsername())) {
 				return AppointmentConverter.toDto(appointment);
 			} else {
 				return AppointmentConverter.toDto(appointment);
 			}
 		}
 		throw new DataIdNotFoundException("Can not find appointment with id: " + id);
-	}
-
-	@Override
-	@Transactional
-	public Void deleteAppointmentById(Long id) {
-		AppointmentEntity appointment = appointmentRepo.getById(id);
-		if (appointment != null) {
-			appointmentRepo.delete(appointment);
-		}
-		throw new DataIdNotFoundException("Can not find appointment wit given ID: " + id);
 	}
 
 	@Override
@@ -118,7 +108,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 		return listOfSlots;
 	}
 
-	public static List<LocalDateTime> getSevenDaysForward(LocalDateTime startDate, LocalDateTime endDate) {
+	private static List<LocalDateTime> getSevenDaysForward(LocalDateTime startDate, LocalDateTime endDate) {
 		long numOfDaysBetween = ChronoUnit.HOURS.between(startDate, endDate);
 		return IntStream.iterate(0, i -> i + 1).limit(numOfDaysBetween).mapToObj(i -> startDate.plusHours(i))
 				.filter(i -> isWorkingHours(i)).filter(i -> isWorkingDay(i)).collect(Collectors.toList());
@@ -135,13 +125,12 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 	@Override
 	@Transactional
-	public DisplayAppointmentDto rezerveAppointment(@Valid CreatePublicAppointmentDto rezerveDto) {
-		UserEntity thisUser = userService.getAuthenticatedUser();
+	public DisplayAppointmentDto rezerveAppointment(@Valid CreatePublicAppointmentDto rezerveDto, UserEntity authenticated) {
 		List<SlotDto> freeSlots = getFreeTimes();
 		boolean hasFreeSlot = hasSlot(freeSlots, rezerveDto.getDate(), rezerveDto.getStartTime());
 		if (rezerveDto.getDentist() == null) {
 			if (hasFreeSlot) {
-				AppointmentEntity appointment = AppointmentConverter.rezervationToEntity(rezerveDto, thisUser,
+				AppointmentEntity appointment = AppointmentConverter.rezervationToEntity(rezerveDto, authenticated,
 						"No Doctor Selected");
 				return AppointmentConverter.toDto(appointmentRepo.save(appointment));
 			}
@@ -150,7 +139,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 			UserEntity doctorSelected = userService.getDoctorByUsername(rezerveDto.getDentist());
 
 			if (hasFreeSlot) {
-				AppointmentEntity appointment = AppointmentConverter.rezervationToEntity(rezerveDto, thisUser,
+				AppointmentEntity appointment = AppointmentConverter.rezervationToEntity(rezerveDto, authenticated,
 						doctorSelected.getUsername());
 				return AppointmentConverter.toDto(appointmentRepo.save(appointment));
 			}
@@ -242,31 +231,30 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 
 	@Override
-	public List<DisplayAppointmentDto> getMyAllAppointments(String status) {
-		UserEntity user = userService.getAuthenticatedUser();
-		if (user.getRole().equals(Role.ROLE_DOCTOR)) {
+	public List<DisplayAppointmentDto> getMyAllAppointments(String status, UserEntity authentication) {
+		if (authentication.getRole().equals(Role.ROLE_DOCTOR)) {
 			List<DisplayAppointmentDto> appointments = new ArrayList<>();
 			if (isValidStatus(status)) {
-				appointmentRepo.findByDentist(user.getUsername()).stream()
+				appointmentRepo.findByDentist(authentication.getUsername()).stream()
 						.filter(appointment -> appointment.getStatus().equals(Status.valueOf(status.toUpperCase())))
 						.forEach(appointment -> appointments.add(AppointmentConverter.toDto(appointment)));
 				return appointments;
 			} else {
-				appointmentRepo.findByDentist(user.getUsername()).stream()
+				appointmentRepo.findByDentist(authentication.getUsername()).stream()
 						.forEach(appointment -> appointments.add(AppointmentConverter.toDto(appointment)));
 				return appointments;
 			}
 
-		} else if (user.getRole().equals(Role.ROLE_PUBLIC)) {
+		} else if (authentication.getRole().equals(Role.ROLE_PUBLIC)) {
 			if (status != null && !status.isEmpty()) {
 				List<DisplayAppointmentDto> appointments = new ArrayList<>();
-				appointmentRepo.findByPatient(user).stream()
+				appointmentRepo.findByPatient(authentication).stream()
 						.filter(appointment -> appointment.getStatus().equals(Status.valueOf(status.toUpperCase())))
 						.forEach(appointment -> appointments.add(AppointmentConverter.toDto(appointment)));
 				return appointments;
 			} else {
 				List<DisplayAppointmentDto> appointments = new ArrayList<>();
-				appointmentRepo.findByPatient(user).stream()
+				appointmentRepo.findByPatient(authentication).stream()
 						.forEach(appointment -> appointments.add(AppointmentConverter.toDto(appointment)));
 				return appointments;
 			}
@@ -353,5 +341,15 @@ public class AppointmentServiceImpl implements AppointmentService {
 			appointmentRepo.save(appointment);
 			return null;
 		});
+	}
+
+	@Override
+	public DisplayAppointmentDto setAppointmentFeedback(Long id, @Valid CreateFeedbackDto dto, UserEntity thisUser) {
+		AppointmentEntity appointment = appointmentRepo.getActiveAppointmentForFeedback(thisUser.getUsername());
+		if(appointment != null) {
+			appointment.setFeedback(FeedbackConverter.toEntity(dto));
+			return AppointmentConverter.toDto(appointmentRepo.save(appointment));
+		}
+		throw new DataIdNotFoundException("Can not find and active or in progress appointment with id: "+id);
 	}
 }

@@ -9,18 +9,17 @@ import com.clinic.dental.model.appointment.dto.ChangeAppointmentDentistDto;
 import com.clinic.dental.model.appointment.dto.ChangeAppointmentTimeDto;
 import com.clinic.dental.model.appointment.dto.CreatePublicAppointmentDto;
 import com.clinic.dental.model.appointment.dto.SlotDto;
+import com.clinic.dental.model.feedback.dto.CreateFeedbackDto;
+import com.clinic.dental.model.user.UserEntity;
 
 public interface AppointmentService {
-
 	List<DisplayAppointmentDto> getAllAppointments();
 
-	DisplayAppointmentDto getAppointmentById(Long id);
-
-	Void deleteAppointmentById(Long id);
+	DisplayAppointmentDto getAppointmentById(Long id, UserEntity authenticated);
 
 	List<SlotDto> getFreeTimes();
 
-	DisplayAppointmentDto rezerveAppointment(@Valid CreatePublicAppointmentDto rezerveDto);
+	DisplayAppointmentDto rezerveAppointment(@Valid CreatePublicAppointmentDto rezerveDto, UserEntity authenticated);
 
 	DisplayAppointmentDto approveAppointmentById(Long id);
 
@@ -28,7 +27,7 @@ public interface AppointmentService {
 
 	DisplayAppointmentDto closeAppointmentById(Long id);
 
-	List<DisplayAppointmentDto> getMyAllAppointments(String status);
+	List<DisplayAppointmentDto> getMyAllAppointments(String status, UserEntity thisUser);
 
 	DisplayAppointmentDto approveNewTimeAppointment(Long id);
 
@@ -39,5 +38,7 @@ public interface AppointmentService {
 	DisplayAppointmentDto changeAppointmentDentist(Long id, @Valid ChangeAppointmentDentistDto dto);
 
 	void setFeedbackAfterEightHoursNull(String defaultFeedback);
+
+	DisplayAppointmentDto setAppointmentFeedback(Long id, @Valid CreateFeedbackDto dto, UserEntity thisUser);
 
 }

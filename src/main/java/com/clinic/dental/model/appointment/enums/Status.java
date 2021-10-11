@@ -7,6 +7,7 @@ public enum Status {
 	USER_CANCELLED("User Cancelled appointment"),
 	DOCTOR_CANCELLED("Doctor Cancelled appointment"),
 	REFUZED("Refuzed appointments"),
+	IN_PROGRESS("In progress appointment"),
 	ACTIVE("Active appointments"),
 	DONE("Closed appointment");
 

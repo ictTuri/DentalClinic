@@ -75,4 +75,38 @@ public class UserUtilTest {
 		return user;
 	}
 	
+	public static UserEntity doctorOne() {
+		UserEntity user = new UserEntity();
+		user.setId(2L);
+		user.setFirstName("DoctorOne");
+		user.setLastName("DoctorOne");
+		user.setUsername("doctorOne");
+		user.setEmail("doctorOne@gmail.com");
+		user.setNID("D00000001D");
+		user.setRole(Role.ROLE_DOCTOR);
+		user.setGender(Gender.MALE);
+		user.setActive(true);
+		user.setAge(25);
+		user.setPhone("0970000005");
+		user.setCreatedAt(LocalDateTime.now());
+		return user;
+	}
+	
+	public static UserEntity doctorTwo() {
+		UserEntity user = new UserEntity();
+		user.setId(2L);
+		user.setFirstName("DoctorTwo");
+		user.setLastName("DoctorTwo");
+		user.setUsername("doctorTwo");
+		user.setEmail("doctorTwo@gmail.com");
+		user.setNID("D00000002D");
+		user.setRole(Role.ROLE_DOCTOR);
+		user.setGender(Gender.FEMALE);
+		user.setActive(true);
+		user.setAge(25);
+		user.setPhone("0970000006");
+		user.setCreatedAt(LocalDateTime.now());
+		return user;
+	}
+	
 }

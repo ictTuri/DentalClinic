@@ -2,6 +2,7 @@ package com.clinic.dental.controllers;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -11,20 +12,22 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.clinic.dental.model.appointment.converter.AppointmentConverter;
+import com.clinic.dental.model.appointment.dto.ChangeAppointmentDentistDto;
 import com.clinic.dental.model.appointment.dto.ChangeAppointmentTimeDto;
 import com.clinic.dental.model.appointment.dto.CreatePublicAppointmentDto;
 import com.clinic.dental.model.appointment.dto.DisplayAppointmentDto;
 import com.clinic.dental.model.appointment.dto.SlotDto;
 import com.clinic.dental.model.appointment.service.AppointmentService;
+import com.clinic.dental.model.user.UserEntity;
+import com.clinic.dental.model.user.service.UserService;
 import com.clinic.dental.util.AppointmentUtilTest;
-import com.clinic.dental.util.ChangeTimeAppointmentDtoUtilTest;
-import com.clinic.dental.util.RezerveSlotDtoUtilTest;
+import com.clinic.dental.util.UserUtilTest;
+import com.clinic.dental.util.AppointmentDtoUtilTest;
 
 @ExtendWith(MockitoExtension.class)
 class AppointmentControllerTest {
@@ -33,18 +36,21 @@ class AppointmentControllerTest {
 	AppointmentController appointmentController;
 
 	@Mock
+	UserService userService;
+	
+	@Mock
 	AppointmentService appointmentService;
 
 	@BeforeEach
 	void setup() {
-		appointmentController = new AppointmentController(appointmentService);
+		appointmentController = new AppointmentController(appointmentService, userService);
 	}
 
 	@Test
 	void givenFreeSchedule_WhenGetList_CheckValidateList() {
 		List<SlotDto> slots = AppointmentUtilTest.getSLots();
 
-		Mockito.when(appointmentService.getFreeTimes()).thenReturn(slots);
+		when(appointmentService.getFreeTimes()).thenReturn(slots);
 
 		ResponseEntity<List<SlotDto>> allSlots = appointmentController.getFreeTimes();
 
@@ -68,7 +74,7 @@ class AppointmentControllerTest {
 		Long id = 1L;
 		DisplayAppointmentDto dtoCancelled = AppointmentConverter.toDto(AppointmentUtilTest.appointmentFour());
 
-		Mockito.when(appointmentService.cancelAppointment(id)).thenReturn(dtoCancelled);
+		when(appointmentService.cancelAppointment(id)).thenReturn(dtoCancelled);
 
 		ResponseEntity<DisplayAppointmentDto> cancelledApp = appointmentController.cancelAppointment(id);
 
@@ -81,7 +87,7 @@ class AppointmentControllerTest {
 	void givenAppointment_WhenRefuzeNewTime_VerifyStatus() {
 		DisplayAppointmentDto dtoRefuzed = AppointmentConverter.toDto(AppointmentUtilTest.appointmentUserRefuzed());
 
-		Mockito.when(appointmentService.refuzeNewTimeAppointment(dtoRefuzed.getId())).thenReturn(dtoRefuzed);
+		when(appointmentService.refuzeNewTimeAppointment(dtoRefuzed.getId())).thenReturn(dtoRefuzed);
 
 		ResponseEntity<DisplayAppointmentDto> refuzedApp = appointmentController.refuzeNewTimeAppointment(dtoRefuzed.getId());
 
@@ -94,7 +100,7 @@ class AppointmentControllerTest {
 	void givenAppointment_WhenApproveNewTime_VerifyStatus() {
 		DisplayAppointmentDto dtoApproved = AppointmentConverter.toDto(AppointmentUtilTest.appointmentUserApprove());
 
-		Mockito.when(appointmentService.approveNewTimeAppointment(dtoApproved.getId())).thenReturn(dtoApproved);
+		when(appointmentService.approveNewTimeAppointment(dtoApproved.getId())).thenReturn(dtoApproved);
 
 		ResponseEntity<DisplayAppointmentDto> approvedApp = appointmentController.approveNewTimeAppointment(dtoApproved.getId());
 
@@ -107,7 +113,7 @@ class AppointmentControllerTest {
 	void givenAppointment_WhenClose_VerifyStatus() {
 		DisplayAppointmentDto dtoClosed = AppointmentConverter.toDto(AppointmentUtilTest.appointmentClosed());
 
-		Mockito.when(appointmentService.closeAppointmentById(dtoClosed.getId())).thenReturn(dtoClosed);
+		when(appointmentService.closeAppointmentById(dtoClosed.getId())).thenReturn(dtoClosed);
 
 		ResponseEntity<DisplayAppointmentDto> closedApp = appointmentController.closeAppointmentById(dtoClosed.getId());
 
@@ -120,7 +126,7 @@ class AppointmentControllerTest {
 	void givenAppointment_WhenApproveById_VerifyStatus() {
 		DisplayAppointmentDto dtoApproved = AppointmentConverter.toDto(AppointmentUtilTest.appointmentUserApprove());
 
-		Mockito.when(appointmentService.approveAppointmentById(dtoApproved.getId())).thenReturn(dtoApproved);
+		when(appointmentService.approveAppointmentById(dtoApproved.getId())).thenReturn(dtoApproved);
 
 		ResponseEntity<DisplayAppointmentDto> approvedByIdApp = appointmentController.approveAppointmentById(dtoApproved.getId());
 
@@ -131,10 +137,13 @@ class AppointmentControllerTest {
 	
 	@Test
 	void givenAppointment_WhenGetById_VerifyAppointment() {
+		UserEntity thisUser = UserUtilTest.publicOne();
 		DisplayAppointmentDto dtoGet = AppointmentConverter.toDto(AppointmentUtilTest.appointmentFour());
 
-		Mockito.when(appointmentService.getAppointmentById(dtoGet.getId())).thenReturn(dtoGet);
-
+		when(userService.getAuthenticatedUser()).thenReturn(thisUser);
+		when(appointmentService.getAppointmentById(dtoGet.getId(),thisUser)).thenReturn(dtoGet);
+		
+		
 		ResponseEntity<DisplayAppointmentDto> getByIdApp = appointmentController.getAppointmentById(dtoGet.getId());
 
 		assertEquals(HttpStatus.OK, getByIdApp.getStatusCode());
@@ -145,10 +154,12 @@ class AppointmentControllerTest {
 	
 	@Test
 	void givenSlot_WhenRezerve_VerifyAppointment() {
-		CreatePublicAppointmentDto dto = RezerveSlotDtoUtilTest.rezerveSlot();
-		DisplayAppointmentDto dtoGet = AppointmentConverter.toDto(AppointmentUtilTest.rezervedAppointment());
+		UserEntity thisUser = UserUtilTest.publicOne();
+		CreatePublicAppointmentDto dto = AppointmentDtoUtilTest.rezerveSlot();
+		DisplayAppointmentDto dtoToGet = AppointmentConverter.toDto(AppointmentUtilTest.rezervedAppointment());
 		
-		Mockito.when(appointmentService.rezerveAppointment(dto)).thenReturn(dtoGet);
+		when(userService.getAuthenticatedUser()).thenReturn(thisUser);
+		when(appointmentService.rezerveAppointment(dto,thisUser)).thenReturn(dtoToGet);
 		
 		ResponseEntity<DisplayAppointmentDto> rezerveAppointmen = appointmentController.rezerveAppointment(dto);
 
@@ -161,17 +172,32 @@ class AppointmentControllerTest {
 	@Test
 	void givenAppointment_WhenChangeTime_VerifyAppointment() {
 		Long id = 1L;
-		ChangeAppointmentTimeDto dtoNewTime = ChangeTimeAppointmentDtoUtilTest.changeTimeOne();
+		ChangeAppointmentTimeDto dtoNewTime = AppointmentDtoUtilTest.changeTimeOne();
 		DisplayAppointmentDto dtoChangeTime = AppointmentConverter.toDto(AppointmentUtilTest.appointmentFive());
 
-		Mockito.when(appointmentService.changeAppointmentTimeById(id,dtoNewTime)).thenReturn(dtoChangeTime);
+		when(appointmentService.changeAppointmentTimeById(id,dtoNewTime)).thenReturn(dtoChangeTime);
 
 		ResponseEntity<DisplayAppointmentDto> cangeTimeApp = appointmentController.changeAppointmentTimeById(id,dtoNewTime);
 
 		assertEquals(HttpStatus.OK, cangeTimeApp.getStatusCode());
-		assertEquals("dentistname", cangeTimeApp.getBody().getDentist());
 		assertEquals(LocalDate.of(2021, 11, 12), cangeTimeApp.getBody().getDate());
 		assertNotNull(cangeTimeApp);
+	}
+	
+	@Test
+	void givenAppointment_WhenChangeDentist_VerifyAppointment() {
+		Long id = 1L;
+		ChangeAppointmentDentistDto dtoNewDentist = AppointmentDtoUtilTest.changeDentistOne();
+		DisplayAppointmentDto dtoChangeDentist = AppointmentConverter.toDto(AppointmentUtilTest.appointmentSix());
+
+		when(appointmentService.changeAppointmentDentist(id,dtoNewDentist)).thenReturn(dtoChangeDentist);
+
+		ResponseEntity<DisplayAppointmentDto> cangeDentistApp = appointmentController.changeAppointmentDentist(id,dtoNewDentist);
+
+		assertEquals(HttpStatus.OK, cangeDentistApp.getStatusCode());
+		assertEquals("newDentist", cangeDentistApp.getBody().getDentist());
+		assertEquals(LocalDate.of(2021, 11, 12), cangeDentistApp.getBody().getDate());
+		assertNotNull(cangeDentistApp);
 	}
 	
 }
