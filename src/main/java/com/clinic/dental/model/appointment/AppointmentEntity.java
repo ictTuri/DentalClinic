@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -42,7 +43,7 @@ public class AppointmentEntity{
 	private LocalDate date;
 	private LocalTime startTime;
 	private LocalTime endTime;
-	@OneToOne
+	@OneToOne(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "feedback", referencedColumnName = "id", nullable = true)
 	private FeedbackEntity feedback;
 	

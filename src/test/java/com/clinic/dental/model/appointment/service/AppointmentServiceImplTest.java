@@ -14,24 +14,35 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.clinic.dental.exceptions.CustomMessageException;
 import com.clinic.dental.exceptions.DataIdNotFoundException;
 import com.clinic.dental.model.appointment.AppointmentEntity;
+import com.clinic.dental.model.appointment.dto.CreatePublicAppointmentDto;
 import com.clinic.dental.model.appointment.dto.DisplayAppointmentDto;
+import com.clinic.dental.model.appointment.dto.SlotDto;
 import com.clinic.dental.model.appointment.enums.Status;
 import com.clinic.dental.model.appointment.repository.AppointmentRepository;
 import com.clinic.dental.model.original_appointment.repository.OriginalAppointmentRepository;
 import com.clinic.dental.model.user.UserEntity;
+import com.clinic.dental.model.user.enums.Role;
+import com.clinic.dental.model.user.repository.UserRepository;
 import com.clinic.dental.model.user.service.UserService;
+import com.clinic.dental.util.AppointmentDtoUtilTest;
 import com.clinic.dental.util.AppointmentUtilTest;
 import com.clinic.dental.util.UserUtilTest;
 
+
 @SpringBootTest
+@Transactional
 class AppointmentServiceImplTest {
 	@InjectMocks
 	AppointmentServiceImpl appService;
 	@Mock
 	AppointmentRepository appointmentRepo;
+	@Mock
+	UserRepository userRepo;
 	@Mock
 	OriginalAppointmentRepository originalAppointmentRepo;
 	@Mock
@@ -94,6 +105,22 @@ class AppointmentServiceImplTest {
 		assertNotNull(noDoctorDto);
 		assertEquals(Status.USER_CANCELLED.toString(), noDoctorDto.getStatus());
 	}
+	
+	@Test
+	void givenSlotDtoList_WhenAskedFor_Validate() {
+		List<AppointmentEntity> appointmentList = new ArrayList<>();
+		appointmentList.add(app1);
+		appointmentList.add(app2);
+		appointmentList.add(app3);
+		String[] doctors = {"dentist","doctor"};
+		
+		when(appointmentRepo.findAllAfterToday()).thenReturn(appointmentList);
+		when(userService.getDoctorsName(Role.ROLE_DOCTOR.toString())).thenReturn(doctors);
+		
+		List<SlotDto> slots = appService.getFreeTimes();
+		
+		assertNotNull(slots);
+	}
 
 	@Test
 	void givenLocalDateTime_WhenCheckIsWorkingHour_Validate() throws IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
@@ -122,5 +149,31 @@ class AppointmentServiceImplTest {
 		List<LocalDateTime> timeList = (List<LocalDateTime>) method.invoke(appService, startTime,startTime.plusDays(7));
 		assertNotNull(timeList);
 	}
+	
+	@Test
+	void givenDto_WhenRezerve_thenThrows() {
+		CreatePublicAppointmentDto dto = AppointmentDtoUtilTest.rezerveSlot();
+		UserEntity user = UserUtilTest.publicTwo();
+		
+		assertThrows(CustomMessageException.class, ()-> appService.rezerveAppointment(dto, user));
+	}
 
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

@@ -54,8 +54,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 	public List<AppointmentEntity> getAllAppointments() {
 		List<AppointmentEntity> appointments = new ArrayList<>();
-		appointmentRepo.findAll().stream()
-				.forEach(appointment -> appointments.add(appointment));
+		appointmentRepo.findAll().stream().forEach(appointment -> appointments.add(appointment));
 		return appointments;
 	}
 
@@ -65,7 +64,8 @@ public class AppointmentServiceImpl implements AppointmentService {
 		if (appointment != null) {
 			if (authenticated.getRole().equals(Role.ROLE_PUBLIC) && appointment.getPatient().equals(authenticated)) {
 				return AppointmentConverter.toDto(appointment);
-			} else if (authenticated.getRole().equals(Role.ROLE_DOCTOR) && appointment.getDentist().equals(authenticated.getUsername())) {
+			} else if (authenticated.getRole().equals(Role.ROLE_DOCTOR)
+					&& appointment.getDentist().equals(authenticated.getUsername())) {
 				return AppointmentConverter.toDto(appointment);
 			} else {
 				return AppointmentConverter.toDto(appointment);
@@ -127,9 +127,11 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 	@Override
 	@Transactional
-	public DisplayAppointmentDto rezerveAppointment(@Valid CreatePublicAppointmentDto rezerveDto, UserEntity authenticated) {
+	public DisplayAppointmentDto rezerveAppointment(@Valid CreatePublicAppointmentDto rezerveDto,
+			UserEntity authenticated) {
 		List<SlotDto> freeSlots = getFreeTimes();
-		boolean hasFreeSlot = hasSlot(freeSlots, rezerveDto.getDate(), rezerveDto.getStartTime());
+		boolean hasFreeSlot = hasSlot(freeSlots, rezerveDto.getDate(), rezerveDto.getStartTime(),
+				rezerveDto.getDentist());
 		if (rezerveDto.getDentist() == null) {
 			if (hasFreeSlot) {
 				AppointmentEntity appointment = AppointmentConverter.rezervationToEntity(rezerveDto, authenticated,
@@ -143,15 +145,31 @@ public class AppointmentServiceImpl implements AppointmentService {
 			if (hasFreeSlot) {
 				AppointmentEntity appointment = AppointmentConverter.rezervationToEntity(rezerveDto, authenticated,
 						doctorSelected.getUsername());
-				return AppointmentConverter.toDto(appointmentRepo.save(appointment));
+				AppointmentEntity savedAppointment = appointmentRepo.save(appointment);
+				return AppointmentConverter.toDto(savedAppointment);
 			}
 			throw new CustomMessageException("Please pick another time!");
 		}
 	}
 
-	private boolean hasSlot(List<SlotDto> slots, LocalDate day, LocalTime startTime) {
-		return slots.stream().anyMatch(slot -> slot.getVisitStart().equals(startTime.truncatedTo(ChronoUnit.HOURS))
-				&& slot.getDate().equals(day));
+	private boolean hasSlot(List<SlotDto> slots, LocalDate day, LocalTime startTime, String dentist) {
+		SlotDto slotDto = slots.stream()
+				.filter(slot -> slot.getVisitStart().equals(startTime.truncatedTo(ChronoUnit.HOURS))
+						&& slot.getDate().equals(day)).findAny().get();
+		
+		if(slotDto.getDoctors() == null) {
+			return false;
+		}
+		
+		for(int i=0 ; i<slotDto.getDoctors().length;i++) {
+			if(slotDto.getDoctors()[i].contains(dentist)) {
+				return true;
+			}
+		}
+		
+		System.out.println(slotDto);
+		
+		return false;
 	}
 
 	@Override
@@ -173,7 +191,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 	public DisplayAppointmentDto changeAppointmentTimeById(Long id, @Valid ChangeAppointmentTimeDto dto) {
 		AppointmentEntity appointment = appointmentRepo.getById(id);
 		if (appointment != null) {
-			boolean hasFreeSlot = hasSlot(getFreeTimes(), dto.getDay(), dto.getStartTime());
+			boolean hasFreeSlot = hasSlot(getFreeTimes(), dto.getDay(), dto.getStartTime(), appointment.getDentist());
 			if (hasFreeSlot) {
 				OriginalAppointmentEntity originalDate = OriginalAppointmentConverter.toEntity(appointment);
 				appointment.setOriginalDate(originalAppointmentRepo.save(originalDate));
@@ -352,7 +370,9 @@ public class AppointmentServiceImpl implements AppointmentService {
 	@Transactional
 	public void setFeedbackAfterEightHoursNull(String defaultFeedback) {
 		appointmentRepo.getAppoinmentForUpdateFeedback().stream().map(appointment -> {
-			appointment.setFeedback(new FeedbackEntity(null, defaultFeedback, LocalDateTime.now()));
+			FeedbackEntity feedback = feedbackRepository
+					.save(new FeedbackEntity(null, defaultFeedback, LocalDateTime.now()));
+			appointment.setFeedback(feedback);
 			appointmentRepo.save(appointment);
 			return null;
 		});
@@ -362,11 +382,11 @@ public class AppointmentServiceImpl implements AppointmentService {
 	@Transactional
 	public DisplayAppointmentDto setAppointmentFeedback(Long id, @Valid CreateFeedbackDto dto, UserEntity thisUser) {
 		AppointmentEntity appointment = appointmentRepo.getActiveAppointmentForFeedback(thisUser.getUsername());
-		if(appointment != null) {
+		if (appointment != null) {
 			FeedbackEntity feedback = FeedbackConverter.toEntity(dto);
 			appointment.setFeedback(feedbackRepository.save(feedback));
 			return AppointmentConverter.toDto(appointmentRepo.save(appointment));
 		}
-		throw new DataIdNotFoundException("Can not find and active or in progress appointment with id: "+id);
+		throw new DataIdNotFoundException("Can not find and active or in progress appointment with id: " + id);
 	}
 }

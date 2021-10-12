@@ -26,8 +26,8 @@ public class AppointmentDtoUtilTest {
 	
 	public static CreatePublicAppointmentDto rezerveSlot() {
 		CreatePublicAppointmentDto dto = new CreatePublicAppointmentDto();
-		dto.setDate(LocalDate.of(2021, 11, 2));
-		dto.setDentist("dentistname");
+		dto.setDate(LocalDate.of(2021, 10, 14));
+		dto.setDentist("doctor");
 		dto.setStartTime(LocalTime.of(15, 00));
 		dto.setType(AppointmentType.GENERAL.name());
 		return dto;
@@ -36,6 +36,7 @@ public class AppointmentDtoUtilTest {
 	public static String[] getDoctors(){
 		List<String> list = new ArrayList<>();
 		list.add("doctorname");
+		list.add("doctorOne");
 		String[] returnList = list.toArray(new String[0]);
 		return returnList;
 	}

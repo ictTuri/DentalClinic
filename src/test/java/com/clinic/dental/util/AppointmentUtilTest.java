@@ -46,7 +46,7 @@ public class AppointmentUtilTest {
 	
 	public static AppointmentEntity appointmentClosed() {
 		AppointmentEntity app = new AppointmentEntity();
-		app.setDate(LocalDate.of(2021, 11, 2));
+		app.setDate(LocalDate.of(2021, 10, 13));
 		app.setDentist("dentistname");
 		app.setId(1L);
 		app.setPatient(UserUtilTest.publicOne());

@@ -16,6 +16,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import com.clinic.dental.util.AppointmentUtilTest;
+import com.clinic.dental.util.UserUtilTest;
 import com.clinic.dental.model.appointment.converter.AppointmentConverter;
 import com.clinic.dental.model.appointment.dto.ChangeAppointmentDentistDto;
 import com.clinic.dental.model.appointment.dto.ChangeAppointmentTimeDto;
@@ -25,8 +27,6 @@ import com.clinic.dental.model.appointment.dto.SlotDto;
 import com.clinic.dental.model.appointment.service.AppointmentService;
 import com.clinic.dental.model.user.UserEntity;
 import com.clinic.dental.model.user.service.UserService;
-import com.clinic.dental.util.AppointmentUtilTest;
-import com.clinic.dental.util.UserUtilTest;
 import com.clinic.dental.util.AppointmentDtoUtilTest;
 
 @ExtendWith(MockitoExtension.class)
