@@ -3,6 +3,8 @@ package com.clinic.dental.config;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.validation.ConstraintViolationException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -71,6 +73,16 @@ public class GlobalExceptionHandler {
 
 		return new ResponseEntity<>(errorBody, HttpStatus.NOT_FOUND);
 
+	}
+	
+	@ExceptionHandler(value = { ConstraintViolationException.class})
+	protected ResponseEntity<Object> handleValidationConstraint(RuntimeException ex, WebRequest request){
+		var errorBody = new ErrorFormat();
+		errorBody.setMessage(ex.getMessage());
+		errorBody.setDesc(request.getDescription(false));
+		errorBody.setSuggestion("Contact Admin");
+		
+		return new ResponseEntity<>(errorBody, HttpStatus.BAD_REQUEST);
 	}
 
 }

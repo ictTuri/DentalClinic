@@ -39,4 +39,18 @@ public interface AppointmentRepository extends JpaRepository<AppointmentEntity, 
 	@Query("SELECT app FROM AppointmentEntity app WHERE app.dentist = ?1 AND app.status = 'ACTIVE' OR app.status = 'IN_PROGRESS' ")
 	AppointmentEntity getActiveAppointmentForFeedback(String username);
 
+//	REPORTS READ OPERATIONS
+//	
+//	@Query(value = "SELECT COUNT(appointments) FROM appointments WHERE extract(year FROM created_at) = ?1 AND extract(month FROM created_at) = ?2", nativeQuery = true)
+//	Long getTotalForMonth(int year,int month);
+//
+//	@Query(value = "SELECT COUNT(appointments) FROM appointments WHERE extract(year FROM created_at) = ?1 AND extract(month FROM created_at) = ?2 AND status IN ('DONE')", nativeQuery = true)
+//	Long getTotalDoneForMonth(int year,int month);
+//
+//	@Query(value = "SELECT COUNT(appointments) FROM appointments WHERE extract(year FROM created_at) = ?1 AND extract(month FROM created_at) = ?2 AND status IN ('DOCTOR_CANCELLED')", nativeQuery = true)
+//	Long getTotalDoctorCancelledForMonth(int year,int month);
+//
+//	@Query(value = "SELECT COUNT(appointments) FROM appointments WHERE extract(year FROM created_at) = ?1 AND extract(month FROM created_at) = ?2 AND status IN ('USER_CANCELLED')", nativeQuery = true)
+//	Long getUserCancelledForMonth(int year,int month);
+
 }
