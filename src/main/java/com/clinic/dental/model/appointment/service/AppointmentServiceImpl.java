@@ -8,6 +8,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import javax.validation.Valid;
@@ -104,9 +105,6 @@ public class AppointmentServiceImpl implements AppointmentService {
 						return null;
 					}).collect(Collectors.toList());
 		}
-		listOfSlots.stream().filter(slot -> slot.getDoctors() != null).findFirst()
-				.map(slot -> listOfSlots.remove(slot));
-
 		return listOfSlots;
 	}
 
@@ -129,11 +127,16 @@ public class AppointmentServiceImpl implements AppointmentService {
 	@Transactional
 	public DisplayAppointmentDto rezerveAppointment(@Valid CreatePublicAppointmentDto rezerveDto,
 			UserEntity authenticated) {
+		Optional<AppointmentEntity> existAppointment = appointmentRepo.existScheduleByUser(authenticated, rezerveDto.getDate(),rezerveDto.getStartTime());
+		if(existAppointment.isPresent()) {
+			throw new CustomMessageException("You already hava an appointment at this time");
+		}
+		
 		List<SlotDto> freeSlots = getFreeTimes();
-		boolean hasFreeSlot = hasSlot(freeSlots, rezerveDto.getDate(), rezerveDto.getStartTime(),
-				rezerveDto.getDentist());
+		
 		if (rezerveDto.getDentist() == null) {
-			if (hasFreeSlot) {
+			boolean hasFreeSlotNoDoc = hasFreeSlotNoDentist(freeSlots, rezerveDto.getDate(), rezerveDto.getStartTime());
+			if (hasFreeSlotNoDoc) {
 				AppointmentEntity appointment = AppointmentConverter.rezervationToEntity(rezerveDto, authenticated,
 						"No Doctor Selected");
 				return AppointmentConverter.toDto(appointmentRepo.save(appointment));
@@ -141,7 +144,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 			throw new CustomMessageException("Please pick another time!");
 		} else {
 			UserEntity doctorSelected = userService.getDoctorByUsername(rezerveDto.getDentist());
-
+			boolean hasFreeSlot = hasSlot(freeSlots, rezerveDto.getDate(), rezerveDto.getStartTime(),rezerveDto.getDentist());
 			if (hasFreeSlot) {
 				AppointmentEntity appointment = AppointmentConverter.rezervationToEntity(rezerveDto, authenticated,
 						doctorSelected.getUsername());
@@ -150,6 +153,12 @@ public class AppointmentServiceImpl implements AppointmentService {
 			}
 			throw new CustomMessageException("Please pick another time!");
 		}
+	}
+
+	private boolean hasFreeSlotNoDentist(List<SlotDto> freeSlots, LocalDate date, LocalTime startTime) {
+		return freeSlots.stream()
+				.anyMatch(slot -> slot.getVisitStart().equals(startTime.truncatedTo(ChronoUnit.HOURS))
+						&& slot.getDate().equals(date));
 	}
 
 	private boolean hasSlot(List<SlotDto> slots, LocalDate day, LocalTime startTime, String dentist) {

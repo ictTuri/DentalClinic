@@ -16,8 +16,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.clinic.dental.util.AppointmentUtilTest;
-import com.clinic.dental.util.UserUtilTest;
 import com.clinic.dental.model.appointment.converter.AppointmentConverter;
 import com.clinic.dental.model.appointment.dto.ChangeAppointmentDentistDto;
 import com.clinic.dental.model.appointment.dto.ChangeAppointmentTimeDto;
@@ -25,9 +23,12 @@ import com.clinic.dental.model.appointment.dto.CreatePublicAppointmentDto;
 import com.clinic.dental.model.appointment.dto.DisplayAppointmentDto;
 import com.clinic.dental.model.appointment.dto.SlotDto;
 import com.clinic.dental.model.appointment.service.AppointmentService;
+import com.clinic.dental.model.feedback.dto.CreateFeedbackDto;
 import com.clinic.dental.model.user.UserEntity;
 import com.clinic.dental.model.user.service.UserService;
-import com.clinic.dental.util.AppointmentDtoUtilTest;
+import com.clinic.dental.util.appointment.AppointmentDtoUtilTest;
+import com.clinic.dental.util.appointment.AppointmentUtilTest;
+import com.clinic.dental.util.user.UserUtilTest;
 
 @ExtendWith(MockitoExtension.class)
 class AppointmentControllerTest {
@@ -200,4 +201,20 @@ class AppointmentControllerTest {
 		assertNotNull(cangeDentistApp);
 	}
 	
+	@Test
+	void givenAppointment_WhenSetFeedback_VerifyStatus() {
+		Long id = 1L;
+		UserEntity thisUser = UserUtilTest.publicOne();
+		CreateFeedbackDto feedbackDto = AppointmentDtoUtilTest.feedbackOne();
+		DisplayAppointmentDto dtoAppointment = AppointmentConverter.toDto(AppointmentUtilTest.appointmentSix());
+
+		when(appointmentService.setAppointmentFeedback(id, feedbackDto, thisUser)).thenReturn(dtoAppointment);
+
+		ResponseEntity<DisplayAppointmentDto> dtoAppointmentReturned = appointmentController.setAppointmentFeedback(id, feedbackDto);
+		
+		assertEquals(HttpStatus.CREATED, dtoAppointmentReturned.getStatusCode());
+		assertEquals("newDentist", dtoAppointmentReturned.getBody().getDentist());
+		assertEquals(LocalDate.of(2021, 11, 12), dtoAppointmentReturned.getBody().getDate());
+		assertNotNull(dtoAppointmentReturned);
+	}
 }

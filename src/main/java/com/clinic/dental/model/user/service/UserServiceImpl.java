@@ -3,8 +3,10 @@ package com.clinic.dental.model.user.service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,15 +15,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.clinic.dental.exceptions.CustomMessageException;
 import com.clinic.dental.exceptions.DataIdNotFoundException;
+import com.clinic.dental.model.appointment.converter.AppointmentConverter;
+import com.clinic.dental.model.appointment.dto.DisplayAppointmentDto;
+import com.clinic.dental.model.appointment.repository.AppointmentRepository;
 import com.clinic.dental.model.user.UserEntity;
 import com.clinic.dental.model.user.converter.UserConverter;
 import com.clinic.dental.model.user.dto.CustomResponseDto;
+import com.clinic.dental.model.user.dto.UserClinicDataDto;
 import com.clinic.dental.model.user.dto.UserDto;
 import com.clinic.dental.model.user.dto.UserRegisterDto;
 import com.clinic.dental.model.user.enums.Role;
 import com.clinic.dental.model.user.repository.UserRepository;
+import com.clinic.dental.security.auth.RegexPatterns;
 
 import lombok.RequiredArgsConstructor;
+import lombok.var;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +37,7 @@ import lombok.RequiredArgsConstructor;
 public class UserServiceImpl implements UserService {
 
 	private final UserRepository userRepo;
+	private final AppointmentRepository appointmentRepo;
 	private final PasswordEncoder passEncoder;
 
 	@Override
@@ -146,36 +155,35 @@ public class UserServiceImpl implements UserService {
 		}
 		throw new DataIdNotFoundException("Can not find doctor by given username: "+ doctorUsername);
 	}
+
+	@Override
+	public UserClinicDataDto getUserDataByCredentials(@NotBlank String credentials) {
+		if(credentials.trim().toUpperCase().matches(RegexPatterns.NID)) {
+			var userEntity = userRepo.findByNID(credentials);
+			return loadUserData(userEntity);
+		}else if(credentials.trim().matches(RegexPatterns.PHONE_NUMBER)) {
+			var userEntity = userRepo.findByPhone(credentials);
+			return loadUserData(userEntity);
+		}else {
+			var userEntity = userRepo.findByEmail(credentials);
+			return loadUserData(userEntity);
+		}
+	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	private UserClinicDataDto loadUserData(UserEntity user) {
+		UserClinicDataDto userToReturn = new UserClinicDataDto();
+		userToReturn.setFirstName(user.getFirstName());
+		userToReturn.setLastName(user.getLastName());
+		userToReturn.setEmail(user.getEmail());
+		userToReturn.setPhone(user.getPhone());
+		userToReturn.setAge(user.getAge());
+		userToReturn.setNID(user.getNID());
+		List<DisplayAppointmentDto> appointments = appointmentRepo.findByPatient(user)
+				.stream()
+				.map(AppointmentConverter::toDto)
+				.collect(Collectors.toList());
+		userToReturn.setAppointments(appointments);
+		return userToReturn;
+	}
 	
 }

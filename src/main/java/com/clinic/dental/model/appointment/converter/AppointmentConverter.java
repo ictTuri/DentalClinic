@@ -53,6 +53,7 @@ public class AppointmentConverter {
 		entity.setType(AppointmentType.valueOf(rezerveDto.getType().toUpperCase()));
 		entity.setStatus(Status.APPENDING);
 		entity.setLastUpdatedAt(LocalDateTime.now());
+		entity.setLastUpdatedBy(user.getUsername());
 		entity.setFeedback(null);
 		return entity;
 	}

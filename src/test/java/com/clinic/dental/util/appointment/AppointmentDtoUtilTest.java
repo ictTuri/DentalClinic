@@ -1,4 +1,4 @@
-package com.clinic.dental.util;
+package com.clinic.dental.util.appointment;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -9,6 +9,7 @@ import com.clinic.dental.model.appointment.dto.ChangeAppointmentDentistDto;
 import com.clinic.dental.model.appointment.dto.ChangeAppointmentTimeDto;
 import com.clinic.dental.model.appointment.dto.CreatePublicAppointmentDto;
 import com.clinic.dental.model.appointment.enums.AppointmentType;
+import com.clinic.dental.model.feedback.dto.CreateFeedbackDto;
 
 public class AppointmentDtoUtilTest {
 	public static ChangeAppointmentTimeDto changeTimeOne() {
@@ -39,5 +40,11 @@ public class AppointmentDtoUtilTest {
 		list.add("doctorOne");
 		String[] returnList = list.toArray(new String[0]);
 		return returnList;
+	}
+
+	public static CreateFeedbackDto feedbackOne() {
+		CreateFeedbackDto feedback = new CreateFeedbackDto();
+		feedback.setDescription("Just For testing purposes!");
+		return feedback;
 	}
 }

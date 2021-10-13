@@ -1,6 +1,9 @@
 package com.clinic.dental.model.appointment.repository;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Collection;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -38,4 +41,10 @@ public interface AppointmentRepository extends JpaRepository<AppointmentEntity, 
 
 	@Query("SELECT app FROM AppointmentEntity app WHERE app.dentist = ?1 AND app.status = 'ACTIVE' OR app.status = 'IN_PROGRESS' ")
 	AppointmentEntity getActiveAppointmentForFeedback(String username);
+
+	@Query("SELECT app FROM AppointmentEntity app WHERE app.patient = ?1 AND app.date = ?2 AND app.startTime = ?3")
+	Optional<AppointmentEntity> existScheduleByUser(UserEntity authenticated, LocalDate date, LocalTime startTime);
+
+	@Query("SELECT app FROM AppointmentEntity app WHERE EXTRACT(year FROM app.createdAt) = ?1")
+	Collection<AppointmentEntity> findAllThisYear(int year);
 }

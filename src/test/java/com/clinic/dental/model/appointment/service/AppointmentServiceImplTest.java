@@ -29,9 +29,9 @@ import com.clinic.dental.model.user.UserEntity;
 import com.clinic.dental.model.user.enums.Role;
 import com.clinic.dental.model.user.repository.UserRepository;
 import com.clinic.dental.model.user.service.UserService;
-import com.clinic.dental.util.AppointmentDtoUtilTest;
-import com.clinic.dental.util.AppointmentUtilTest;
-import com.clinic.dental.util.UserUtilTest;
+import com.clinic.dental.util.appointment.AppointmentDtoUtilTest;
+import com.clinic.dental.util.appointment.AppointmentUtilTest;
+import com.clinic.dental.util.user.UserUtilTest;
 
 
 @SpringBootTest

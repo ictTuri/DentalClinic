@@ -17,9 +17,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.clinic.dental.model.user.converter.UserConverter;
+import com.clinic.dental.model.user.dto.UserClinicDataDto;
 import com.clinic.dental.model.user.dto.UserDto;
 import com.clinic.dental.model.user.service.UserService;
-import com.clinic.dental.util.UserUtilTest;
+import com.clinic.dental.util.user.UserClinicDataUtilTest;
+import com.clinic.dental.util.user.UserUtilTest;
 
 @ExtendWith(MockitoExtension.class)
 class UserControllerTest {
@@ -101,5 +103,18 @@ class UserControllerTest {
 		
 		assertNotNull(voidResponse);
 		assertEquals(HttpStatus.NO_CONTENT, voidResponse.getStatusCode());
+	}
+	
+	@Test
+	void givenCredentials_WhenGEtUserData_ValidateStatus() {
+		String credentials = "G00000000D";
+		UserClinicDataDto user = UserClinicDataUtilTest.dataUserOne();
+		
+		when(userService.getUserDataByCredentials(credentials)).thenReturn(user);
+		
+		ResponseEntity<UserClinicDataDto> userRetrieved = userController.getUserDataByCredentials(credentials);
+		
+		assertNotNull(userRetrieved);
+		assertEquals(HttpStatus.OK, userRetrieved.getStatusCode());
 	}
 }

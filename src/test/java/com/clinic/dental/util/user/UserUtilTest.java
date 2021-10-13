@@ -1,4 +1,4 @@
-package com.clinic.dental.util;
+package com.clinic.dental.util.user;
 
 import java.time.LocalDateTime;
 

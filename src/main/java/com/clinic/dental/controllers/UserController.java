@@ -3,6 +3,7 @@ package com.clinic.dental.controllers;
 import java.util.List;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.clinic.dental.model.user.dto.UserClinicDataDto;
 import com.clinic.dental.model.user.dto.UserDto;
 import com.clinic.dental.model.user.service.UserService;
 
@@ -38,6 +40,12 @@ public class UserController {
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<UserDto> getUserById(@PathVariable("id") Long id){
 		return new ResponseEntity<UserDto>(userService.getUserById(id),HttpStatus.OK);
+	}
+	
+	@GetMapping("client-data/{credentials}")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_DOCTOR')")
+	public ResponseEntity<UserClinicDataDto> getUserDataByCredentials(@PathVariable("credentials") @NotBlank String credentials){
+		return new ResponseEntity<UserClinicDataDto>(userService.getUserDataByCredentials(credentials),HttpStatus.OK);
 	}
 	
 	@PostMapping

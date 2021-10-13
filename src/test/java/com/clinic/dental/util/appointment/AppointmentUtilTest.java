@@ -1,4 +1,4 @@
-package com.clinic.dental.util;
+package com.clinic.dental.util.appointment;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -14,6 +14,7 @@ import com.clinic.dental.model.appointment.AppointmentEntity;
 import com.clinic.dental.model.appointment.dto.SlotDto;
 import com.clinic.dental.model.appointment.enums.AppointmentType;
 import com.clinic.dental.model.appointment.enums.Status;
+import com.clinic.dental.util.user.UserUtilTest;
 
 public class AppointmentUtilTest {
 	public static AppointmentEntity appointmentUserRefuzed () {
