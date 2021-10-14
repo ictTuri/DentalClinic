@@ -1,7 +1,6 @@
 package com.clinic.dental.model.user;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,10 +9,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.clinic.dental.model.appointment.AppointmentEntity;
 import com.clinic.dental.model.user.enums.Gender;
 import com.clinic.dental.model.user.enums.Role;
 
@@ -44,7 +41,5 @@ public class UserEntity {
 	@Enumerated(EnumType.STRING)
 	private Role role;
 	private boolean isActive;
-	@OneToMany
-	private Set<AppointmentEntity> appointments; 
 	private LocalDateTime createdAt;
 }

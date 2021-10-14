@@ -37,7 +37,7 @@ public class AppointmentController {
 
 	
 	@GetMapping("/free-schedule")
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_PUBLIC')")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SECRETARY','ROLE_PUBLIC')")
 	public ResponseEntity<List<SlotDto>> getFreeTimes(){
 		return new ResponseEntity<List<SlotDto>>(appointmentService.getFreeTimes(),HttpStatus.OK);
 	}

@@ -5,7 +5,7 @@ VALUES ('secretary','secretary','secretary','0690000001',25,'FEMALE',true,'S0000
 INSERT INTO users (first_name,last_name,username,phone_number,age,gender,is_active,national_id,email,created_at,role,password)
 VALUES ('dentistone','dentistone','dentistone','0680000001',30,'MALE',true,'D00000001D','dentistone@dentistone.com','2021-10-05 10:21:05.805','ROLE_DOCTOR','$2a$10$4GYXQCDGYjwJ1Mxa35UfbuaoUJRze7ugWFlP86TRI8QTpDvCWrKom');
 INSERT INTO users (first_name,last_name,username,phone_number,age,gender,is_active,national_id,email,created_at,role,password)
-VALUES ('dentisttwo','dentisttwo','dentisttwo','0680000002',30,'FEMALE',true,'D00000001D','dentisttwo@dentisttwo.com','2021-10-05 10:21:05.805','ROLE_DOCTOR','$2a$10$4GYXQCDGYjwJ1Mxa35UfbuaoUJRze7ugWFlP86TRI8QTpDvCWrKom');
+VALUES ('dentisttwo','dentisttwo','dentisttwo','0680000002',30,'FEMALE',true,'D00000002D','dentisttwo@dentisttwo.com','2021-10-05 10:21:05.805','ROLE_DOCTOR','$2a$10$4GYXQCDGYjwJ1Mxa35UfbuaoUJRze7ugWFlP86TRI8QTpDvCWrKom');
 INSERT INTO users (first_name,last_name,username,phone_number,age,gender,is_active,national_id,email,created_at,role,password)
 VALUES ('userone','userone','userone','0670000001',45,'MALE',true,'U00000001U','userone@userone.com','2021-10-05 10:21:05.805','ROLE_PUBLIC','$2a$10$cDr0W8sc605ROV61.Wiz9e6CB5RNwiIB0f05jnexmua1iYdWxQSi.');
 INSERT INTO users (first_name,last_name,username,phone_number,age,gender,is_active,national_id,email,created_at,role,password)
