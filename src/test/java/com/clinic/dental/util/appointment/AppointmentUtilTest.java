@@ -115,6 +115,34 @@ public class AppointmentUtilTest {
 		app.setCreatedAt(LocalDateTime.now());
 		return app;
 	}
+	
+	public static AppointmentEntity general() {
+		AppointmentEntity app = new AppointmentEntity();
+		app.setDate(LocalDate.of(2021, 11, 12));
+		app.setDentist("doctor");
+		app.setId(null);
+		app.setPatient(UserUtilTest.general());
+		app.setStartTime(LocalTime.of(15, 00));
+		app.setEndTime(LocalTime.of(16, 00));
+		app.setStatus(Status.APPENDING);
+		app.setType(AppointmentType.IMPLANTS);
+		app.setCreatedAt(LocalDateTime.now());
+		return app;
+	}
+	
+	public static AppointmentEntity generalOne() {
+		AppointmentEntity app = new AppointmentEntity();
+		app.setDate(LocalDate.of(2021, 11, 12));
+		app.setDentist("doctor");
+		app.setId(null);
+		app.setPatient(UserUtilTest.general());
+		app.setStartTime(LocalTime.of(16, 00));
+		app.setEndTime(LocalTime.of(17, 00));
+		app.setStatus(Status.REFUZED);
+		app.setType(AppointmentType.IMPLANTS);
+		app.setCreatedAt(LocalDateTime.now());
+		return app;
+	}
 
 	
 	  

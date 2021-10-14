@@ -109,4 +109,54 @@ public class UserUtilTest {
 		return user;
 	}
 	
+	public static UserEntity general() {
+		UserEntity user = new UserEntity();
+		user.setId(null);
+		user.setFirstName("general");
+		user.setLastName("general");
+		user.setUsername("general");
+		user.setEmail("general@gmail.com");
+		user.setNID("G00000000G");
+		user.setRole(Role.ROLE_DOCTOR);
+		user.setGender(Gender.FEMALE);
+		user.setActive(true);
+		user.setAge(25);
+		user.setPhone("0970000009");
+		user.setCreatedAt(LocalDateTime.now());
+		return user;
+	}
+	
+	public static UserEntity generalOne() {
+		UserEntity user = new UserEntity();
+		user.setId(null);
+		user.setFirstName("generalOne");
+		user.setLastName("generalOne");
+		user.setUsername("generalOne");
+		user.setEmail("generalOne@gmail.com");
+		user.setNID("G00000001G");
+		user.setRole(Role.ROLE_ADMIN);
+		user.setGender(Gender.FEMALE);
+		user.setActive(true);
+		user.setAge(25);
+		user.setPhone("0970000010");
+		user.setCreatedAt(LocalDateTime.now());
+		return user;
+	}
+	
+	public static UserEntity generalTwo() {
+		UserEntity user = new UserEntity();
+		user.setId(null);
+		user.setFirstName("generalTwo");
+		user.setLastName("generalTwo");
+		user.setUsername("generalTwo");
+		user.setEmail("generalTwo@gmail.com");
+		user.setNID("G00000002G");
+		user.setRole(Role.ROLE_SECRETARY);
+		user.setGender(Gender.MALE);
+		user.setActive(true);
+		user.setAge(25);
+		user.setPhone("0970000019");
+		user.setCreatedAt(LocalDateTime.now());
+		return user;
+	}
 }

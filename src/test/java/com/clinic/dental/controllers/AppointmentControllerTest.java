@@ -208,6 +208,7 @@ class AppointmentControllerTest {
 		CreateFeedbackDto feedbackDto = AppointmentDtoUtilTest.feedbackOne();
 		DisplayAppointmentDto dtoAppointment = AppointmentConverter.toDto(AppointmentUtilTest.appointmentSix());
 
+		when(userService.getAuthenticatedUser()).thenReturn(thisUser);
 		when(appointmentService.setAppointmentFeedback(id, feedbackDto, thisUser)).thenReturn(dtoAppointment);
 
 		ResponseEntity<DisplayAppointmentDto> dtoAppointmentReturned = appointmentController.setAppointmentFeedback(id, feedbackDto);

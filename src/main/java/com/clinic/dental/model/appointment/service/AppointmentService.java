@@ -10,6 +10,7 @@ import com.clinic.dental.model.appointment.dto.ChangeAppointmentDentistDto;
 import com.clinic.dental.model.appointment.dto.ChangeAppointmentTimeDto;
 import com.clinic.dental.model.appointment.dto.CreatePublicAppointmentDto;
 import com.clinic.dental.model.appointment.dto.SlotDto;
+import com.clinic.dental.model.appointment.dto.TimeSlotDto;
 import com.clinic.dental.model.feedback.dto.CreateFeedbackDto;
 import com.clinic.dental.model.user.UserEntity;
 
@@ -41,5 +42,11 @@ public interface AppointmentService {
 	void setFeedbackAfterEightHoursNull(String defaultFeedback);
 
 	DisplayAppointmentDto setAppointmentFeedback(Long id, @Valid CreateFeedbackDto dto, UserEntity thisUser);
+
+	List<TimeSlotDto> getDoctorFreeTimes(UserEntity thisUser);
+
+	List<DisplayAppointmentDto> getDoctorApprovedAppointments(UserEntity thisUser);
+
+	List<DisplayAppointmentDto> getDoctorCancelledAppointments(UserEntity thisUser);
 
 }

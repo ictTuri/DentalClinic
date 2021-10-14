@@ -6,7 +6,12 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,10 +19,13 @@ import org.springframework.transaction.annotation.Transactional;
 import com.clinic.dental.model.appointment.AppointmentEntity;
 import com.clinic.dental.model.appointment.enums.Status;
 import com.clinic.dental.model.appointment.repository.AppointmentRepository;
+import com.clinic.dental.model.report.dto.DentistsTotalReportsDto;
 import com.clinic.dental.model.report.dto.TotalRezervationsReportDto;
+import com.clinic.dental.model.report.dto.WeeklyDentistsTotalReportsDto;
 import com.clinic.dental.model.report.dto.WeeklyReportDto;
 
 import lombok.RequiredArgsConstructor;
+import lombok.var;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +38,7 @@ public class ReportServiceImpl implements ReportService {
 	public TotalRezervationsReportDto getMonthlyReports(int year, int month) {
 		TotalRezervationsReportDto dto = new TotalRezervationsReportDto();
 		List<AppointmentEntity> allAppointments = new ArrayList<>();
-		appointmentRepo.findAllThisYear(year).stream().map(app -> allAppointments.add(app)).collect(Collectors.toList());
+		appointmentRepo.findAllThisYear(year).stream().map(app -> allAppointments.add(app)).toList();
 		dto.setYear(year);
 		String monthName = getMonth(month, Locale.US);
 		dto.setMonthName(monthName);
@@ -116,5 +124,102 @@ public class ReportServiceImpl implements ReportService {
 		}
 		return dtos;
 	}
+
+	@Override
+	public DentistsTotalReportsDto getDentistsMonthlyReports(int year, @NotNull @Min(1) @Max(12) int month, Status status) {
+		DentistsTotalReportsDto dto = new DentistsTotalReportsDto();
+		var monthname = getMonth(month,Locale.US);
+		List<AppointmentEntity> appointmentList = appointmentRepo.findAllThisYear(year)
+				.stream()
+				.filter(app -> app.getCreatedAt().getMonth().equals(LocalDate.of(year, month, 1).getMonth()))
+				.filter(app -> app.getStatus().equals(status))
+				.toList();
+		Map<String, Long> report = getDentistResult(appointmentList);
+		
+		List<WeeklyDentistsTotalReportsDto> weeklyList = getWeeklyDentistreport(appointmentList, 2021, month);
+		dto.setMonthName(monthname);
+		dto.setWeeklyReport(weeklyList);
+		dto.setDentistsReport(report);
+		
+		return dto;
+	}
+	
+	private Map<String, Long> getDentistResult(List<AppointmentEntity> appointmentList){
+		return appointmentList
+				.stream()
+				.collect(Collectors.groupingBy(AppointmentEntity::getDentist,Collectors.counting()));
+	}
+	
+	private List<WeeklyDentistsTotalReportsDto> getWeeklyDentistreport(List<AppointmentEntity> appointments, int year, int month) {
+		List<WeeklyDentistsTotalReportsDto> weeklyList = new ArrayList<>();
+		List<LocalDate> weekTimes =  weekSlots(LocalDate.of(year, month, 1), LocalDate.of(year, month, 1).plusMonths(1));
+		
+		weekTimes.forEach(week -> {
+			WeeklyDentistsTotalReportsDto dto = new WeeklyDentistsTotalReportsDto();
+			List<AppointmentEntity> weekAppointments = appointments.stream().filter(app -> app.getCreatedAt().toLocalDate().isAfter(week.minusDays(1)))
+					.filter(app -> app.getCreatedAt().toLocalDate().isBefore(week.plusDays(7))).toList();
+			Map<String, Long>  weekReport = weekAppointments.stream()
+					.collect(Collectors.groupingBy(AppointmentEntity::getDentist,Collectors.counting()));
+			dto.setWeekDay(week.getDayOfMonth());
+			dto.setWeeklyResult(weekReport);
+			weeklyList.add(dto);
+		});
+		
+		return weeklyList;
+	}
+
+	@Override
+	public List<DentistsTotalReportsDto> getDentistsTotalReports(int year) {
+		List<DentistsTotalReportsDto> dtos = new ArrayList<>();
+		for (int i = 1; i <= 12; i++) {
+			dtos.add(getDentistsMonthlyReports(year, i, Status.DONE));
+		}
+		return dtos;
+	}
+
+	@Override
+	public List<DentistsTotalReportsDto> getDentistsTotalCancellReports(int year) {
+		List<DentistsTotalReportsDto> dtos = new ArrayList<>();
+		for (int i = 1; i <= 12; i++) {
+			dtos.add(getDentistsMonthlyReports(year, i, Status.DOCTOR_CANCELLED));
+		}
+		return dtos;
+	}
+
+	@Override
+	public DentistsTotalReportsDto getDentistsMonthlyCancellReports(int year, @NotNull @Min(1) @Max(12) int month, Status status) {
+		return getDentistsMonthlyReports(year, month, status);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 }

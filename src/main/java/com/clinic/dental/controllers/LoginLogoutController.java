@@ -33,7 +33,7 @@ public class LoginLogoutController {
 	@PostMapping("/_login")
 	public ResponseEntity<String> login(HttpServletResponse response,
 			@Valid @RequestBody UsernameAndPasswordAuthenticationRequest credentials) throws AuthenticationException{
-		 
+		logout();
 		try {
 			var authenticate = authenticationManager
 					.authenticate(new UsernamePasswordAuthenticationToken(credentials.getCredential(), credentials.getPassword()));

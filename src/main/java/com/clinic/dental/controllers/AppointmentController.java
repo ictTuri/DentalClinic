@@ -19,6 +19,7 @@ import com.clinic.dental.model.appointment.dto.ChangeAppointmentDentistDto;
 import com.clinic.dental.model.appointment.dto.ChangeAppointmentTimeDto;
 import com.clinic.dental.model.appointment.dto.CreatePublicAppointmentDto;
 import com.clinic.dental.model.appointment.dto.SlotDto;
+import com.clinic.dental.model.appointment.dto.TimeSlotDto;
 import com.clinic.dental.model.appointment.service.AppointmentService;
 import com.clinic.dental.model.feedback.dto.CreateFeedbackDto;
 import com.clinic.dental.model.user.UserEntity;
@@ -39,6 +40,27 @@ public class AppointmentController {
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_PUBLIC')")
 	public ResponseEntity<List<SlotDto>> getFreeTimes(){
 		return new ResponseEntity<List<SlotDto>>(appointmentService.getFreeTimes(),HttpStatus.OK);
+	}
+	
+	@GetMapping("/free-schedule/doctor")
+	@PreAuthorize("hasAnyRole('ROLE_DOCTOR')")
+	public ResponseEntity<List<TimeSlotDto>> getDoctorFreeTimes(){
+		UserEntity thisUser = userService.getAuthenticatedUser();
+		return new ResponseEntity<List<TimeSlotDto>>(appointmentService.getDoctorFreeTimes(thisUser),HttpStatus.OK);
+	}
+	
+	@GetMapping("/doctor/approved")
+	@PreAuthorize("hasAnyRole('ROLE_DOCTOR')")
+	public ResponseEntity<List<DisplayAppointmentDto>> getDoctorApprovedAppointments(){
+		UserEntity thisUser = userService.getAuthenticatedUser();
+		return new ResponseEntity<List<DisplayAppointmentDto>>(appointmentService.getDoctorApprovedAppointments(thisUser),HttpStatus.OK);
+	}
+	
+	@GetMapping("/doctor/cancelled")
+	@PreAuthorize("hasAnyRole('ROLE_DOCTOR')")
+	public ResponseEntity<List<DisplayAppointmentDto>> getDoctorCancelledAppointments(){
+		UserEntity thisUser = userService.getAuthenticatedUser();
+		return new ResponseEntity<List<DisplayAppointmentDto>>(appointmentService.getDoctorCancelledAppointments(thisUser),HttpStatus.OK);
 	}
 	
 	@PostMapping("/rezerve")

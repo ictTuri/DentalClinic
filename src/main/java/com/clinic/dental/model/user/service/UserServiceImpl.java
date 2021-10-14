@@ -159,13 +159,13 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserClinicDataDto getUserDataByCredentials(@NotBlank String credentials) {
 		if(credentials.trim().toUpperCase().matches(RegexPatterns.NID)) {
-			var userEntity = userRepo.findByNID(credentials);
+			var userEntity = userRepo.findByNIDAndRole(credentials,Role.ROLE_PUBLIC);
 			return loadUserData(userEntity);
 		}else if(credentials.trim().matches(RegexPatterns.PHONE_NUMBER)) {
-			var userEntity = userRepo.findByPhone(credentials);
+			var userEntity = userRepo.findByPhoneClientAndRole(credentials,Role.ROLE_PUBLIC);
 			return loadUserData(userEntity);
 		}else {
-			var userEntity = userRepo.findByEmail(credentials);
+			var userEntity = userRepo.findByEmailClientAndRole(credentials,Role.ROLE_PUBLIC);
 			return loadUserData(userEntity);
 		}
 	}

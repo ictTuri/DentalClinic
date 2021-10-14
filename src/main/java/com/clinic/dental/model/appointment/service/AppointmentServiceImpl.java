@@ -25,6 +25,7 @@ import com.clinic.dental.model.appointment.dto.ChangeAppointmentDentistDto;
 import com.clinic.dental.model.appointment.dto.ChangeAppointmentTimeDto;
 import com.clinic.dental.model.appointment.dto.CreatePublicAppointmentDto;
 import com.clinic.dental.model.appointment.dto.SlotDto;
+import com.clinic.dental.model.appointment.dto.TimeSlotDto;
 import com.clinic.dental.model.appointment.enums.Status;
 import com.clinic.dental.model.appointment.repository.AppointmentRepository;
 import com.clinic.dental.model.feedback.FeedbackEntity;
@@ -39,8 +40,10 @@ import com.clinic.dental.model.user.enums.Role;
 import com.clinic.dental.model.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class AppointmentServiceImpl implements AppointmentService {
@@ -200,17 +203,20 @@ public class AppointmentServiceImpl implements AppointmentService {
 	public DisplayAppointmentDto changeAppointmentTimeById(Long id, @Valid ChangeAppointmentTimeDto dto) {
 		AppointmentEntity appointment = appointmentRepo.getById(id);
 		if (appointment != null) {
-			boolean hasFreeSlot = hasSlot(getFreeTimes(), dto.getDay(), dto.getStartTime(), appointment.getDentist());
-			if (hasFreeSlot) {
-				OriginalAppointmentEntity originalDate = OriginalAppointmentConverter.toEntity(appointment);
-				appointment.setOriginalDate(originalAppointmentRepo.save(originalDate));
-				appointment.setStatus(Status.APPENDING_USER);
-				appointment.setDate(dto.getDay());
-				appointment.setStartTime(dto.getStartTime().truncatedTo(ChronoUnit.HOURS));
-				appointment.setEndTime(dto.getStartTime().plusHours(1).truncatedTo(ChronoUnit.HOURS));
-				return AppointmentConverter.toDto(appointmentRepo.save(appointment));
+			if(appointment.getOriginalDate()!=null) {
+				boolean hasFreeSlot = hasSlot(getFreeTimes(), dto.getDay(), dto.getStartTime(), appointment.getDentist());
+				if (hasFreeSlot) {
+					OriginalAppointmentEntity originalDate = OriginalAppointmentConverter.toEntity(appointment);
+					appointment.setOriginalDate(originalAppointmentRepo.save(originalDate));
+					appointment.setStatus(Status.APPENDING_USER);
+					appointment.setDate(dto.getDay());
+					appointment.setStartTime(dto.getStartTime().truncatedTo(ChronoUnit.HOURS));
+					appointment.setEndTime(dto.getStartTime().plusHours(1).truncatedTo(ChronoUnit.HOURS));
+					return AppointmentConverter.toDto(appointmentRepo.save(appointment));
+				}
+				throw new CustomMessageException("Please pick another time!");
 			}
-			throw new CustomMessageException("Please pick another time!");
+			throw new CustomMessageException("Already suggested another time");
 		}
 		throw new DataIdNotFoundException("Can not find appointment with given id: " + id);
 	}
@@ -378,13 +384,16 @@ public class AppointmentServiceImpl implements AppointmentService {
 	@Override
 	@Transactional
 	public void setFeedbackAfterEightHoursNull(String defaultFeedback) {
-		appointmentRepo.getAppoinmentForUpdateFeedback().stream().map(appointment -> {
-			FeedbackEntity feedback = feedbackRepository
-					.save(new FeedbackEntity(null, defaultFeedback, LocalDateTime.now()));
-			appointment.setFeedback(feedback);
-			appointmentRepo.save(appointment);
-			return null;
-		});
+		FeedbackEntity defaultFeedbackEntity = feedbackRepository.getById(1L);
+		List<AppointmentEntity> appointments = appointmentRepo.getAppoinmentForUpdateFeedback().stream().toList();
+		
+		if(!appointments.isEmpty()) {
+			appointments.forEach(app -> {
+				app.setFeedback(defaultFeedbackEntity);
+				appointmentRepo.save(app);
+			});
+		}else
+			log.debug("no feedback updates this time");
 	}
 
 	@Override
@@ -398,4 +407,71 @@ public class AppointmentServiceImpl implements AppointmentService {
 		}
 		throw new DataIdNotFoundException("Can not find and active or in progress appointment with id: " + id);
 	}
+
+	@Override
+	public List<TimeSlotDto> getDoctorFreeTimes(UserEntity thisUser) {
+		List<LocalDateTime> timeList = getSevenDaysForward(
+				LocalDateTime.now().truncatedTo(ChronoUnit.HOURS).plusHours(1), LocalDateTime.now().plusWeeks(1L));
+		List<AppointmentEntity> appointmentList = appointmentRepo.findAllAfterToday().stream()
+				.filter(app -> !app.getStatus().equals(Status.REFUZED))
+				.filter(app -> app.getDentist().equals(thisUser.getUsername()))
+				.toList();
+		
+		List<TimeSlotDto> listOfTimeSlots = new ArrayList<>();
+		timeList.stream().map(time -> listOfTimeSlots
+				.add(new TimeSlotDto(time.toLocalDate(), time.toLocalTime(), time.plusHours(1).toLocalTime())))
+				.collect(Collectors.toList());
+		appointmentList.forEach(app -> {
+			listOfTimeSlots.removeIf(slot -> slot.getDate().equals(app.getDate()) && slot.getVisitStart().equals(app.getStartTime()));
+		});
+		return listOfTimeSlots;
+		
+	}
+
+	@Override
+	public List<DisplayAppointmentDto> getDoctorApprovedAppointments(UserEntity thisUser) {
+		List<DisplayAppointmentDto> dtos =  new ArrayList<>();
+		
+		appointmentRepo.findByDentist(thisUser.getUsername())
+				.stream()
+				.filter(app -> app.getStatus().equals(Status.ACTIVE) || app.getStatus().equals(Status.IN_PROGRESS))
+				.map(app -> dtos.add(AppointmentConverter.toDto(app))).toList();
+		
+		return dtos;
+	}
+
+	@Override
+	public List<DisplayAppointmentDto> getDoctorCancelledAppointments(UserEntity thisUser) {
+		List<DisplayAppointmentDto> dtos =  new ArrayList<>();
+		
+		appointmentRepo.findByDentist(thisUser.getUsername())
+				.stream()
+				.filter(app -> app.getStatus().equals(Status.REFUZED) || app.getStatus().equals(Status.DOCTOR_CANCELLED) || app.getStatus().equals(Status.USER_CANCELLED))
+				.map(app -> dtos.add(AppointmentConverter.toDto(app))).toList();
+		
+		return dtos;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

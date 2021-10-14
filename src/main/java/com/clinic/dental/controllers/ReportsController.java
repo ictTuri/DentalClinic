@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.clinic.dental.model.appointment.enums.Status;
+import com.clinic.dental.model.report.dto.DentistsTotalReportsDto;
 import com.clinic.dental.model.report.dto.TotalRezervationsReportDto;
 import com.clinic.dental.model.report.service.ReportService;
 
@@ -41,5 +43,33 @@ public class ReportsController {
 	public ResponseEntity<TotalRezervationsReportDto> getMonthlyReports(@PathVariable("month") @NotNull @Min(1) @Max(12) int month){
 		int year = LocalDate.now().getYear();
 		return new ResponseEntity<>(reportService.getMonthlyReports(year,month),HttpStatus.OK);
+	}
+	
+	@GetMapping("dentists-report")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SECRETARY')")
+	public ResponseEntity<List<DentistsTotalReportsDto>> getDentistsTotalReports(){
+		int year = LocalDate.now().getYear();
+		return new ResponseEntity<>(reportService.getDentistsTotalReports(year),HttpStatus.OK);
+	}
+	
+	@GetMapping("dentists-report/{month}")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SECRETARY')")
+	public ResponseEntity<DentistsTotalReportsDto> getDentistsMonthlyReports(@PathVariable("month") @NotNull @Min(1) @Max(12) int month){
+		int year = LocalDate.now().getYear();
+		return new ResponseEntity<>(reportService.getDentistsMonthlyReports(year,month,Status.DONE),HttpStatus.OK);
+	}
+	
+	@GetMapping("dentists-cancelled-report")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SECRETARY')")
+	public ResponseEntity<List<DentistsTotalReportsDto>> getDentistsTotalCancellReports(){
+		int year = LocalDate.now().getYear();
+		return new ResponseEntity<>(reportService.getDentistsTotalCancellReports(year),HttpStatus.OK);
+	}
+	
+	@GetMapping("dentists-cancelled-report/{month}")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SECRETARY')")
+	public ResponseEntity<DentistsTotalReportsDto> getDentistsMonthlyCancellReports(@PathVariable("month") @NotNull @Min(1) @Max(12) int month){
+		int year = LocalDate.now().getYear();
+		return new ResponseEntity<>(reportService.getDentistsMonthlyCancellReports(year,month,Status.DOCTOR_CANCELLED),HttpStatus.OK);
 	}
 }
