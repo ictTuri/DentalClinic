@@ -50,22 +50,22 @@ public class ReportServiceImpl implements ReportService {
 
 		Long total = allAppointments.stream()
 				.filter(app -> app.getCreatedAt().getMonth().equals(LocalDate.of(year, month, 1).getMonth()))
-				.filter(app -> app.getCreatedAt().getYear() == year).count();
+				.filter(app -> app.getCreatedAt().getYear() == year).parallel().count();
 		dto.setTotal(total);
 		
 		Long totalDone = allAppointments.stream()
 				.filter(app -> app.getCreatedAt().getMonth().equals(LocalDate.of(year, month, 1).getMonth()) && app.getStatus().equals(Status.DONE))
-				.filter(app -> app.getCreatedAt().getYear() == year).count();
+				.filter(app -> app.getCreatedAt().getYear() == year).parallel().count();
 		dto.setDone(totalDone);
 		
 		Long doctorCancelled = allAppointments.stream()
 				.filter(app -> app.getCreatedAt().getMonth().equals(LocalDate.of(year, month, 1).getMonth()) && app.getStatus().equals(Status.DOCTOR_CANCELLED))
-				.filter(app -> app.getCreatedAt().getYear() == year).count();
+				.filter(app -> app.getCreatedAt().getYear() == year).parallel().count();
 		dto.setDoctocCancelled(doctorCancelled);
 		
 		Long clientCancelled = allAppointments.stream()
 				.filter(app -> app.getCreatedAt().getMonth().equals(LocalDate.of(year, month, 1).getMonth()) && app.getStatus().equals(Status.USER_CANCELLED))
-				.filter(app -> app.getCreatedAt().getYear() == year).count();
+				.filter(app -> app.getCreatedAt().getYear() == year).parallel().count();
 		dto.setClientCancelled(clientCancelled);
 		dto.setWeeklyReport(weeklyReport(allAppointments, year, month));
 
@@ -87,23 +87,23 @@ public class ReportServiceImpl implements ReportService {
 			WeeklyReportDto dto = new WeeklyReportDto();
 			Long total = appointment.stream().filter(app -> app.getCreatedAt().toLocalDate().isAfter(week.minusDays(1)))
 					.filter(app -> app.getCreatedAt().toLocalDate().isBefore(week.plusDays(7)))
-					.filter(app -> app.getCreatedAt().getYear() == year).count();
+					.filter(app -> app.getCreatedAt().getYear() == year).parallel().count();
 			dto.setTotal(total);
 			
 			Long totalDone = appointment.stream().filter(app -> app.getCreatedAt().toLocalDate().isAfter(week.minusDays(1)))
 					.filter(app -> app.getCreatedAt().toLocalDate().isBefore(week.plusDays(7)))
 					.filter(app -> app.getCreatedAt().getYear() == year)
-					.filter(app -> app.getStatus().equals(Status.DONE)).count();
+					.filter(app -> app.getStatus().equals(Status.DONE)).parallel().count();
 			dto.setDone(totalDone);
 			
 			Long totalDoctorCancelled = appointment.stream().filter(app -> app.getCreatedAt().toLocalDate().isAfter(week.minusDays(1)))
 					.filter(app -> app.getCreatedAt().toLocalDate().isBefore(week.plusDays(7)))
-					.filter(app -> app.getStatus().equals(Status.DOCTOR_CANCELLED)).count();
+					.filter(app -> app.getStatus().equals(Status.DOCTOR_CANCELLED)).parallel().count();
 			dto.setDoctocCancelled(totalDoctorCancelled);
 			
 			Long totalUserCancelled = appointment.stream().filter(app -> app.getCreatedAt().toLocalDate().isAfter(week.minusDays(1)))
 					.filter(app -> app.getCreatedAt().toLocalDate().isBefore(week.plusDays(7)))
-					.filter(app -> app.getStatus().equals(Status.USER_CANCELLED)).count();
+					.filter(app -> app.getStatus().equals(Status.USER_CANCELLED)).parallel().count();
 			dto.setClientCancelled(totalUserCancelled);
 			dto.setWeekDay(week.getDayOfMonth());
 			weeklyList.add(dto);					
@@ -167,7 +167,7 @@ public class ReportServiceImpl implements ReportService {
 			WeeklyDentistsTotalReportsDto dto = new WeeklyDentistsTotalReportsDto();
 			List<AppointmentEntity> weekAppointments = appointments.stream().filter(app -> app.getCreatedAt().toLocalDate().isAfter(week.minusDays(1)))
 					.filter(app -> app.getCreatedAt().toLocalDate().isBefore(week.plusDays(7))).toList();
-			Map<String, Long>  weekReport = weekAppointments.stream()
+			Map<String, Long>  weekReport = weekAppointments.stream().parallel()
 					.collect(Collectors.groupingBy(AppointmentEntity::getDentist,Collectors.counting()));
 			dto.setWeekDay(week.getDayOfMonth());
 			dto.setWeeklyResult(weekReport);

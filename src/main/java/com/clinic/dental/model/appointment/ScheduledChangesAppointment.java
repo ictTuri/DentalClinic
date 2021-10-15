@@ -2,6 +2,8 @@ package com.clinic.dental.model.appointment;
 
 import java.util.concurrent.TimeUnit;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -9,12 +11,10 @@ import org.springframework.stereotype.Component;
 import com.clinic.dental.model.appointment.repository.AppointmentRepository;
 import com.clinic.dental.model.appointment.service.AppointmentService;
 
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
 @Component
 public class ScheduledChangesAppointment {
 
+	Logger log =  LogManager.getLogger(ScheduledChangesAppointment.class);
 	private static final String DEFAULT_FEEDBACK = "No feedback given for this appointment!";
 	
 	@Autowired

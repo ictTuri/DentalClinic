@@ -1,6 +1,141 @@
-2021-10-15 11:45:53,838 INFO o.h.v.i.u.Version [background-preinit] HV000001: Hibernate Validator 6.2.0.Final
-2021-10-15 11:45:53,920 INFO o.s.b.StartupInfoLogger [restartedMain] Starting DentalClinicApplication using Java 16.0.2 on PC-AMOLLA with PID 10192 (C:\Users\amolla\Desktop\STSWorkspace\DentalClinic\target\classes started by amolla in C:\Users\amolla\Desktop\STSWorkspace\DentalClinic)
-2021-10-15 11:45:53,925 DEBUG o.s.b.StartupInfoLogger [restartedMain] Running with Spring Boot v2.5.5, Spring v5.3.10
-2021-10-15 11:45:53,926 INFO o.s.b.SpringApplication [restartedMain] The following profiles are active: dev
-2021-10-15 11:45:54,120 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
-2021-10-15 11:45:54,121 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2021-10-15 14:28:16,888 INFO o.h.v.i.u.Version [background-preinit] HV000001: Hibernate Validator 6.2.0.Final
+2021-10-15 14:28:16,977 INFO o.s.b.StartupInfoLogger [restartedMain] Starting DentalClinicApplication using Java 16.0.2 on PC-AMOLLA with PID 3164 (C:\Users\amolla\Desktop\STSWorkspace\DentalClinic\target\classes started by amolla in C:\Users\amolla\Desktop\STSWorkspace\DentalClinic)
+2021-10-15 14:28:16,986 DEBUG o.s.b.StartupInfoLogger [restartedMain] Running with Spring Boot v2.5.5, Spring v5.3.10
+2021-10-15 14:28:16,989 INFO o.s.b.SpringApplication [restartedMain] The following profiles are active: dev
+2021-10-15 14:28:17,220 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2021-10-15 14:28:17,221 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2021-10-15 14:28:19,034 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2021-10-15 14:28:19,200 INFO o.s.d.r.c.RepositoryConfigurationDelegate [restartedMain] Finished Spring Data repository scanning in 156 ms. Found 4 JPA repository interfaces.
+2021-10-15 14:28:19,713 INFO o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker [restartedMain] Bean 'org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler@2e6d31fe' of type [org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2021-10-15 14:28:19,719 INFO o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker [restartedMain] Bean 'methodSecurityMetadataSource' of type [org.springframework.security.access.method.DelegatingMethodSecurityMetadataSource] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2021-10-15 14:28:20,086 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat initialized with port(s): 8080 (http)
+2021-10-15 14:28:20,098 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing ProtocolHandler ["http-nio-8080"]
+2021-10-15 14:28:20,099 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting service [Tomcat]
+2021-10-15 14:28:20,099 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting Servlet engine: [Apache Tomcat/9.0.53]
+2021-10-15 14:28:20,361 INFO o.a.j.l.DirectJDKLog [restartedMain] Initializing Spring embedded WebApplicationContext
+2021-10-15 14:28:20,366 INFO o.s.b.w.s.c.ServletWebServerApplicationContext [restartedMain] Root WebApplicationContext: initialization completed in 3140 ms
+2021-10-15 14:28:20,480 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Starting...
+2021-10-15 14:28:20,850 INFO c.z.h.HikariDataSource [restartedMain] HikariPool-1 - Start completed.
+2021-10-15 14:28:20,864 INFO o.s.b.a.h.H2ConsoleAutoConfiguration [restartedMain] H2 console available at '/h2-console'. Database available at 'jdbc:postgresql://localhost:5432/dental?sslmode=disable'
+2021-10-15 14:28:21,059 INFO o.h.j.i.u.LogHelper [restartedMain] HHH000204: Processing PersistenceUnitInfo [name: default]
+2021-10-15 14:28:21,160 INFO o.h.Version [restartedMain] HHH000412: Hibernate ORM core version 5.4.32.Final
+2021-10-15 14:28:21,420 INFO o.h.a.c.r.j.JavaReflectionManager [restartedMain] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2021-10-15 14:28:21,682 INFO o.h.d.Dialect [restartedMain] HHH000400: Using dialect: org.hibernate.dialect.PostgreSQLDialect
+2021-10-15 14:28:23,920 INFO o.h.e.t.j.p.i.JtaPlatformInitiator [restartedMain] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2021-10-15 14:28:23,933 INFO o.s.o.j.AbstractEntityManagerFactoryBean [restartedMain] Initialized JPA EntityManagerFactory for persistence unit 'default'
+2021-10-15 14:28:24,595 WARN o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration [restartedMain] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2021-10-15 14:28:25,283 INFO s.d.s.w.PropertySourcedRequestMappingHandlerMapping [restartedMain] Mapped URL path [/v2/api-docs] onto method [springfox.documentation.swagger2.web.Swagger2Controller#getDocumentation(String, HttpServletRequest)]
+2021-10-15 14:28:25,542 INFO o.s.b.d.a.OptionalLiveReloadServer [restartedMain] LiveReload server is running on port 35729
+2021-10-15 14:28:25,757 INFO o.s.s.w.DefaultSecurityFilterChain [restartedMain] Will secure Ant [pattern='/api/register'] with []
+2021-10-15 14:28:25,757 INFO o.s.s.w.DefaultSecurityFilterChain [restartedMain] Will secure Ant [pattern='/api/_login'] with []
+2021-10-15 14:28:25,758 INFO o.s.s.w.DefaultSecurityFilterChain [restartedMain] Will secure Ant [pattern='/open/**'] with []
+2021-10-15 14:28:25,758 INFO o.s.s.w.DefaultSecurityFilterChain [restartedMain] Will secure Ant [pattern='/h2-console/**'] with []
+2021-10-15 14:28:25,758 INFO o.s.s.w.DefaultSecurityFilterChain [restartedMain] Will secure Ant [pattern='/h2-console'] with []
+2021-10-15 14:28:25,759 INFO o.s.s.w.DefaultSecurityFilterChain [restartedMain] Will secure Ant [pattern='/api/register'] with []
+2021-10-15 14:28:25,759 INFO o.s.s.w.DefaultSecurityFilterChain [restartedMain] Will secure Ant [pattern='/webjars/**'] with []
+2021-10-15 14:28:25,759 INFO o.s.s.w.DefaultSecurityFilterChain [restartedMain] Will secure Ant [pattern='/v2/api-docs/**'] with []
+2021-10-15 14:28:25,759 INFO o.s.s.w.DefaultSecurityFilterChain [restartedMain] Will secure Ant [pattern='/swagger-resources/**'] with []
+2021-10-15 14:28:25,760 INFO o.s.s.w.DefaultSecurityFilterChain [restartedMain] Will secure Ant [pattern='/swagger-ui.html'] with []
+2021-10-15 14:28:25,760 INFO o.s.s.w.DefaultSecurityFilterChain [restartedMain] Will secure Ant [pattern='/swagger/**'] with []
+2021-10-15 14:28:25,760 INFO o.s.s.w.DefaultSecurityFilterChain [restartedMain] Will secure Ant [pattern='/favicon.ico'] with []
+2021-10-15 14:28:25,760 INFO o.s.s.w.DefaultSecurityFilterChain [restartedMain] Will secure Ant [pattern='/api/swagger.json'] with []
+2021-10-15 14:28:25,761 INFO o.s.s.w.DefaultSecurityFilterChain [restartedMain] Will secure Ant [pattern='/actuator/health'] with []
+2021-10-15 14:28:25,761 INFO o.s.s.w.DefaultSecurityFilterChain [restartedMain] Will secure Ant [pattern='/**', OPTIONS] with []
+2021-10-15 14:28:25,799 INFO o.s.s.w.DefaultSecurityFilterChain [restartedMain] Will secure any request with [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@73864c7c, org.springframework.security.web.context.SecurityContextPersistenceFilter@9d0e663, org.springframework.security.web.header.HeaderWriterFilter@35f7572, org.springframework.web.filter.CorsFilter@2d1cd130, org.springframework.security.web.authentication.logout.LogoutFilter@527b37f9, com.clinic.dental.security.jwt.JwtTokenVerifier@1c555a63, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@72853988, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@117b2cae, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@73a0a270, org.springframework.security.web.session.SessionManagementFilter@28b141bd, org.springframework.security.web.access.ExceptionTranslationFilter@4b61dbe5, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@6291b168]
+2021-10-15 14:28:25,892 INFO o.a.j.l.DirectJDKLog [restartedMain] Starting ProtocolHandler ["http-nio-8080"]
+2021-10-15 14:28:25,924 INFO o.s.b.w.e.t.TomcatWebServer [restartedMain] Tomcat started on port(s): 8080 (http) with context path ''
+2021-10-15 14:28:25,925 INFO s.d.s.w.p.DocumentationPluginsBootstrapper [restartedMain] Context refreshed
+2021-10-15 14:28:25,956 INFO s.d.s.w.p.DocumentationPluginsBootstrapper [restartedMain] Found 1 custom documentation plugin(s)
+2021-10-15 14:28:25,990 INFO s.d.s.w.s.ApiListingReferenceScanner [restartedMain] Scanning for api listing references
+2021-10-15 14:28:26,325 INFO o.s.b.StartupInfoLogger [restartedMain] Started DentalClinicApplication in 10.017 seconds (JVM running for 12.092)
+2021-10-15 14:28:26,362 INFO c.c.d.m.a.ScheduledChangesAppointment [scheduling-1] Schedule run for status update!
+2021-10-15 14:28:26,388 INFO c.c.d.m.a.ScheduledChangesAppointment [scheduling-1] Schedule run for feedback update!
+2021-10-15 14:28:36,540 INFO o.a.j.l.DirectJDKLog [http-nio-8080-exec-1] Initializing Spring DispatcherServlet 'dispatcherServlet'
+2021-10-15 14:28:36,540 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-1] Initializing Servlet 'dispatcherServlet'
+2021-10-15 14:28:36,541 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-1] Completed initialization in 1 ms
+2021-10-15 14:29:14,182 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-6] Getting weekly report for appointments!
+2021-10-15 14:29:14,183 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-6] Getting monthly report for appointments!
+2021-10-15 14:29:20,337 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-8] Getting weekly report for appointments!
+2021-10-15 14:29:20,338 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-8] Getting monthly report for appointments!
+2021-10-15 14:29:25,925 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-9] Getting Dentist weekly report for appointments!
+2021-10-15 14:29:25,926 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-9] Getting Dentist monthly report for appointments!
+2021-10-15 14:29:25,927 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-9] Getting Dentist weekly report for appointments!
+2021-10-15 14:29:25,927 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-9] Getting Dentist monthly report for appointments!
+2021-10-15 14:29:25,929 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-9] Getting Dentist weekly report for appointments!
+2021-10-15 14:29:25,929 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-9] Getting Dentist monthly report for appointments!
+2021-10-15 14:29:25,930 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-9] Getting Dentist weekly report for appointments!
+2021-10-15 14:29:25,930 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-9] Getting Dentist monthly report for appointments!
+2021-10-15 14:29:25,931 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-9] Getting Dentist weekly report for appointments!
+2021-10-15 14:29:25,932 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-9] Getting Dentist monthly report for appointments!
+2021-10-15 14:29:25,933 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-9] Getting Dentist weekly report for appointments!
+2021-10-15 14:29:25,933 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-9] Getting Dentist monthly report for appointments!
+2021-10-15 14:29:25,934 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-9] Getting Dentist weekly report for appointments!
+2021-10-15 14:29:25,934 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-9] Getting Dentist monthly report for appointments!
+2021-10-15 14:29:25,935 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-9] Getting Dentist weekly report for appointments!
+2021-10-15 14:29:25,935 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-9] Getting Dentist monthly report for appointments!
+2021-10-15 14:29:25,936 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-9] Getting Dentist weekly report for appointments!
+2021-10-15 14:29:25,936 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-9] Getting Dentist monthly report for appointments!
+2021-10-15 14:29:25,937 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-9] Getting Dentist weekly report for appointments!
+2021-10-15 14:29:25,938 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-9] Getting Dentist monthly report for appointments!
+2021-10-15 14:29:25,939 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-9] Getting Dentist weekly report for appointments!
+2021-10-15 14:29:25,939 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-9] Getting Dentist monthly report for appointments!
+2021-10-15 14:29:25,942 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-9] Getting Dentist weekly report for appointments!
+2021-10-15 14:29:25,943 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-9] Getting Dentist monthly report for appointments!
+2021-10-15 14:29:25,943 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-9] Getting Dentist total cancelled report for appointments!
+2021-10-15 14:29:36,542 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-3] Getting Dentist monthly cancelled report for appointments!
+2021-10-15 14:29:36,546 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-3] Getting Dentist weekly report for appointments!
+2021-10-15 14:29:36,546 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-3] Getting Dentist monthly report for appointments!
+2021-10-15 14:29:43,391 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-5] Getting Dentist weekly report for appointments!
+2021-10-15 14:29:43,392 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-5] Getting Dentist monthly report for appointments!
+2021-10-15 14:29:43,394 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-5] Getting Dentist weekly report for appointments!
+2021-10-15 14:29:43,394 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-5] Getting Dentist monthly report for appointments!
+2021-10-15 14:29:43,395 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-5] Getting Dentist weekly report for appointments!
+2021-10-15 14:29:43,395 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-5] Getting Dentist monthly report for appointments!
+2021-10-15 14:29:43,396 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-5] Getting Dentist weekly report for appointments!
+2021-10-15 14:29:43,396 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-5] Getting Dentist monthly report for appointments!
+2021-10-15 14:29:43,397 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-5] Getting Dentist weekly report for appointments!
+2021-10-15 14:29:43,397 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-5] Getting Dentist monthly report for appointments!
+2021-10-15 14:29:43,398 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-5] Getting Dentist weekly report for appointments!
+2021-10-15 14:29:43,399 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-5] Getting Dentist monthly report for appointments!
+2021-10-15 14:29:43,400 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-5] Getting Dentist weekly report for appointments!
+2021-10-15 14:29:43,400 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-5] Getting Dentist monthly report for appointments!
+2021-10-15 14:29:43,401 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-5] Getting Dentist weekly report for appointments!
+2021-10-15 14:29:43,401 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-5] Getting Dentist monthly report for appointments!
+2021-10-15 14:29:43,402 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-5] Getting Dentist weekly report for appointments!
+2021-10-15 14:29:43,403 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-5] Getting Dentist monthly report for appointments!
+2021-10-15 14:29:43,404 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-5] Getting Dentist weekly report for appointments!
+2021-10-15 14:29:43,404 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-5] Getting Dentist monthly report for appointments!
+2021-10-15 14:29:43,407 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-5] Getting Dentist weekly report for appointments!
+2021-10-15 14:29:43,407 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-5] Getting Dentist monthly report for appointments!
+2021-10-15 14:29:43,408 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-5] Getting Dentist weekly report for appointments!
+2021-10-15 14:29:43,408 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-5] Getting Dentist monthly report for appointments!
+2021-10-15 14:29:43,409 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-5] Getting Dentist total report for appointments!
+2021-10-15 14:29:50,488 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-7] Getting weekly report for appointments!
+2021-10-15 14:29:50,488 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-7] Getting monthly report for appointments!
+2021-10-15 14:29:50,491 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-7] Getting weekly report for appointments!
+2021-10-15 14:29:50,492 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-7] Getting monthly report for appointments!
+2021-10-15 14:29:50,495 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-7] Getting weekly report for appointments!
+2021-10-15 14:29:50,495 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-7] Getting monthly report for appointments!
+2021-10-15 14:29:50,497 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-7] Getting weekly report for appointments!
+2021-10-15 14:29:50,498 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-7] Getting monthly report for appointments!
+2021-10-15 14:29:50,500 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-7] Getting weekly report for appointments!
+2021-10-15 14:29:50,500 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-7] Getting monthly report for appointments!
+2021-10-15 14:29:50,502 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-7] Getting weekly report for appointments!
+2021-10-15 14:29:50,502 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-7] Getting monthly report for appointments!
+2021-10-15 14:29:50,503 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-7] Getting weekly report for appointments!
+2021-10-15 14:29:50,504 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-7] Getting monthly report for appointments!
+2021-10-15 14:29:50,505 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-7] Getting weekly report for appointments!
+2021-10-15 14:29:50,506 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-7] Getting monthly report for appointments!
+2021-10-15 14:29:50,508 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-7] Getting weekly report for appointments!
+2021-10-15 14:29:50,508 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-7] Getting monthly report for appointments!
+2021-10-15 14:29:50,510 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-7] Getting weekly report for appointments!
+2021-10-15 14:29:50,511 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-7] Getting monthly report for appointments!
+2021-10-15 14:29:50,512 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-7] Getting weekly report for appointments!
+2021-10-15 14:29:50,512 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-7] Getting monthly report for appointments!
+2021-10-15 14:29:50,514 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-7] Getting weekly report for appointments!
+2021-10-15 14:29:50,514 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-7] Getting monthly report for appointments!
+2021-10-15 14:29:50,514 INFO c.c.d.m.r.s.i.ReportServiceImpl [http-nio-8080-exec-7] Getting year report for appointments!
+2021-10-15 14:30:32,779 INFO o.s.b.a.SpringApplicationAdminMXBeanRegistrar$SpringApplicationAdmin [RMI TCP Connection(10)-127.0.0.1] Application shutdown requested.
+2021-10-15 14:30:32,806 INFO o.s.o.j.AbstractEntityManagerFactoryBean [RMI TCP Connection(10)-127.0.0.1] Closing JPA EntityManagerFactory for persistence unit 'default'
+2021-10-15 14:30:32,808 INFO c.z.h.HikariDataSource [RMI TCP Connection(10)-127.0.0.1] HikariPool-1 - Shutdown initiated...
+2021-10-15 14:30:32,813 INFO c.z.h.HikariDataSource [RMI TCP Connection(10)-127.0.0.1] HikariPool-1 - Shutdown completed.
