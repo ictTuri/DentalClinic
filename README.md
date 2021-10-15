@@ -95,32 +95,32 @@ Run the app and it will populate initial data:
 #### Controllers 
 * Swagger UI api Docs
 
-![Schema](https://github.com/ictTuri/DentalClinic/blob/main/img/api.PNG?raw=true)
+![Schema](https://github.com/ictTuri/DentalClinic/blob/main/img/api.png?raw=true)
 
 ---
 * Appointments-Controller Operations
 
-![Schema](https://github.com/ictTuri/DentalClinic/blob/main/img/appointments.PNG?raw=true)
+![Schema](https://github.com/ictTuri/DentalClinic/blob/main/img/appointments.png?raw=true)
 
 ---
 * Login-Logout-Controller Operations
 
-![Schema](https://github.com/ictTuri/DentalClinic/blob/main/img/loginlogout.PNG?raw=true)
+![Schema](https://github.com/ictTuri/DentalClinic/blob/main/img/loginlogout.png?raw=true)
 
 ---
 * Register-Controller Operations
 
-![Schema](https://github.com/ictTuri/DentalClinic/blob/main/img/register.PNG?raw=true)
+![Schema](https://github.com/ictTuri/DentalClinic/blob/main/img/register.png?raw=true)
 
 ---
 * Reports-Controller Operations
 
-![Schema](https://github.com/ictTuri/DentalClinic/blob/main/img/reports.PNG?raw=true)
+![Schema](https://github.com/ictTuri/DentalClinic/blob/main/img/reports.png?raw=true)
 
 ---
 * Users-Controller Operations
 
-![Schema](https://github.com/ictTuri/DentalClinic/blob/main/img/users.PNG?raw=true)
+![Schema](https://github.com/ictTuri/DentalClinic/blob/main/img/users.png?raw=true)
 
 ---
 
