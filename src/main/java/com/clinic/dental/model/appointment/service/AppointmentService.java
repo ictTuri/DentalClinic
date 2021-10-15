@@ -35,7 +35,7 @@ public interface AppointmentService {
 
 	DisplayAppointmentDto refuzeNewTimeAppointment(Long id);
 
-	DisplayAppointmentDto cancelAppointment(Long id);
+	DisplayAppointmentDto cancelAppointment(Long id, UserEntity thisUser);
 
 	DisplayAppointmentDto changeAppointmentDentist(Long id, @Valid ChangeAppointmentDentistDto dto);
 

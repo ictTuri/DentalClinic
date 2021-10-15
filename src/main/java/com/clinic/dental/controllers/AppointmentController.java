@@ -6,6 +6,7 @@ import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,11 +16,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.clinic.dental.model.appointment.dto.DisplayAppointmentDto;
+import com.clinic.dental.Utils.ValueOfEnum;
 import com.clinic.dental.model.appointment.dto.ChangeAppointmentDentistDto;
 import com.clinic.dental.model.appointment.dto.ChangeAppointmentTimeDto;
 import com.clinic.dental.model.appointment.dto.CreatePublicAppointmentDto;
 import com.clinic.dental.model.appointment.dto.SlotDto;
 import com.clinic.dental.model.appointment.dto.TimeSlotDto;
+import com.clinic.dental.model.appointment.enums.Status;
 import com.clinic.dental.model.appointment.service.AppointmentService;
 import com.clinic.dental.model.feedback.dto.CreateFeedbackDto;
 import com.clinic.dental.model.user.UserEntity;
@@ -29,12 +32,12 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
+@Validated
 @RequestMapping("/api/visit")
 public class AppointmentController {
 
 	private final AppointmentService appointmentService;
 	private final UserService userService;
-
 	
 	@GetMapping("/free-schedule")
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SECRETARY','ROLE_PUBLIC')")
@@ -72,7 +75,7 @@ public class AppointmentController {
 	
 	@GetMapping()
 	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_PUBLIC','ROLE_DOCTOR','ROLE_SECRETARY')")
-	public ResponseEntity<List<DisplayAppointmentDto>> getMyAllAppointments(@RequestParam(name = "status", required = false) String status){
+	public ResponseEntity<List<DisplayAppointmentDto>> getMyAllAppointments(@ValueOfEnum(enumClass = Status.class,message ="Please enter a valid status") @RequestParam(name = "status", required = false) String status){
 		UserEntity thisUser = userService.getAuthenticatedUser();
 		return new ResponseEntity<List<DisplayAppointmentDto>>(appointmentService.getMyAllAppointments(status,thisUser),HttpStatus.OK);
 	}
@@ -130,7 +133,8 @@ public class AppointmentController {
 	@PostMapping("/{id}/cancel")
 	@PreAuthorize("hasAnyRole('ROLE_PUBLIC','ROLE_DOCTOR')")
 	public ResponseEntity<DisplayAppointmentDto> cancelAppointment(@PathVariable("id") Long id){
-		return new ResponseEntity<DisplayAppointmentDto>(appointmentService.cancelAppointment(id),HttpStatus.OK);
+		UserEntity thisUser = userService.getAuthenticatedUser();
+		return new ResponseEntity<DisplayAppointmentDto>(appointmentService.cancelAppointment(id,thisUser),HttpStatus.OK);
 	}
 
 }

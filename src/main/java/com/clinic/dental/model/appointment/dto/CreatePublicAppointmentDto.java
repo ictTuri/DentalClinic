@@ -20,11 +20,8 @@ public class CreatePublicAppointmentDto {
 	@NotNull(message = "Please enter a valid start time of format 'HH:MM:SS' ")
 	private LocalTime startTime;
 
-	@NotBlank(message = "Please enter a service type you are interested at!")
-	@ValueOfEnum(enumClass = AppointmentType.class, message = "Please enter a valid type: COMPLETE,\r\n"
-			+ "	FILLINGS,\r\n" + "	COSMETIC,\r\n" + "	IMPLANTS,\r\n" + "	ORTHODONTICS,\r\n"
-			+ "	PREVENTATIVE_CARE,\r\n" + "	PERIODONTAL_THERAPY,\r\n" + "	NUTRITIONAL_COUNSELING,\r\n"
-			+ "	ROOT_CANALS\r\n" + " or	GENERAL")
+	@NotBlank
+	@ValueOfEnum(enumClass = AppointmentType.class, message = "Please enter a valid type: COMPLETE, FILLINGS, COSMETIC, IMPLANTS, ORTHODONTICS, PREVENTATIVE_CARE, PERIODONTAL_THERAPY, NUTRITIONAL_COUNSELING, ROOT_CANALS or GENERAL")
 	private String type;
 
 }

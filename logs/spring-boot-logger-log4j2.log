@@ -1,0 +1,6 @@
+2021-10-15 11:45:53,838 INFO o.h.v.i.u.Version [background-preinit] HV000001: Hibernate Validator 6.2.0.Final
+2021-10-15 11:45:53,920 INFO o.s.b.StartupInfoLogger [restartedMain] Starting DentalClinicApplication using Java 16.0.2 on PC-AMOLLA with PID 10192 (C:\Users\amolla\Desktop\STSWorkspace\DentalClinic\target\classes started by amolla in C:\Users\amolla\Desktop\STSWorkspace\DentalClinic)
+2021-10-15 11:45:53,925 DEBUG o.s.b.StartupInfoLogger [restartedMain] Running with Spring Boot v2.5.5, Spring v5.3.10
+2021-10-15 11:45:53,926 INFO o.s.b.SpringApplication [restartedMain] The following profiles are active: dev
+2021-10-15 11:45:54,120 INFO o.s.b.l.DeferredLog [restartedMain] Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2021-10-15 11:45:54,121 INFO o.s.b.l.DeferredLog [restartedMain] For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'

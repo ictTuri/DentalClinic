@@ -73,9 +73,11 @@ class AppointmentControllerTest {
 	@Test
 	void givenAppointment_WhenCancelled_VerifyStatus() {
 		Long id = 1L;
+		UserEntity thisUser = UserUtilTest.publicOne();
 		DisplayAppointmentDto dtoCancelled = AppointmentConverter.toDto(AppointmentUtilTest.appointmentFour());
 
-		when(appointmentService.cancelAppointment(id)).thenReturn(dtoCancelled);
+		when(userService.getAuthenticatedUser()).thenReturn(thisUser);
+		when(appointmentService.cancelAppointment(id,thisUser)).thenReturn(dtoCancelled);
 
 		ResponseEntity<DisplayAppointmentDto> cancelledApp = appointmentController.cancelAppointment(id);
 

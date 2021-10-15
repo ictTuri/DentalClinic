@@ -25,7 +25,7 @@ import lombok.var;
 @RequiredArgsConstructor
 public class LoginLogoutController {
 	
-	private static final String USERNOTAUTHENTICATED = "Unable to Authenticate! Check username and password!";
+	private static final String USERNOTAUTHENTICATED = "Unable to Authenticate! Check credential and password!";
 
 	private final AuthenticationManager authenticationManager;
 	private final JwtTokenProvider jwtTokenProvider;

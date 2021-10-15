@@ -21,7 +21,7 @@ public class ApplicationUserService implements UserDetailsService{
 		
 		if(credential != null) {
 			if(credential.trim().toUpperCase().matches(RegexPatterns.NID)) {
-				var userEntity = userRepo.findByNID(credential);
+				var userEntity = userRepo.findByNID(credential.toUpperCase());
 				return new ApplicationUser(userEntity);
 			}else if(credential.trim().matches(RegexPatterns.PHONE_NUMBER)) {
 				var userEntity = userRepo.findByPhone(credential);

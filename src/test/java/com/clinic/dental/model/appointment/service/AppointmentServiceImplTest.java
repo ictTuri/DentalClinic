@@ -24,6 +24,7 @@ import com.clinic.dental.model.appointment.dto.DisplayAppointmentDto;
 import com.clinic.dental.model.appointment.dto.SlotDto;
 import com.clinic.dental.model.appointment.enums.Status;
 import com.clinic.dental.model.appointment.repository.AppointmentRepository;
+import com.clinic.dental.model.appointment.service.impl.AppointmentServiceImpl;
 import com.clinic.dental.model.original_appointment.repository.OriginalAppointmentRepository;
 import com.clinic.dental.model.user.UserEntity;
 import com.clinic.dental.model.user.enums.Role;

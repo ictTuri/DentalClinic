@@ -82,6 +82,7 @@ Move to lms/src/main/resources/application-dev.properties
 Create your own database and update the properties.
 At lms/src/main/resources/application.properties make sure profile is dev 
 Run the app and it will populate initial data:
+
 " NID: A00000001A, password: admin "
 " NID: S00000001S, password: secretary "
 " NID: D00000001D, password: dentist "

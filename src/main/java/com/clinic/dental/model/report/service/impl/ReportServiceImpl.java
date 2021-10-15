@@ -1,4 +1,4 @@
-package com.clinic.dental.model.report.service;
+package com.clinic.dental.model.report.service.impl;
 
 import java.text.DateFormatSymbols;
 import java.time.LocalDate;
@@ -13,6 +13,8 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +25,7 @@ import com.clinic.dental.model.report.dto.DentistsTotalReportsDto;
 import com.clinic.dental.model.report.dto.TotalRezervationsReportDto;
 import com.clinic.dental.model.report.dto.WeeklyDentistsTotalReportsDto;
 import com.clinic.dental.model.report.dto.WeeklyReportDto;
+import com.clinic.dental.model.report.service.ReportService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.var;
@@ -31,6 +34,8 @@ import lombok.var;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ReportServiceImpl implements ReportService {
+	
+	Logger log = LogManager.getLogger(ReportServiceImpl.class);
 
 	private final AppointmentRepository appointmentRepo;
 
@@ -64,6 +69,7 @@ public class ReportServiceImpl implements ReportService {
 		dto.setClientCancelled(clientCancelled);
 		dto.setWeeklyReport(weeklyReport(allAppointments, year, month));
 
+		log.info("Getting monthly report for appointments!");
 		return dto;
 	}
 
@@ -102,6 +108,7 @@ public class ReportServiceImpl implements ReportService {
 			dto.setWeekDay(week.getDayOfMonth());
 			weeklyList.add(dto);					
 		});
+		log.info("Getting weekly report for appointments!");
 		return weeklyList;
 	}
 	
@@ -122,6 +129,7 @@ public class ReportServiceImpl implements ReportService {
 		for (int i = 1; i <= 12; i++) {
 			dtos.add(getMonthlyReports(year, i));
 		}
+		log.info("Getting year report for appointments!");
 		return dtos;
 	}
 
@@ -141,6 +149,7 @@ public class ReportServiceImpl implements ReportService {
 		dto.setWeeklyReport(weeklyList);
 		dto.setDentistsReport(report);
 		
+		log.info("Getting Dentist monthly report for appointments!");
 		return dto;
 	}
 	
@@ -165,6 +174,7 @@ public class ReportServiceImpl implements ReportService {
 			weeklyList.add(dto);
 		});
 		
+		log.info("Getting Dentist weekly report for appointments!");
 		return weeklyList;
 	}
 
@@ -174,6 +184,7 @@ public class ReportServiceImpl implements ReportService {
 		for (int i = 1; i <= 12; i++) {
 			dtos.add(getDentistsMonthlyReports(year, i, Status.DONE));
 		}
+		log.info("Getting Dentist total report for appointments!");
 		return dtos;
 	}
 
@@ -183,11 +194,13 @@ public class ReportServiceImpl implements ReportService {
 		for (int i = 1; i <= 12; i++) {
 			dtos.add(getDentistsMonthlyReports(year, i, Status.DOCTOR_CANCELLED));
 		}
+		log.info("Getting Dentist total cancelled report for appointments!");
 		return dtos;
 	}
 
 	@Override
 	public DentistsTotalReportsDto getDentistsMonthlyCancellReports(int year, @NotNull @Min(1) @Max(12) int month, Status status) {
+		log.info("Getting Dentist monthly cancelled report for appointments!");
 		return getDentistsMonthlyReports(year, month, status);
 	}
 	

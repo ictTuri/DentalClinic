@@ -1,4 +1,4 @@
-package com.clinic.dental.model.user.service;
+package com.clinic.dental.model.user.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,6 +28,7 @@ import com.clinic.dental.model.user.dto.UserDto;
 import com.clinic.dental.model.user.dto.UserRegisterDto;
 import com.clinic.dental.model.user.enums.Role;
 import com.clinic.dental.model.user.repository.UserRepository;
+import com.clinic.dental.model.user.service.UserService;
 import com.clinic.dental.security.auth.RegexPatterns;
 
 import lombok.RequiredArgsConstructor;
@@ -36,6 +39,8 @@ import lombok.var;
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
+	private static final Logger log = LogManager.getLogger(UserServiceImpl.class);
+	
 	private final UserRepository userRepo;
 	private final AppointmentRepository appointmentRepo;
 	private final PasswordEncoder passEncoder;
@@ -44,12 +49,14 @@ public class UserServiceImpl implements UserService {
 	public List<UserDto> getAllUsers() {
 		List<UserDto> users = new ArrayList<>();
 		userRepo.findAll().stream().forEach(user -> users.add(UserConverter.toDto(user)));
+		log.info("Getting all users!");
 		return users;
 	}
 
 	@Override
 	public UserDto getUserById(Long id) {
 		UserDto dto = UserConverter.toDto(userRepo.locateById(id));
+		log.info("Getting user with id: {}",id);
 		return dto;
 	}
 
@@ -61,6 +68,7 @@ public class UserServiceImpl implements UserService {
 				if (!existUserByPhone(userDto.getPhone())) {
 					if (!existUserByEmail(userDto.getEmail())) {
 						userDto.setPassword(passEncoder.encode(userDto.getPassword()));
+						log.info("Creating new user with NID: {} and role: {}",userDto.getNID(),userDto.getRole());
 						return UserConverter.toDto(userRepo.save(UserConverter.toEntity(userDto)));
 					}
 					throw new CustomMessageException("Email Already exist!");
@@ -101,6 +109,7 @@ public class UserServiceImpl implements UserService {
 		user.setNID(userDto.getNID());
 		user.setRole(Role.valueOf(userDto.getRole().trim().toUpperCase()));
 		userRepo.save(user);
+		log.info("Updating user with id: {}",id);
 		return UserConverter.toDto(user);
 	}
 
@@ -108,6 +117,7 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	public Void deleteUserById(Long id) {
 		userRepo.deleteById(id);
+		log.info("Deleting user with id: {}",id);
 		return null;
 	}
 
@@ -130,6 +140,7 @@ public class UserServiceImpl implements UserService {
 					if (!existUserByEmail(dto.getEmail())) {
 						dto.setPassword(passEncoder.encode(dto.getPassword()));
 						userRepo.save(UserConverter.toClientRegisterEntity(dto));
+						log.info("Client registering with NID: {} and Name: {}", dto.getNID(), dto.getFirstName().concat(" "+dto.getLastName()));
 						return new CustomResponseDto("Successful Registration, please login now! ", LocalDateTime.now());
 					}
 					throw new CustomMessageException("Email Already exist!");
@@ -160,12 +171,15 @@ public class UserServiceImpl implements UserService {
 	public UserClinicDataDto getUserDataByCredentials(@NotBlank String credentials) {
 		if(credentials.trim().toUpperCase().matches(RegexPatterns.NID)) {
 			var userEntity = userRepo.findByNIDAndRole(credentials,Role.ROLE_PUBLIC);
+			log.info("Getting user data by NID: {}",credentials);
 			return loadUserData(userEntity);
 		}else if(credentials.trim().matches(RegexPatterns.PHONE_NUMBER)) {
 			var userEntity = userRepo.findByPhoneClientAndRole(credentials,Role.ROLE_PUBLIC);
+			log.info("Getting user data by Phone: {}",credentials);
 			return loadUserData(userEntity);
 		}else {
 			var userEntity = userRepo.findByEmailClientAndRole(credentials,Role.ROLE_PUBLIC);
+			log.info("Getting user data by Email: {}",credentials);
 			return loadUserData(userEntity);
 		}
 	}
