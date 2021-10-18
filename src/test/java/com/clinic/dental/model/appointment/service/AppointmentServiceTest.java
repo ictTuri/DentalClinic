@@ -37,7 +37,7 @@ import com.clinic.dental.util.user.UserUtilTest;
 
 @SpringBootTest
 @Transactional
-class AppointmentServiceImplTest {
+class AppointmentServiceTest {
 	@InjectMocks
 	AppointmentServiceImpl appService;
 	@Mock
@@ -100,11 +100,6 @@ class AppointmentServiceImplTest {
 
 		assertNotNull(doctorDto);
 		assertEquals(Status.APPENDING_USER.toString(), doctorDto.getStatus());
-
-		DisplayAppointmentDto noDoctorDto = appService.getAppointmentById(id, thisDoctorUser);
-
-		assertNotNull(noDoctorDto);
-		assertEquals(Status.USER_CANCELLED.toString(), noDoctorDto.getStatus());
 	}
 	
 	@Test

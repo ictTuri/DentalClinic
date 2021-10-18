@@ -47,8 +47,8 @@ class UserRepositoryTest {
 		List<UserEntity> usersRetrieved = userRepo.getByRole("ROLE_ADMIN");
 		
 		assertNotNull(usersRetrieved);
-		assertEquals("generalOne", usersRetrieved.get(0).getFirstName());
-		assertEquals("G00000001G",usersRetrieved.get(0).getNID());
+		assertEquals("admin", usersRetrieved.get(0).getFirstName());
+		assertEquals("A00000001A",usersRetrieved.get(0).getNID());
 	}
 	
 	@Test
