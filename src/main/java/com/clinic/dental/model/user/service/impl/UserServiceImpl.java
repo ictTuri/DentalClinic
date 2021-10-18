@@ -40,7 +40,7 @@ import lombok.var;
 public class UserServiceImpl implements UserService {
 
 	private static final Logger log = LogManager.getLogger(UserServiceImpl.class);
-	
+
 	private final UserRepository userRepo;
 	private final AppointmentRepository appointmentRepo;
 	private final PasswordEncoder passEncoder;
@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserDto getUserById(Long id) {
 		UserDto dto = UserConverter.toDto(userRepo.locateById(id));
-		log.info("Getting user with id: {}",id);
+		log.info("Getting user with id: {}", id);
 		return dto;
 	}
 
@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
 				if (!existUserByPhone(userDto.getPhone())) {
 					if (!existUserByEmail(userDto.getEmail())) {
 						userDto.setPassword(passEncoder.encode(userDto.getPassword()));
-						log.info("Creating new user with NID: {} and role: {}",userDto.getNID(),userDto.getRole());
+						log.info("Creating new user with NID: {} and role: {}", userDto.getNID(), userDto.getRole());
 						return UserConverter.toDto(userRepo.save(UserConverter.toEntity(userDto)));
 					}
 					throw new CustomMessageException("Email Already exist!");
@@ -109,7 +109,7 @@ public class UserServiceImpl implements UserService {
 		user.setNID(userDto.getNID());
 		user.setRole(Role.valueOf(userDto.getRole().trim().toUpperCase()));
 		userRepo.save(user);
-		log.info("Updating user with id: {}",id);
+		log.info("Updating user with id: {}", id);
 		return UserConverter.toDto(user);
 	}
 
@@ -117,7 +117,7 @@ public class UserServiceImpl implements UserService {
 	@Transactional
 	public Void deleteUserById(Long id) {
 		userRepo.deleteById(id);
-		log.info("Deleting user with id: {}",id);
+		log.info("Deleting user with id: {}", id);
 		return null;
 	}
 
@@ -140,8 +140,10 @@ public class UserServiceImpl implements UserService {
 					if (!existUserByEmail(dto.getEmail())) {
 						dto.setPassword(passEncoder.encode(dto.getPassword()));
 						userRepo.save(UserConverter.toClientRegisterEntity(dto));
-						log.info("Client registering with NID: {} and Name: {}", dto.getNID(), dto.getFirstName().concat(" "+dto.getLastName()));
-						return new CustomResponseDto("Successful Registration, please login now! ", LocalDateTime.now());
+						log.info("Client registering with NID: {} and Name: {}", dto.getNID(),
+								dto.getFirstName().concat(" " + dto.getLastName()));
+						return new CustomResponseDto("Successful Registration, please login now! ",
+								LocalDateTime.now());
 					}
 					throw new CustomMessageException("Email Already exist!");
 				}
@@ -161,30 +163,33 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserEntity getDoctorByUsername(String doctorUsername) {
 		UserEntity doctor = userRepo.findDoctorByUsername(doctorUsername);
-		if(doctor != null) {
+		if (doctor != null) {
 			return doctor;
 		}
-		throw new DataIdNotFoundException("Can not find doctor by given username: "+ doctorUsername);
+		throw new DataIdNotFoundException("Can not find doctor by given username: " + doctorUsername);
 	}
 
 	@Override
 	public UserClinicDataDto getUserDataByCredentials(@NotBlank String credentials) {
-		if(credentials.trim().toUpperCase().matches(RegexPatterns.NID)) {
-			var userEntity = userRepo.findByNIDAndRole(credentials,Role.ROLE_PUBLIC);
-			log.info("Getting user data by NID: {}",credentials);
+		if (credentials.trim().toUpperCase().matches(RegexPatterns.NID)) {
+			var userEntity = userRepo.findByNIDAndRole(credentials, Role.ROLE_PUBLIC);
+			log.info("Getting user data by NID: {}", credentials);
 			return loadUserData(userEntity);
-		}else if(credentials.trim().matches(RegexPatterns.PHONE_NUMBER)) {
-			var userEntity = userRepo.findByPhoneClientAndRole(credentials,Role.ROLE_PUBLIC);
-			log.info("Getting user data by Phone: {}",credentials);
+		} else if (credentials.trim().matches(RegexPatterns.PHONE_NUMBER)) {
+			var userEntity = userRepo.findByPhoneClientAndRole(credentials, Role.ROLE_PUBLIC);
+			log.info("Getting user data by Phone: {}", credentials);
 			return loadUserData(userEntity);
-		}else {
-			var userEntity = userRepo.findByEmailClientAndRole(credentials,Role.ROLE_PUBLIC);
-			log.info("Getting user data by Email: {}",credentials);
+		} else {
+			var userEntity = userRepo.findByEmailClientAndRole(credentials, Role.ROLE_PUBLIC);
+			log.info("Getting user data by Email: {}", credentials);
 			return loadUserData(userEntity);
 		}
 	}
-	
+
 	private UserClinicDataDto loadUserData(UserEntity user) {
+		if(user==null) {
+			throw new DataIdNotFoundException("Credentials not found");
+		}
 		UserClinicDataDto userToReturn = new UserClinicDataDto();
 		userToReturn.setFirstName(user.getFirstName());
 		userToReturn.setLastName(user.getLastName());
@@ -192,12 +197,10 @@ public class UserServiceImpl implements UserService {
 		userToReturn.setPhone(user.getPhone());
 		userToReturn.setAge(user.getAge());
 		userToReturn.setNID(user.getNID());
-		List<DisplayAppointmentDto> appointments = appointmentRepo.findByPatient(user)
-				.stream()
-				.map(AppointmentConverter::toDto)
-				.collect(Collectors.toList());
+		List<DisplayAppointmentDto> appointments = appointmentRepo.findByPatient(user).stream()
+				.map(AppointmentConverter::toDto).collect(Collectors.toList());
 		userToReturn.setAppointments(appointments);
 		return userToReturn;
 	}
-	
+
 }
