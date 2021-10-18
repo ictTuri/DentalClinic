@@ -20,7 +20,8 @@
 .springBeans
 .vscode
 /code
-logs
+/logs
+/target
 MANIFEST.MF
 _site/
 activemq-data
