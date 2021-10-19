@@ -1,4 +1,4 @@
-package com.clinic.dental.Utils;
+package com.clinic.dental.utils;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

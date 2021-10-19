@@ -5,9 +5,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
-import com.clinic.dental.Utils.ValueOfEnum;
 import com.clinic.dental.model.user.enums.Gender;
 import com.clinic.dental.model.user.enums.Role;
+import com.clinic.dental.utils.ValueOfEnum;
 
 import lombok.Data;
 

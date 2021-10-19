@@ -1,4 +1,4 @@
-package com.clinic.dental.Utils;
+package com.clinic.dental.utils;
 
 import java.util.List;
 import java.util.stream.Collectors;

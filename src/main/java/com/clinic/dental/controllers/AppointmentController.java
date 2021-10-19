@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.clinic.dental.model.appointment.dto.DisplayAppointmentDto;
-import com.clinic.dental.Utils.ValueOfEnum;
 import com.clinic.dental.model.appointment.dto.ChangeAppointmentDentistDto;
 import com.clinic.dental.model.appointment.dto.ChangeAppointmentTimeDto;
 import com.clinic.dental.model.appointment.dto.CreatePublicAppointmentDto;
@@ -27,6 +26,7 @@ import com.clinic.dental.model.appointment.service.AppointmentService;
 import com.clinic.dental.model.feedback.dto.CreateFeedbackDto;
 import com.clinic.dental.model.user.UserEntity;
 import com.clinic.dental.model.user.service.UserService;
+import com.clinic.dental.utils.ValueOfEnum;
 
 import lombok.RequiredArgsConstructor;
 

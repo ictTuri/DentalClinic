@@ -48,7 +48,6 @@ class FeedbackServiceTest {
 	@Test
 	void givenId_WhenGetFeedback_ThrowsDataNotFound() {
 		Long id = 1L;
-		AppointmentEntity app = AppointmentUtilTest.appointmentSix();
 		
 		when(appointmentRepo.getById(id)).thenReturn(null);
 		

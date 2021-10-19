@@ -6,8 +6,8 @@ import java.time.LocalTime;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import com.clinic.dental.Utils.ValueOfEnum;
 import com.clinic.dental.model.appointment.enums.AppointmentType;
+import com.clinic.dental.utils.ValueOfEnum;
 
 import lombok.Data;
 

@@ -187,7 +187,11 @@ public class AppointmentServiceImpl implements AppointmentService {
 		if (slotDto.isEmpty()) {
 			return false;
 		}
-
+		
+		if(slotDto.get().getDoctors() == null) {
+			return false;
+		}
+		
 		for (int i = 0; i < slotDto.get().getDoctors().length; i++) {
 			if (slotDto.get().getDoctors()[i].contains(dentist)) {
 				return true;
