@@ -32,6 +32,7 @@ import com.clinic.dental.model.feedback.FeedbackEntity;
 import com.clinic.dental.model.feedback.converter.FeedbackConverter;
 import com.clinic.dental.model.feedback.dto.CreateFeedbackDto;
 import com.clinic.dental.model.feedback.repository.FeedbackRepository;
+import com.clinic.dental.model.original_appointment.OriginalAppointmentEntity;
 import com.clinic.dental.model.original_appointment.repository.OriginalAppointmentRepository;
 import com.clinic.dental.model.user.UserEntity;
 import com.clinic.dental.model.user.enums.Role;
@@ -305,14 +306,14 @@ class AppointmentServiceTest {
 		list.add(app2);
 		list.add(app3);
 		UserEntity doctor = UserUtilTest.doctorOne();
-		
+
 		when(appointmentRepo.findByDentist(doctor.getUsername())).thenReturn(list);
-		
+
 		List<DisplayAppointmentDto> dtos = appService.getMyAllAppointments(Status.ACTIVE.toString(), doctor);
-		
+
 		assertNotNull(dtos);
 	}
-	
+
 	@Test
 	void givenUserPublic_WhenGetAppointment_Validate() {
 		List<AppointmentEntity> list = new ArrayList<>();
@@ -320,14 +321,14 @@ class AppointmentServiceTest {
 		list.add(app2);
 		list.add(app3);
 		UserEntity user = UserUtilTest.publicOne();
-		
+
 		when(appointmentRepo.findByPatient(user)).thenReturn(list);
-		
+
 		List<DisplayAppointmentDto> dtos = appService.getMyAllAppointments(Status.ACTIVE.toString(), user);
-		
+
 		assertNotNull(dtos);
 	}
-	
+
 	@Test
 	void givenAnyUser_WhenGetAppointment_Validate() {
 		List<AppointmentEntity> list = new ArrayList<>();
@@ -335,18 +336,65 @@ class AppointmentServiceTest {
 		list.add(app2);
 		list.add(app3);
 		UserEntity secretary = UserUtilTest.secretaryOne();
-		
+
 		when(appointmentRepo.findByPatient(secretary)).thenReturn(list);
-		
+
 		List<DisplayAppointmentDto> dtos = appService.getMyAllAppointments(Status.ACTIVE.toString(), secretary);
-		
+
 		assertNotNull(dtos);
 	}
+
+	@Test
+	void whenGivenId_WhenRefuzeTime_Validate() {
+		when(userService.getAuthenticatedUser()).thenReturn(UserUtilTest.publicOne());
+		when(appointmentRepo.findByIdAndStatus(2L, Status.APPENDING_USER)).thenReturn(app1);
+
+		assertThrows(DataIdNotFoundException.class, () -> appService.refuzeNewTimeAppointment(2L));
+	}
 	
+	@Test
+	void whenGivenId_WhenRefuzeTime_ThrowNotFound() {
+		when(userService.getAuthenticatedUser()).thenReturn(UserUtilTest.publicOne());
+		when(appointmentRepo.findByIdAndStatus(1L, Status.APPENDING_USER)).thenReturn(null);
+
+		assertThrows(DataIdNotFoundException.class, () -> appService.refuzeNewTimeAppointment(1L));
+	}
+
+	@Test
+	void whenGivenId_WhenRefuzeTime_ValidateTrue() {
+		UserEntity user = UserUtilTest.publicOne();
+
+		when(userService.getAuthenticatedUser()).thenReturn(user);
+		when(appointmentRepo.findByIdAndStatus(1L, Status.APPENDING_USER)).thenReturn(app1);
+		app1.setPatient(user);
+		app1.setOriginalDate(new OriginalAppointmentEntity());
+		when(appointmentRepo.save(app1)).thenReturn(app1);
+		
+		DisplayAppointmentDto dto = appService.refuzeNewTimeAppointment(1L);
+
+		assertNotNull(dto);
+	}
 	
+	@Test
+	void givenId_WhenCancel_ThrowNotFound() {
+		UserEntity user = UserUtilTest.doctorOne();
+		when(appointmentRepo.findAppointmentToCancel(1L)).thenReturn(null).thenReturn(app1);
+		
+		assertThrows(DataIdNotFoundException.class, ()->appService.cancelAppointment(1L, user));
+		assertThrows(CustomMessageException.class, ()->appService.cancelAppointment(1L, user));
+	}
 	
+	@Test
+	void givenId_WhenCancel_Validate() {
+		UserEntity user = UserUtilTest.doctorOne();
+		when(appointmentRepo.findAppointmentToCancel(1L)).thenReturn(app2);
+		when(appointmentRepo.save(app2)).thenReturn(app2);
+		
+		DisplayAppointmentDto dto = appService.cancelAppointment(1L, user);
+		
+		assertEquals("doctorOne", dto.getDentist());
+		assertNotNull(dto);
+	}
 	
-	
-	
-	
+
 }
