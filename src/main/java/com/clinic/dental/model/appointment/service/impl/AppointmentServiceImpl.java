@@ -17,6 +17,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.yaml.snakeyaml.util.EnumUtils;
 
 import com.clinic.dental.exceptions.CustomMessageException;
 import com.clinic.dental.exceptions.DataIdNotFoundException;
@@ -347,13 +348,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 	private boolean isValidStatus(String status) {
 		if (status != null && !status.isBlank()) {
-			if (status.strip().toUpperCase().equals(Status.ACTIVE.name())
-					|| status.strip().toUpperCase().equals(Status.REFUZED.name())
-					|| status.strip().toUpperCase().equals(Status.DONE.name())
-					|| status.strip().toUpperCase().equals(Status.DOCTOR_CANCELLED.name())
-					|| status.strip().toUpperCase().equals(Status.USER_CANCELLED.name())
-					|| status.strip().toUpperCase().equals(Status.USER_REFUZED_TIME.name())
-					|| status.strip().toUpperCase().equals(Status.IN_PROGRESS.name())) {
+			if (EnumUtils.findEnumInsensitiveCase(Status.class, status) != null) {
 				return true;
 			}
 			throw new CustomMessageException(

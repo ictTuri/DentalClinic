@@ -298,4 +298,55 @@ class AppointmentServiceTest {
 		assertFalse(emptyStatus);
 	}
 
+	@Test
+	void givenUserDoctor_WhenGetAppointment_Validate() {
+		List<AppointmentEntity> list = new ArrayList<>();
+		list.add(app1);
+		list.add(app2);
+		list.add(app3);
+		UserEntity doctor = UserUtilTest.doctorOne();
+		
+		when(appointmentRepo.findByDentist(doctor.getUsername())).thenReturn(list);
+		
+		List<DisplayAppointmentDto> dtos = appService.getMyAllAppointments(Status.ACTIVE.toString(), doctor);
+		
+		assertNotNull(dtos);
+	}
+	
+	@Test
+	void givenUserPublic_WhenGetAppointment_Validate() {
+		List<AppointmentEntity> list = new ArrayList<>();
+		list.add(app1);
+		list.add(app2);
+		list.add(app3);
+		UserEntity user = UserUtilTest.publicOne();
+		
+		when(appointmentRepo.findByPatient(user)).thenReturn(list);
+		
+		List<DisplayAppointmentDto> dtos = appService.getMyAllAppointments(Status.ACTIVE.toString(), user);
+		
+		assertNotNull(dtos);
+	}
+	
+	@Test
+	void givenAnyUser_WhenGetAppointment_Validate() {
+		List<AppointmentEntity> list = new ArrayList<>();
+		list.add(app1);
+		list.add(app2);
+		list.add(app3);
+		UserEntity secretary = UserUtilTest.secretaryOne();
+		
+		when(appointmentRepo.findByPatient(secretary)).thenReturn(list);
+		
+		List<DisplayAppointmentDto> dtos = appService.getMyAllAppointments(Status.ACTIVE.toString(), secretary);
+		
+		assertNotNull(dtos);
+	}
+	
+	
+	
+	
+	
+	
+	
 }
