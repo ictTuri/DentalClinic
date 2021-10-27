@@ -67,7 +67,7 @@ public class AppointmentController {
 	}
 	
 	@PostMapping("/rezerve")
-	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_PUBLIC')")
+	@PreAuthorize("hasAnyRole('ROLE_PUBLIC')")
 	public ResponseEntity<DisplayAppointmentDto> rezerveAppointment(@Valid @RequestBody CreatePublicAppointmentDto rezerveDto){
 		UserEntity thisUser = userService.getAuthenticatedUser();
 		return new ResponseEntity<DisplayAppointmentDto>(appointmentService.rezerveAppointment(rezerveDto,thisUser),HttpStatus.CREATED);

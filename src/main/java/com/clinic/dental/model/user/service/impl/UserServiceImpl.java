@@ -55,9 +55,12 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserDto getUserById(Long id) {
-		UserDto dto = UserConverter.toDto(userRepo.locateById(id));
-		log.info("Getting user with id: {}", id);
-		return dto;
+		UserEntity user = userRepo.locateById(id);
+		if(user!= null) {
+			log.info("Getting user with id: {}", id);
+			return UserConverter.toDto(user);
+		}
+		throw new DataIdNotFoundException("Can not find user with id: "+id);
 	}
 
 	@Override
@@ -172,7 +175,7 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserClinicDataDto getUserDataByCredentials(@NotBlank String credentials) {
 		if (credentials.trim().toUpperCase().matches(RegexPatterns.NID)) {
-			var userEntity = userRepo.findByNIDAndRole(credentials, Role.ROLE_PUBLIC);
+			var userEntity = userRepo.findByNIDAndRole(credentials.toUpperCase(), Role.ROLE_PUBLIC);
 			log.info("Getting user data by NID: {}", credentials);
 			return loadUserData(userEntity);
 		} else if (credentials.trim().matches(RegexPatterns.PHONE_NUMBER)) {
