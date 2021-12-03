@@ -301,48 +301,60 @@ public class AppointmentServiceImpl implements AppointmentService {
 	@Override
 	public List<DisplayAppointmentDto> getMyAllAppointments(String status, UserEntity authentication) {
 		if (authentication.getRole().equals(Role.ROLE_DOCTOR)) {
-			List<DisplayAppointmentDto> appointments = new ArrayList<>();
-			if (isValidStatus(status)) {
-				appointmentRepo.findByDentist(authentication.getUsername()).stream()
-						.filter(appointment -> appointment.getStatus().equals(Status.valueOf(status.toUpperCase())))
-						.forEach(appointment -> appointments.add(AppointmentConverter.toDto(appointment)));
-				log.info("Returning {} doctor appointments",authentication.getUsername());
-				return appointments;
-			} else {
-				appointmentRepo.findByDentist(authentication.getUsername()).stream()
-						.forEach(appointment -> appointments.add(AppointmentConverter.toDto(appointment)));
-				return appointments;
-			}
+			return doctorUserAppointments(status, authentication);
 
 		} else if (authentication.getRole().equals(Role.ROLE_PUBLIC)) {
-			if (status != null && !status.isEmpty()) {
-				List<DisplayAppointmentDto> appointments = new ArrayList<>();
-				appointmentRepo.findByPatient(authentication).stream()
-						.filter(appointment -> appointment.getStatus().equals(Status.valueOf(status.toUpperCase())))
-						.forEach(appointment -> appointments.add(AppointmentConverter.toDto(appointment)));
-				log.info("Returning {} public user appointments",authentication.getUsername());
-				return appointments;
-			} else {
-				List<DisplayAppointmentDto> appointments = new ArrayList<>();
-				appointmentRepo.findByPatient(authentication).stream()
-						.forEach(appointment -> appointments.add(AppointmentConverter.toDto(appointment)));
-				log.info("Returning {} admin or secretary user appointments",authentication.getUsername());
-				return appointments;
-			}
+			return publicUserAppointments(status, authentication);
 
 		} else {
-			if (status != null && !status.isEmpty()) {
-				List<DisplayAppointmentDto> appointments = new ArrayList<>();
-				getAllAppointments().stream()
-						.filter(appointment -> appointment.getStatus().equals(Status.valueOf(status.toUpperCase())))
-						.forEach(appointment -> appointments.add(AppointmentConverter.toDto(appointment)));
-				return appointments;
-			} else {
-				List<DisplayAppointmentDto> appointments = new ArrayList<>();
-				getAllAppointments().stream()
-						.forEach(appointment -> appointments.add(AppointmentConverter.toDto(appointment)));
-				return appointments;
-			}
+			return adminSecretaryUserAppointments(status);
+		}
+	}
+
+	private List<DisplayAppointmentDto> adminSecretaryUserAppointments(String status) {
+		if (status != null && !status.isEmpty()) {
+			List<DisplayAppointmentDto> appointments = new ArrayList<>();
+			getAllAppointments().stream()
+					.filter(appointment -> appointment.getStatus().equals(Status.valueOf(status.toUpperCase())))
+					.forEach(appointment -> appointments.add(AppointmentConverter.toDto(appointment)));
+			return appointments;
+		} else {
+			List<DisplayAppointmentDto> appointments = new ArrayList<>();
+			getAllAppointments().stream()
+					.forEach(appointment -> appointments.add(AppointmentConverter.toDto(appointment)));
+			return appointments;
+		}
+	}
+
+	private List<DisplayAppointmentDto> doctorUserAppointments(String status, UserEntity authentication) {
+		List<DisplayAppointmentDto> appointments = new ArrayList<>();
+		if (isValidStatus(status)) {
+			appointmentRepo.findByDentist(authentication.getUsername()).stream()
+					.filter(appointment -> appointment.getStatus().equals(Status.valueOf(status.toUpperCase())))
+					.forEach(appointment -> appointments.add(AppointmentConverter.toDto(appointment)));
+			log.info("Returning {} doctor appointments",authentication.getUsername());
+			return appointments;
+		} else {
+			appointmentRepo.findByDentist(authentication.getUsername()).stream()
+					.forEach(appointment -> appointments.add(AppointmentConverter.toDto(appointment)));
+			return appointments;
+		}
+	}
+
+	private List<DisplayAppointmentDto> publicUserAppointments(String status, UserEntity authentication) {
+		if (status != null && !status.isEmpty()) {
+			List<DisplayAppointmentDto> appointments = new ArrayList<>();
+			appointmentRepo.findByPatient(authentication).stream()
+					.filter(appointment -> appointment.getStatus().equals(Status.valueOf(status.toUpperCase())))
+					.forEach(appointment -> appointments.add(AppointmentConverter.toDto(appointment)));
+			log.info("Returning {} public user appointments",authentication.getUsername());
+			return appointments;
+		} else {
+			List<DisplayAppointmentDto> appointments = new ArrayList<>();
+			appointmentRepo.findByPatient(authentication).stream()
+					.forEach(appointment -> appointments.add(AppointmentConverter.toDto(appointment)));
+			log.info("Returning {} admin or secretary user appointments",authentication.getUsername());
+			return appointments;
 		}
 	}
 

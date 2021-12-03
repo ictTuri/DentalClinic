@@ -9,7 +9,8 @@ import javax.servlet.http.Cookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import io.jsonwebtoken.CompressionCodecs;
+
+//import io.jsonwebtoken.CompressionCodecs;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import lombok.var;
@@ -22,12 +23,13 @@ public class JwtTokenProvider {
 	private final SecretKey secretKey;
 
 	public String createToken(Authentication authentication) {
+
 		return Jwts.builder()
 				.setSubject(authentication.getName())
 				.claim("authorities", authentication.getAuthorities())
 				.setIssuedAt(new Date())
 				.setExpiration(java.sql.Date.valueOf(LocalDate.now().plusDays(jwtConfig.getTokenExpirationAfterDays())))
-				.compressWith(CompressionCodecs.DEFLATE)
+//				.compressWith(CompressionCodecs.DEFLATE)
 				.signWith(secretKey).compact();
 
 	}
