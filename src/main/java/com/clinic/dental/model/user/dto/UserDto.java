@@ -48,4 +48,6 @@ public class UserDto {
 	@NotBlank(message = "Role is mandatory! Enter \"doctor\" or \"secretary\" or \"public\"!")
 	@ValueOfEnum(enumClass = Role.class)
 	private String role;
+	
+	private String profileUrl;
 }

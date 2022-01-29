@@ -1,10 +1,11 @@
 package com.clinic.dental.controllers;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -17,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.clinic.dental.exceptions.InvalidCredentialsException;
 import com.clinic.dental.security.dto.UsernameAndPasswordAuthenticationRequest;
 import com.clinic.dental.security.jwt.JwtTokenProvider;
-import com.clinic.dental.utils.TokenUtil;
 
 import lombok.RequiredArgsConstructor;
 import lombok.var;
@@ -34,7 +34,7 @@ public class LoginLogoutController {
 	private final JwtTokenProvider jwtTokenProvider;
 
 	@PostMapping("/_login")
-	public ResponseEntity<TokenUtil> login(HttpServletResponse response,
+	public Map<String, String> login(HttpServletResponse response,
 			@Valid @RequestBody UsernameAndPasswordAuthenticationRequest credentials) throws AuthenticationException{
 		logout();
 		String token;
@@ -49,8 +49,9 @@ public class LoginLogoutController {
 		}catch(AuthenticationException e) {
 			throw new InvalidCredentialsException(USER_NOT_AUTHENTICATED);
 		}
-		TokenUtil t = new TokenUtil(token);
-		return new ResponseEntity<>(t,HttpStatus.OK);
+		Map<String, String> result = new HashMap<>();
+		result.put("token", token);
+		return result;
 	}
 	
 	@PostMapping("/_logout")

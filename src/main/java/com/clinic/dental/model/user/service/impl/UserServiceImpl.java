@@ -206,4 +206,28 @@ public class UserServiceImpl implements UserService {
 		return userToReturn;
 	}
 
+	@Override
+	public UserDto userProfile() {
+		return UserConverter.toDto(getAuthenticatedUser());
+	}
+
+	@Override
+	@Transactional
+	public UserDto updateProfile(@Valid UserDto userDto) {
+		UserEntity loggedUser = getAuthenticatedUser();
+		userDto.setRole(loggedUser.getRole().name());
+		return updateUserById(userDto, loggedUser.getId());
+	}
+
+	@Override
+	public String getRole() {
+		return SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString();
+	}
+
+
+//	private String getUUID() {
+//		UUID uuid = UUID.randomUUID();
+//        return uuid.toString();
+//	}
+
 }

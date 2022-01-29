@@ -1,5 +1,6 @@
 package com.clinic.dental.controllers;
 
+
 import java.util.List;
 
 import javax.validation.Valid;
@@ -38,6 +39,18 @@ public class UserController {
 		return new ResponseEntity<List<UserDto>>(userService.getAllUsers(),HttpStatus.OK);
 	}
 	
+	@GetMapping("/role")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SECRETARY','ROLE_DOCTOR','ROLE_PUBLIC')")
+	public ResponseEntity<String> getRole(){
+		return new ResponseEntity<String>(userService.getRole(),HttpStatus.OK);
+	}
+	
+	@GetMapping("/profile")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SECRETARY','ROLE_DOCTOR','ROLE_PUBLIC')")
+	public ResponseEntity<UserDto> userProfile(){
+		return new ResponseEntity<UserDto>(userService.userProfile(),HttpStatus.OK);
+	}
+	
 	@GetMapping("{id}")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<UserDto> getUserById(@PathVariable("id") Long id){
@@ -56,6 +69,12 @@ public class UserController {
 		return new ResponseEntity<UserDto>(userService.createUser(userDto),HttpStatus.CREATED);
 	}
 	
+	@PutMapping("/profile")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SECRETARY','ROLE_DOCTOR','ROLE_PUBLIC')")
+	public ResponseEntity<UserDto> updateProfile(@Valid @RequestBody UserDto userDto){
+		return new ResponseEntity<UserDto>(userService.updateProfile(userDto),HttpStatus.CREATED);
+	}
+
 	@PutMapping("{id}")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<UserDto> updateUserById(@Valid @RequestBody UserDto userDto, @PathVariable("id") Long id){

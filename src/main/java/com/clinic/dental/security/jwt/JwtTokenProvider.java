@@ -38,7 +38,8 @@ public class JwtTokenProvider {
 		var cookie = new Cookie("jwttoken", token);
 		cookie.setPath("/");
 		cookie.setSecure(false);
-		cookie.setHttpOnly(true);
+		cookie.setHttpOnly(false);
+		cookie.setMaxAge(60*60*24);
 		return cookie;
 	}
 }
