@@ -33,4 +33,10 @@ public interface UserService {
 
 	UserClinicDataDto getUserDataByCredentials(@NotBlank String credentials);
 
+	UserDto userProfile();
+
+	UserDto updateProfile(@Valid UserDto userDto);
+
+	String getRole();
+
 }

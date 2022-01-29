@@ -1,13 +1,15 @@
 package com.clinic.dental.controllers;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,30 +24,34 @@ import lombok.var;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "http://localhost:4200",allowedHeaders = "*", allowCredentials = "true")
 @RequiredArgsConstructor
 public class LoginLogoutController {
 	
-	private static final String USERNOTAUTHENTICATED = "Unable to Authenticate! Check credential and password!";
+	private static final String USER_NOT_AUTHENTICATED = "Unable to Authenticate! Check credential and password!";
 
 	private final AuthenticationManager authenticationManager;
 	private final JwtTokenProvider jwtTokenProvider;
 
 	@PostMapping("/_login")
-	public ResponseEntity<String> login(HttpServletResponse response,
+	public Map<String, String> login(HttpServletResponse response,
 			@Valid @RequestBody UsernameAndPasswordAuthenticationRequest credentials) throws AuthenticationException{
 		logout();
+		String token;
 		try {
 			var authenticate = authenticationManager
 					.authenticate(new UsernamePasswordAuthenticationToken(credentials.getCredential(), credentials.getPassword()));
 
-			String token = jwtTokenProvider.createToken(authenticate);
+			token = jwtTokenProvider.createToken(authenticate);
 			var cookie = jwtTokenProvider.createCookie(token);
 			response.addCookie(cookie);
 			
 		}catch(AuthenticationException e) {
-			throw new InvalidCredentialsException(USERNOTAUTHENTICATED);
+			throw new InvalidCredentialsException(USER_NOT_AUTHENTICATED);
 		}
-		return new ResponseEntity<>("Login successfully ",HttpStatus.OK);
+		Map<String, String> result = new HashMap<>();
+		result.put("token", token);
+		return result;
 	}
 	
 	@PostMapping("/_logout")

@@ -1,5 +1,6 @@
 package com.clinic.dental.controllers;
 
+
 import java.util.List;
 
 import javax.validation.Valid;
@@ -8,6 +9,7 @@ import javax.validation.constraints.NotBlank;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
+@CrossOrigin(origins = "http://localhost:4200",allowedHeaders = "*", allowCredentials = "true")
 @RequestMapping("api/users")
 public class UserController {
 	
@@ -34,6 +37,18 @@ public class UserController {
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<List<UserDto>> getAllUsers(){
 		return new ResponseEntity<List<UserDto>>(userService.getAllUsers(),HttpStatus.OK);
+	}
+	
+	@GetMapping("/role")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SECRETARY','ROLE_DOCTOR','ROLE_PUBLIC')")
+	public ResponseEntity<String> getRole(){
+		return new ResponseEntity<String>(userService.getRole(),HttpStatus.OK);
+	}
+	
+	@GetMapping("/profile")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SECRETARY','ROLE_DOCTOR','ROLE_PUBLIC')")
+	public ResponseEntity<UserDto> userProfile(){
+		return new ResponseEntity<UserDto>(userService.userProfile(),HttpStatus.OK);
 	}
 	
 	@GetMapping("{id}")
@@ -54,6 +69,12 @@ public class UserController {
 		return new ResponseEntity<UserDto>(userService.createUser(userDto),HttpStatus.CREATED);
 	}
 	
+	@PutMapping("/profile")
+	@PreAuthorize("hasAnyRole('ROLE_ADMIN','ROLE_SECRETARY','ROLE_DOCTOR','ROLE_PUBLIC')")
+	public ResponseEntity<UserDto> updateProfile(@Valid @RequestBody UserDto userDto){
+		return new ResponseEntity<UserDto>(userService.updateProfile(userDto),HttpStatus.CREATED);
+	}
+
 	@PutMapping("{id}")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public ResponseEntity<UserDto> updateUserById(@Valid @RequestBody UserDto userDto, @PathVariable("id") Long id){
