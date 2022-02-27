@@ -1,8 +1,10 @@
 package com.clinic.dental.controllers;
 
+import java.net.HttpCookie;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -43,8 +45,10 @@ public class LoginLogoutController {
 					.authenticate(new UsernamePasswordAuthenticationToken(credentials.getCredential(), credentials.getPassword()));
 
 			token = jwtTokenProvider.createToken(authenticate);
-			var cookie = jwtTokenProvider.createCookie(token);
-			response.addCookie(cookie);
+//			var cookie = jwtTokenProvider.createCookie(token);
+			
+//			response.addCookie(cookie);
+			 response.setHeader("Set-Cookie", "jwttoken="+token+" ; HttpOnly; SameSite=None");
 			
 		}catch(AuthenticationException e) {
 			throw new InvalidCredentialsException(USER_NOT_AUTHENTICATED);
