@@ -1,6 +1,6 @@
 -- DROP SCHEMA public;
 
-CREATE SCHEMA public AUTHORIZATION postgres;
+CREATE SCHEMA public AUTHORIZATION lmmjumxrzwpixa;
 
 -- DROP SEQUENCE public.appointments_appointment_id_seq;
 
