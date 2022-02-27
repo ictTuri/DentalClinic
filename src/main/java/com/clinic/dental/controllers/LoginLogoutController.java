@@ -24,9 +24,11 @@ import lombok.var;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(allowedHeaders = "*", allowCredentials = "true", origins = "https://dental-clinic7.web.app")
+@CrossOrigin(allowedHeaders = "*", allowCredentials = "true", origins = {"https://dental-clinic7.web.app","http://localhost:4200"})
 @RequiredArgsConstructor
 public class LoginLogoutController {
+	
+//	"https://dental-clinic7.web.app, http://localhost:4200
 	
 	private static final String USER_NOT_AUTHENTICATED = "Unable to Authenticate! Check credential and password!";
 

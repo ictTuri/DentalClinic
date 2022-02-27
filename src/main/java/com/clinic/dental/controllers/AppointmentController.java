@@ -34,7 +34,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @RestController
 @Validated
-@CrossOrigin(allowedHeaders = "*", allowCredentials = "true", origins = "https://dental-clinic7.web.app")
+@CrossOrigin(allowedHeaders = "*", allowCredentials = "true", origins = {"https://dental-clinic7.web.app","http://localhost:4200"})
 @RequestMapping("/api/visit")
 public class AppointmentController {
 
