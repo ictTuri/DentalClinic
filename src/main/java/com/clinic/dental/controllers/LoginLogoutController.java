@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.clinic.dental.exceptions.InvalidCredentialsException;
 import com.clinic.dental.security.dto.UsernameAndPasswordAuthenticationRequest;
 import com.clinic.dental.security.jwt.JwtTokenProvider;
-import com.google.common.net.HttpHeaders;
 
 import lombok.RequiredArgsConstructor;
 import lombok.var;
@@ -28,8 +27,6 @@ import lombok.var;
 @CrossOrigin(allowedHeaders = "*", allowCredentials = "true", origins = {"https://dental-clinic7.web.app","http://localhost:4200"})
 @RequiredArgsConstructor
 public class LoginLogoutController {
-	
-//	"https://dental-clinic7.web.app, http://localhost:4200
 	
 	private static final String USER_NOT_AUTHENTICATED = "Unable to Authenticate! Check credential and password!";
 
@@ -47,7 +44,6 @@ public class LoginLogoutController {
 
 			token = jwtTokenProvider.createToken(authenticate);
 			var cookie = jwtTokenProvider.createCookie(token);
-			response.setHeader("Set-Cookie", "SameSite=None");
 			response.addCookie(cookie);
 			
 		}catch(AuthenticationException e) {
