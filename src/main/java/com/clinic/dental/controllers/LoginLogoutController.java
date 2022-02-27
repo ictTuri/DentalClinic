@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.clinic.dental.exceptions.InvalidCredentialsException;
 import com.clinic.dental.security.dto.UsernameAndPasswordAuthenticationRequest;
 import com.clinic.dental.security.jwt.JwtTokenProvider;
+import com.google.common.net.HttpHeaders;
 
 import lombok.RequiredArgsConstructor;
 import lombok.var;
@@ -46,7 +47,7 @@ public class LoginLogoutController {
 
 			token = jwtTokenProvider.createToken(authenticate);
 			var cookie = jwtTokenProvider.createCookie(token);
-			response.setHeader("Set-Cookie", "locale=eu; HttpOnly; SameSite=none");
+			response.setHeader(HttpHeaders.SET_COOKIE, "SameSite=none");
 			response.addCookie(cookie);
 			
 		}catch(AuthenticationException e) {
