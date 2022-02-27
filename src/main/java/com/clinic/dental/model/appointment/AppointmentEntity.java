@@ -44,11 +44,11 @@ public class AppointmentEntity{
 	private LocalTime startTime;
 	private LocalTime endTime;
 	@OneToOne(cascade = CascadeType.PERSIST)
-	@JoinColumn(name = "feedback", referencedColumnName = "id", nullable = true)
+	@JoinColumn(name = "feedback", referencedColumnName = "feedback_id", nullable = true)
 	private FeedbackEntity feedback;
 	
 	@OneToOne
-	@JoinColumn(name = "original_date", referencedColumnName = "id", nullable = true)
+	@JoinColumn(name = "original_date", referencedColumnName = "original_appointment_id", nullable = true)
 	private OriginalAppointmentEntity originalDate;
 	
 	@Enumerated(EnumType.STRING)

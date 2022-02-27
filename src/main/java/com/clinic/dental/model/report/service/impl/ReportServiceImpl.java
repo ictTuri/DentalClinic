@@ -43,7 +43,7 @@ public class ReportServiceImpl implements ReportService {
 	public TotalRezervationsReportDto getMonthlyReports(int year, int month) {
 		TotalRezervationsReportDto dto = new TotalRezervationsReportDto();
 		List<AppointmentEntity> allAppointments = new ArrayList<>();
-		appointmentRepo.findAllThisYear(year).stream().map(app -> allAppointments.add(app)).toList();
+		appointmentRepo.findAllThisYear(year).stream().map(app -> allAppointments.add(app)).collect(Collectors.toList());
 		dto.setYear(year);
 		String monthName = getMonth(month, Locale.US);
 		dto.setMonthName(monthName);

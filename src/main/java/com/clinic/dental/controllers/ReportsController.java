@@ -26,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:4200",allowedHeaders = "*", allowCredentials = "true")
+@CrossOrigin(origins = "https://dental-clinic7.web.app/",allowedHeaders = "*", allowCredentials = "true")
 @RequestMapping("/api/reports")
 @Validated
 public class ReportsController {

@@ -95,7 +95,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 				LocalDateTime.now().truncatedTo(ChronoUnit.HOURS).plusHours(1), LocalDateTime.now().plusWeeks(1L));
 
 		List<AppointmentEntity> appointmentList = appointmentRepo.findAllAfterToday().stream()
-				.filter(app -> !app.getStatus().equals(Status.REFUZED)).toList();
+				.filter(app -> !app.getStatus().equals(Status.REFUZED)).collect(Collectors.toList());
 
 		final String[] doctorsList = userService.getDoctorsName(Role.ROLE_DOCTOR.toString());
 
@@ -430,7 +430,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 	@Transactional
 	public void setFeedbackAfterEightHoursNull(String defaultFeedback) {
 		FeedbackEntity defaultFeedbackEntity = feedbackRepository.getById(1L);
-		List<AppointmentEntity> appointments = appointmentRepo.getAppoinmentForUpdateFeedback().stream().toList();
+		List<AppointmentEntity> appointments = appointmentRepo.getAppoinmentForUpdateFeedback().stream().collect(Collectors.toList());
 
 		if (!appointments.isEmpty()) {
 			appointments.forEach(app -> {
@@ -459,7 +459,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 				LocalDateTime.now().truncatedTo(ChronoUnit.HOURS).plusHours(1), LocalDateTime.now().plusWeeks(1L));
 		List<AppointmentEntity> appointmentList = appointmentRepo.findAllAfterToday().stream()
 				.filter(app -> !app.getStatus().equals(Status.REFUZED))
-				.filter(app -> app.getDentist().equals(thisUser.getUsername())).toList();
+				.filter(app -> app.getDentist().equals(thisUser.getUsername())).collect(Collectors.toList());
 
 		List<TimeSlotDto> listOfTimeSlots = new ArrayList<>();
 		timeList.stream()
@@ -480,7 +480,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 		appointmentRepo.findByDentist(thisUser.getUsername()).stream()
 				.filter(app -> app.getStatus().equals(Status.ACTIVE) || app.getStatus().equals(Status.IN_PROGRESS))
-				.map(app -> dtos.add(AppointmentConverter.toDto(app))).toList();
+				.map(app -> dtos.add(AppointmentConverter.toDto(app))).collect(Collectors.toList());
 
 		return dtos;
 	}
@@ -492,7 +492,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 		appointmentRepo.findByDentist(thisUser.getUsername()).stream()
 				.filter(app -> app.getStatus().equals(Status.REFUZED) || app.getStatus().equals(Status.DOCTOR_CANCELLED)
 						|| app.getStatus().equals(Status.USER_CANCELLED))
-				.map(app -> dtos.add(AppointmentConverter.toDto(app))).toList();
+				.map(app -> dtos.add(AppointmentConverter.toDto(app))).collect(Collectors.toList());
 
 		return dtos;
 	}
