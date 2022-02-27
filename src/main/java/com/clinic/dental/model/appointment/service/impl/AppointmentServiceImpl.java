@@ -185,7 +185,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 						&& slot.getDate().equals(day))
 				.findAny();
 
-		if (slotDto.isEmpty()) {
+		if (!slotDto.isPresent()) {
 			return false;
 		}
 		
@@ -312,7 +312,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 
 	private List<DisplayAppointmentDto> adminSecretaryUserAppointments(String status) {
-		if (status != null && !status.isEmpty()) {
+		if (status != null && !(status.length()==0)) {
 			List<DisplayAppointmentDto> appointments = new ArrayList<>();
 			getAllAppointments().stream()
 					.filter(appointment -> appointment.getStatus().equals(Status.valueOf(status.toUpperCase())))
@@ -342,7 +342,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 
 	private List<DisplayAppointmentDto> publicUserAppointments(String status, UserEntity authentication) {
-		if (status != null && !status.isEmpty()) {
+		if (status != null && !(status.length() == 0)) {
 			List<DisplayAppointmentDto> appointments = new ArrayList<>();
 			appointmentRepo.findByPatient(authentication).stream()
 					.filter(appointment -> appointment.getStatus().equals(Status.valueOf(status.toUpperCase())))
