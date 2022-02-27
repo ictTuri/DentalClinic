@@ -49,6 +49,7 @@ public class LoginLogoutController {
 //			response.addCookie(cookie);
 			response.setHeader("Access-Control-Allow-Headers",
 					"Date, Content-Type, Accept, X-Requested-With, Authorization, From, X-Auth-Token, Request-Id");
+			response.setHeader("Access-Control-Allow-Origin", "https://dental-clinic7.web.app");
 			response.setHeader("Access-Control-Allow-Credentials", "true");
 			response.setHeader("Set-Cookie",
 					"jwttoken=" + token + " ; Max-Age=86400; Path=/; Secure; SameSite=None");
