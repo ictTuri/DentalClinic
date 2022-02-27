@@ -46,6 +46,7 @@ public class LoginLogoutController {
 
 			token = jwtTokenProvider.createToken(authenticate);
 			var cookie = jwtTokenProvider.createCookie(token);
+			response.setHeader("Set-Cookie", "locale=eu; HttpOnly; SameSite=none");
 			response.addCookie(cookie);
 			
 		}catch(AuthenticationException e) {
