@@ -13,7 +13,7 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
         .allowedOrigins("https://dental-clinic7.web.app")
-        .allowedMethods("PUT", "DELETE","POST","GET")
+        .allowedMethods("PUT", "DELETE","POST","GET","OPTIONS")
         .allowCredentials(true).maxAge(3600);
     }
 }
