@@ -359,7 +359,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 	}
 
 	private boolean isValidStatus(String status) {
-		if (status != null && !status.isBlank()) {
+		if (status != null && !(status.length() == 0)) {
 			if (EnumUtils.findEnumInsensitiveCase(Status.class, status) != null) {
 				return true;
 			}
@@ -432,7 +432,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 		FeedbackEntity defaultFeedbackEntity = feedbackRepository.getById(1L);
 		List<AppointmentEntity> appointments = appointmentRepo.getAppoinmentForUpdateFeedback().stream().collect(Collectors.toList());
 
-		if (!appointments.isEmpty()) {
+		if (!(appointments.size() == 0)) {
 			appointments.forEach(app -> {
 				app.setFeedback(defaultFeedbackEntity);
 				appointmentRepo.save(app);
