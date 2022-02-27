@@ -24,10 +24,11 @@ import lombok.var;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(allowedHeaders = "*", allowCredentials = "true", origins = {"https://dental-clinic7.web.app","http://localhost:4200"})
+@CrossOrigin(allowedHeaders = "*", allowCredentials = "true", origins = { "https://dental-clinic7.web.app",
+		"http://localhost:4200" })
 @RequiredArgsConstructor
 public class LoginLogoutController {
-	
+
 	private static final String USER_NOT_AUTHENTICATED = "Unable to Authenticate! Check credential and password!";
 
 	private final AuthenticationManager authenticationManager;
@@ -35,30 +36,34 @@ public class LoginLogoutController {
 
 	@PostMapping("/_login")
 	public Map<String, String> login(HttpServletResponse response,
-			@Valid @RequestBody UsernameAndPasswordAuthenticationRequest credentials) throws AuthenticationException{
+			@Valid @RequestBody UsernameAndPasswordAuthenticationRequest credentials) throws AuthenticationException {
 		logout();
 		String token;
 		try {
-			var authenticate = authenticationManager
-					.authenticate(new UsernamePasswordAuthenticationToken(credentials.getCredential(), credentials.getPassword()));
+			var authenticate = authenticationManager.authenticate(
+					new UsernamePasswordAuthenticationToken(credentials.getCredential(), credentials.getPassword()));
 
 			token = jwtTokenProvider.createToken(authenticate);
-			
+
 //			var cookie = jwtTokenProvider.createCookie(token);
 //			response.addCookie(cookie);
-			
-			 response.setHeader("Set-Cookie", "jwttoken="+token+" ; Max-Age=86400; Path=/; Secure; HttpOnly; SameSite=None");
-			
-		}catch(AuthenticationException e) {
+			response.setHeader("Access-Control-Allow-Headers",
+					"Date, Content-Type, Accept, X-Requested-With, Authorization, From, X-Auth-Token, Request-Id");
+			response.setHeader("Access-Control-Expose-Headers", "Set-Cookie");
+			response.setHeader("Access-Control-Allow-Credentials", "true");
+			response.setHeader("Set-Cookie",
+					"jwttoken=" + token + " ; Max-Age=86400; Path=/; Secure; SameSite=None");
+
+		} catch (AuthenticationException e) {
 			throw new InvalidCredentialsException(USER_NOT_AUTHENTICATED);
 		}
 		Map<String, String> result = new HashMap<>();
 		result.put("token", token);
 		return result;
 	}
-	
+
 	@PostMapping("/_logout")
-	public void logout(){
+	public void logout() {
 		// Triggers logout
 	}
 }
