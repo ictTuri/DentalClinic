@@ -24,7 +24,7 @@ import lombok.var;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin
+@CrossOrigin(allowedHeaders = "*", allowCredentials = "true", origins = "[https://dental-clinic7.web.app,https://dental-clinic7.web.app/,http://localhost:4200]")
 @RequiredArgsConstructor
 public class LoginLogoutController {
 	
