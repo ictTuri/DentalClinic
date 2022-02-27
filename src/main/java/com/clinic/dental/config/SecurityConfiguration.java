@@ -1,5 +1,4 @@
 package com.clinic.dental.config;
-
 import javax.crypto.SecretKey;
 
 import org.springframework.context.annotation.Bean;
