@@ -141,7 +141,7 @@ public class ReportServiceImpl implements ReportService {
 				.stream()
 				.filter(app -> app.getCreatedAt().getMonth().equals(LocalDate.of(year, month, 1).getMonth()))
 				.filter(app -> app.getStatus().equals(status))
-				.toList();
+				.collect(Collectors.toList());
 		Map<String, Long> report = getDentistResult(appointmentList);
 		
 		List<WeeklyDentistsTotalReportsDto> weeklyList = getWeeklyDentistreport(appointmentList, 2021, month);
@@ -166,7 +166,7 @@ public class ReportServiceImpl implements ReportService {
 		weekTimes.forEach(week -> {
 			WeeklyDentistsTotalReportsDto dto = new WeeklyDentistsTotalReportsDto();
 			List<AppointmentEntity> weekAppointments = appointments.stream().filter(app -> app.getCreatedAt().toLocalDate().isAfter(week.minusDays(1)))
-					.filter(app -> app.getCreatedAt().toLocalDate().isBefore(week.plusDays(7))).toList();
+					.filter(app -> app.getCreatedAt().toLocalDate().isBefore(week.plusDays(7))).collect(Collectors.toList());
 			Map<String, Long>  weekReport = weekAppointments.stream().parallel()
 					.collect(Collectors.groupingBy(AppointmentEntity::getDentist,Collectors.counting()));
 			dto.setWeekDay(week.getDayOfMonth());
