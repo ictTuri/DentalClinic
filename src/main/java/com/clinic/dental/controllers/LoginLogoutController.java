@@ -43,8 +43,8 @@ public class LoginLogoutController {
 
 //			var cookie = jwtTokenProvider.createCookie(token);
 //			response.addCookie(cookie);
-//			response.setHeader("Set-Cookie",
-//			"jwttoken=" + token + " ; Max-Age=86400; Path=/; Secure; SameSite=None");
+			response.setHeader("Set-Cookie",
+			"jwttoken=" + token + " ; Max-Age=86400; Path=/; Secure; SameSite=None");
 			
 			response.setHeader("Access-Control-Allow-Headers",
 					"Date, Content-Type, Accept, X-Requested-With, Authorization, From, X-Auth-Token, Request-Id");
