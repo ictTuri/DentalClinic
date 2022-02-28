@@ -52,7 +52,7 @@ public class LoginLogoutController {
 //			response.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
 			response.setHeader("Access-Control-Allow-Credentials", "true");
 			response.setHeader("Set-Cookie",
-					"jwttoken=" + token + " ; Max-Age=86400; Path=/; Secure; SameSite=None");
+					"jwttoken=" + token + " ; Max-Age=86400; Path=/; SameSite=Strict");
 
 		} catch (AuthenticationException e) {
 			throw new InvalidCredentialsException(USER_NOT_AUTHENTICATED);
