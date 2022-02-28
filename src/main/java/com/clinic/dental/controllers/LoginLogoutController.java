@@ -49,7 +49,7 @@ public class LoginLogoutController {
 			response.setHeader("Access-Control-Allow-Headers",
 					"Date, Content-Type, Accept, X-Requested-With, Authorization, From, X-Auth-Token, Request-Id");
 			response.setHeader("Access-Control-Allow-Origin", "https://dental-clinic7.web.app");
-			response.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
+//			response.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
 			response.setHeader("Access-Control-Allow-Credentials", "true");
 
 
