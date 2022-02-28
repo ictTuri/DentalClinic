@@ -34,7 +34,7 @@ public class LoginLogoutController {
 	private final JwtTokenProvider jwtTokenProvider;
 
 	@PostMapping("/_login")
-	public Map<String, String> login(HttpServletResponse response,
+	public String login(HttpServletResponse response,
 			@Valid @RequestBody UsernameAndPasswordAuthenticationRequest credentials) throws AuthenticationException {
 		logout();
 		String token;
@@ -52,14 +52,12 @@ public class LoginLogoutController {
 //			response.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
 			response.setHeader("Access-Control-Allow-Credentials", "true");
 			response.setHeader("Set-Cookie",
-					"jwttoken=" + token + " ; Max-Age=86400; Path=/; SameSite=Strict");
+					"jwttoken=" + token + " ; Max-Age=86400; Path=/; Secure; SameSite=None");
 
 		} catch (AuthenticationException e) {
 			throw new InvalidCredentialsException(USER_NOT_AUTHENTICATED);
 		}
-		Map<String, String> result = new HashMap<>();
-		result.put("token", token);
-		return result;
+		return token;
 	}
 
 	@PostMapping("/_logout")
