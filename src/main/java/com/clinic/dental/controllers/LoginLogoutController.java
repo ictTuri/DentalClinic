@@ -3,6 +3,7 @@ package com.clinic.dental.controllers;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -29,6 +30,9 @@ public class LoginLogoutController {
 
 	private final AuthenticationManager authenticationManager;
 	private final JwtTokenProvider jwtTokenProvider;
+	
+	@Value("${url.allowed}")
+	private String ALLOWED_URL;
 
 	@PostMapping("/_login")
 	public String login(HttpServletResponse response,
@@ -41,15 +45,12 @@ public class LoginLogoutController {
 
 			token = jwtTokenProvider.createToken(authenticate);
 
-//			var cookie = jwtTokenProvider.createCookie(token);
-//			response.addCookie(cookie);
 			response.setHeader("Set-Cookie",
 			"jwttoken=" + token + " ; Max-Age=86400; Path=/; Secure; SameSite=None");
 			
 			response.setHeader("Access-Control-Allow-Headers",
 					"Date, Content-Type, Accept, X-Requested-With, Authorization, From, X-Auth-Token, Request-Id");
-			response.setHeader("Access-Control-Allow-Origin", "https://dental-clinic7.web.app");
-//			response.setHeader("Access-Control-Allow-Origin", "http://localhost:4200");
+			response.setHeader("Access-Control-Allow-Origin", ALLOWED_URL);
 			response.setHeader("Access-Control-Allow-Credentials", "true");
 
 
